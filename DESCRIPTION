@@ -1,13 +1,9 @@
 Package: shinySbm
-Title: An Amazing Shiny App
+Title: Shiny application to use the Stochastic Block Model
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "firstname",
-           family = "lastname",
-           role = c("aut", "cre"),
-           email = "your@email.com")
-Description: What the package does (one paragraph).
-License: What license is it under?
+Authors@R: person('Theodore', 'VANRENTERGHEM', email = 'theodore.vanrenterghem@inrae.fr', role = c('cre', 'aut'))
+Description: This package is made to allow a simpler use of the {sbm} R package. It allow a
+License: MIT + file LICENSE
 Imports: 
     config (>= 0.3.1),
     golem (>= 0.3.5),
