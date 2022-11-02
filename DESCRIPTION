@@ -5,9 +5,13 @@ Authors@R: person('Theodore', 'VANRENTERGHEM', email = 'theodore.vanrenterghem@i
 Description: This package is made to allow a simpler use of the {sbm} R package. It allow a
 License: MIT + file LICENSE
 Imports: 
+    attempt,
     config (>= 0.3.1),
+    DT,
+    glue,
     golem (>= 0.3.5),
+    htmltools,
     shiny (>= 1.7.2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1

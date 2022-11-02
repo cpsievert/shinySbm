@@ -33,7 +33,7 @@ You can install the development version of shinySbm like so:
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example, eval=FALSE, include=FALSE}
+```{r example}
 library(shinySbm)
 ## basic example code
 ```
