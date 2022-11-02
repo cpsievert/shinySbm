@@ -8,9 +8,11 @@ Imports:
     attempt,
     config (>= 0.3.1),
     DT,
+    ggplot2,
     glue,
     golem (>= 0.3.5),
     htmltools,
+    sbm,
     shiny (>= 1.7.2)
 Encoding: UTF-8
 LazyData: true
