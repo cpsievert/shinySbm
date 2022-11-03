@@ -5,16 +5,16 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  tagList(
+  fluidPage(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      h1("Stochastic Block Model with the sbm package"),
-      sidebarLayout(
-        actionButton('new',"Upload a new adjency matrix"),
+    h1("Stochastic Block Model with the sbm package"),
+    sidebarLayout(
+      sidebarPanel(
+        actionButton('new',"Upload a new adjacency matrix"),
         conditionalPanel(
-          condition = "input.new",
+          condition = "input.new && oldButton != input.new",
           fileInput("dataFile", label = "Choose the file containing your adjency matrix",
                     buttonLabel = "Browse...",
                     placeholder = "No file selected")
@@ -26,7 +26,7 @@ app_ui <- function(request) {
             "Raw Data",
             # outputCodeButton(plotOutput("matrixPlot")),
             dataTableOutput("matrixPlot"),
-            downloadButton("downloadrawPlot", "Download Plot"),
+            downloadButton("downloadrawPlot", "Download Plot")
           )
         )
       )

@@ -5,7 +5,8 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
-  # Your application server logic
+
+  oldButton <- eventReactive(input$dataFile,{input$new})
   datasetread <- reactive({
     read.csv2(input$dataFile$datapath,row.names=1)
   })
