@@ -13,6 +13,8 @@
 
 # Engineering
 
+golem::run_dev()
+
 ## Dependencies ----
 ## Amend DESCRIPTION with dependencies read from package code parsing
 ## install.package('attachment') # if needed.
