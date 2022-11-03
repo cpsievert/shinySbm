@@ -7,21 +7,20 @@
 app_server <- function(input, output, session) {
 
 
-  datasetread <- reactive({buildSbmMatrix(read.csv2(input$dataFile$datapath,row.names=1))
-  })
-
   datasetInput <- reactive({
-    if (input$whichData != "importData") {
-      data("fungusTreeNetwork")
+    if(input$whichData == 'importData'){
+      buildSbmMatrix(read.csv2(input$dataFile$datapath,row.names=1))
     }
-    switch(input$whichData,
-           "fungus_tree" = buildSbmMatrix(fungusTreeNetwork$fungus_tree),
-           "tree_tree" = buildSbmMatrix(fungusTreeNetwork$tree_tree),
-           "importData" = datasetread()
+    switch(input$dataBase,
+           "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree, col_names = sbm::fungusTreeNetwork$tree_names,
+                                          row_names = sbm::fungusTreeNetwork$fungus_names),
+           "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
+                                        row_names = sbm::fungusTreeNetwork$tree_names)
     )
   })
 
   output$matrixPlot <- renderDataTable({
-    datasetInput()$matrix
+    data_show <- as.data.frame(datasetInput())
+    cbind(NODES_NAMES = rownames(data_show), data_show)
   })
 }

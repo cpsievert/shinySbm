@@ -18,8 +18,8 @@ app_ui <- function(request) {
                      selected = 1, inline = T),
         conditionalPanel(
           condition = "input.whichData == 'sbmData'",
-          radioButtons("dataFile", "Which network ?",
-                       choices = list("Fungus & Trees" = "fungus_trees",
+          radioButtons("dataBase", "Which network ?",
+                       choices = list("Fungus & Trees" = "fungus_tree",
                                       "Trees & Trees" = "tree_tree"),
                        selected = 1)
         ),

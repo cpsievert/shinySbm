@@ -12,7 +12,7 @@
 #' 5 - The supposed density upon the data adjacency matrix.
 #'
 #' @noRd
-buildSbmMatrix <- function(obj, ...){
+buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
   if(is.sbmMatrix(obj)){
     message("obj is already an sbmMatrix")
     return(obj)
@@ -71,7 +71,13 @@ buildSbmMatrix <- function(obj, ...){
     }else{
       list_cov <- NULL
     }
-    my_sbm_object <- structure(list(matrix = matObj, nodes.names = list(col = col,row = row),
+    if(!is.null(col_names)){
+      col = as.character(col_names)
+    }
+    if(!is.null(row_names)){
+      row = as.character(row_names)
+    }
+    my_sbm_object <- structure(list(matrix = matObj, nodes_names = list(col = col,row = row),
                                     covar = list_cov, type = default.type, law = expected.law),class = "sbmMatrix")
     is.sbmMatrix(my_sbm_object,force_stop = T)
     return(my_sbm_object)
@@ -95,11 +101,11 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
       conforme <- rep(F,4)
       dimbase <- dim(my_sbm_object$matrix)
       conforme[1] <- is.matrix(my_sbm_object$matrix)
-      conforme[2] <- length(my_sbm_object$nodes.names$row)==dimbase[1] & length(my_sbm_object$nodes.names$col)==dimbase[2]
-      conforme[2] <- conforme[2] & is.character(my_sbm_object$nodes.names$row) &
-        is.character(my_sbm_object$nodes.names$col)
-      if(identical(my_sbm_object$nodes.names$col,character(0)) &
-         identical(my_sbm_object$nodes.names$row,character(0))){
+      conforme[2] <- length(my_sbm_object$nodes_names$row)==dimbase[1] & length(my_sbm_object$nodes_names$col)==dimbase[2]
+      conforme[2] <- conforme[2] & is.character(my_sbm_object$nodes_names$row) &
+        is.character(my_sbm_object$nodes_names$col)
+      if(identical(my_sbm_object$nodes_names$col,character(0)) &
+         identical(my_sbm_object$nodes_names$row,character(0))){
         if(force_stop){
           warning("You didn't give any nodes names.")
         }
@@ -172,8 +178,8 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
     }else if(x$type == 'bipartite'){
       cat("The network has",dimbase[1],"row nodes &",dimbase[2],"column nodes.")
     }
-    if(identical(x$nodes.names$col,character(0)) &
-       identical(x$nodes.names$row,character(0))){
+    if(identical(x$nodes_names$col,character(0)) &
+       identical(x$nodes_names$row,character(0))){
       cat(" The nodes names aren't registered.\n")
     }
     if(show_matrix){
@@ -198,6 +204,24 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
   }
 }
 
+#' as.data.frame.sbmMatrix
+#'
+#' @description as.data.frame method for sbmMatrix object
+#'
+#' @return a data.frame object that contain the values of the main matrix.
+#' If the is names in the sbmMatrix object they will be put as names in the dataframe.
+#'
+#' @noRd
+as.data.frame.sbmMatrix <- function(x, row.names = NULL, optional = FALSE, ...){
+  table <- data.frame(x$matrix)
+  if(identical(x$nodes_names$col,character(0)) &
+     identical(x$nodes_names$row,character(0))){
+    return(table)
+  }
+  names(table) <- x$nodes_names$col
+  row.names(table) <- x$nodes_names$row
+  return(table)
+}
 
 
 
