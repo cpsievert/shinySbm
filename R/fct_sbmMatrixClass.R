@@ -54,7 +54,7 @@ buildSbmMatrix <- function(obj, ...){
         return(is.matrix(x)|is.data.frame(x)&&all(dim(x)==dimbase)))
       if(length(which(!good_covar))!=0){
         list_cov <- list_cov[which(good_covar)]
-        warning("Covariable ",paste(paste0("n°",which(!good_covar)),collapse=', '),
+        warning("Covariable ",paste(paste0("n ",which(!good_covar)),collapse=', '),
                 " deleted because dimensions are wrong,\n  Covaribles should be data.frames or matrixes of the same dimention than the network matrix.")
       }
       if(length(which(good_covar))!=0){

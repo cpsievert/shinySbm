@@ -12,9 +12,23 @@ app_ui <- function(request) {
     h1("Stochastic Block Model with the sbm package"),
     sidebarLayout(
       sidebarPanel(
+        radioButtons("whichData", "Which data do you want to use ?",
+                     choices = list("My own data" = "importData",
+                                    "SBM exemple" = "sbmData"),
+                     selected = 1, inline = T),
+        conditionalPanel(
+          condition = "input.whichData == 'sbmData'",
+          radioButtons("dataFile", "Which network ?",
+                       choices = list("Fungus & Trees" = "fungus_trees",
+                                      "Trees & Trees" = "tree_tree"),
+                       selected = 1)
+        ),
+        conditionalPanel(
+          condition = "input.whichData == 'importData'",
           fileInput("dataFile", label = "Choose the file containing your adjency matrix",
                     buttonLabel = "Browse...",
                     placeholder = "No file selected")
+        )
       ),
       mainPanel(
         tabsetPanel(

@@ -6,11 +6,22 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
-  oldButton <- eventReactive(input$dataFile,{input$new})
+
   datasetread <- reactive({buildSbmMatrix(read.csv2(input$dataFile$datapath,row.names=1))
   })
 
+  datasetInput <- reactive({
+    if (input$whichData != "importData") {
+      data("fungusTreeNetwork")
+    }
+    switch(input$whichData,
+           "fungus_tree" = buildSbmMatrix(fungusTreeNetwork$fungus_tree),
+           "tree_tree" = buildSbmMatrix(fungusTreeNetwork$tree_tree),
+           "importData" = datasetread()
+    )
+  })
+
   output$matrixPlot <- renderDataTable({
-    datasetread()$matrix
+    datasetInput()$matrix
   })
 }
