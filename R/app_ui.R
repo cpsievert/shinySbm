@@ -12,13 +12,9 @@ app_ui <- function(request) {
     h1("Stochastic Block Model with the sbm package"),
     sidebarLayout(
       sidebarPanel(
-        actionButton('new',"Upload a new adjacency matrix"),
-        conditionalPanel(
-          condition = "input.new && oldButton != input.new",
           fileInput("dataFile", label = "Choose the file containing your adjency matrix",
                     buttonLabel = "Browse...",
                     placeholder = "No file selected")
-        )
       ),
       mainPanel(
         tabsetPanel(

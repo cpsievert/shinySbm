@@ -7,11 +7,10 @@
 app_server <- function(input, output, session) {
 
   oldButton <- eventReactive(input$dataFile,{input$new})
-  datasetread <- reactive({
-    read.csv2(input$dataFile$datapath,row.names=1)
+  datasetread <- reactive({buildSbmMatrix(read.csv2(input$dataFile$datapath,row.names=1))
   })
 
   output$matrixPlot <- renderDataTable({
-    datasetread()
+    datasetread()$matrix
   })
 }
