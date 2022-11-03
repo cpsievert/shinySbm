@@ -15,13 +15,13 @@ app_ui <- function(request) {
         radioButtons("whichData", "Which data do you want to use ?",
                      choices = list("My own data" = "importData",
                                     "SBM exemple" = "sbmData"),
-                     selected = 1, inline = T),
+                     inline = T, selected = character(0)),
         conditionalPanel(
           condition = "input.whichData == 'sbmData'",
           radioButtons("dataBase", "Which network ?",
                        choices = list("Fungus & Trees" = "fungus_tree",
                                       "Trees & Trees" = "tree_tree"),
-                       selected = 1)
+                       selected = character(0))
         ),
         conditionalPanel(
           condition = "input.whichData == 'importData'",
@@ -35,8 +35,18 @@ app_ui <- function(request) {
           tabPanel(
             "Raw Data",
             # outputCodeButton(plotOutput("matrixPlot")),
-            dataTableOutput("matrixPlot"),
-            downloadButton("downloadrawPlot", "Download Plot")
+            plotOutput("matrixPlot"),
+            h = "Settings for plot of the raw adjency matrix",
+            conditionalPanel(
+              condition = "interactiveTable",
+              textInput("rowLabel",
+                        label = "Specify the label for nodes in row",
+                        value = NULL),
+              textInput("colLabel",
+                        label = "Specify the label for nodes in col",
+                        value = NULL),
+              downloadButton("downloadrawPlot", "Download Plot")
+            )
           )
         )
       )
