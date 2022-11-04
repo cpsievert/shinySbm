@@ -4,6 +4,12 @@
 #' obj is the initial network matrix, and argument in ... are the covariables on the link between nodes
 #' ... argument should be named covariables on the interactions, so it's should be matrices of equal dimension than the network
 #'
+#' @param obj,...,Col_names,row_names
+#' `Obj` can be data.frame or a matrix
+#' `...` are covariables, they can be named or not : they should dataframes or matrixes of the same dimension than the network one
+#' `col_names` (respectively. `row.names`) should the node names in columns (resp. rows) of the network matrix
+#'
+#'
 #' @return the return value is a list of sbmMatrix class containing all the necessary information :
 #' 1 - The matrix of adjacency (class :  matrix)
 #' 2 - The row and col names : list of two character vectors containing the nodes names
@@ -92,7 +98,11 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
 #'
 #' @description A fct that analyse an supposed sbmMatrix and tell if it's correctly set.
 #'
-#' @return TRUE if the format is good, FALSE if not
+#' @param my_sbm_object,force_stop
+#' `my_sbm_object` is an sbmMatrix
+#' `force_stop` should the function set an error or a warning when there is a problem in the object
+#'
+#' @return `TRUE` if the format is good, `FALSE` if not
 #'
 #' @noRd
 is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
@@ -155,6 +165,13 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
 #'
 #' @description print method for sbmMatrix object
 #'
+#' @param x,show_matrix,resume_table,show_covar,...
+#' `x` an sbmMatrix
+#' `show_matrix` a boolean, should it show the matrix ?
+#' `resume_table` a boolean, should it shorten the matrices dimensions ? (5 columns and 10 lines)
+#' `show_covar` a boolean, should it show the covariable's matrices ?
+#' `...` form print `.Primitive`
+#'
 #' @return No Values returned
 #'
 #' @noRd
@@ -207,6 +224,10 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
 #' as.data.frame.sbmMatrix
 #'
 #' @description as.data.frame method for sbmMatrix object
+#'
+#' @param x,row.names,optional,...
+#' `x` is an sbmMatrix
+#' `row.names`,`Optional`,`...` are arguments of `data.frame.default`
 #'
 #' @return a data.frame object that contain the values of the main matrix.
 #' If the is names in the sbmMatrix object they will be put as names in the dataframe.
