@@ -10,6 +10,7 @@ Description: This package is made to allow a simpler use of the {sbm} R
 License: MIT + file LICENSE
 Imports: 
     config (>= 0.3.1),
+    DT,
     golem (>= 0.3.5),
     sbm,
     shiny (>= 1.7.2)
