@@ -21,9 +21,24 @@ app_server <- function(input, output, session) {
                                           row_names = sbm::fungusTreeNetwork$tree_names))
     }
   })
-  interactiveTable <- eventReactive(output$matrixPlot,{T})
+  output$matrixprint <- DT::renderDataTable({
+    DT::datatable(
+      as.data.frame(datasetInput()),
+      option = list(
+        # scroll :
+        scrollY = 500, scrollX = 500, scroller = TRUE,
+        lengthMenu = list(c(-1 ,50, 100),
+                          c('All', '50', '100')),
+        paging = T
+      )
+    )
+  })
+
+  window_height <- reactive({htmlwidgets::JS('window.innerHeight')})
+  window_width <- reactive({htmlwidgets::JS('window.innerWidth')})
+
   output$matrixPlot <- renderPlot({
     x <- datasetInput()$matrix
     sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
-  })
+  },height = 600 ,width = 600)
 }

@@ -28,17 +28,11 @@ app_ui <- function(request) {
           fileInput("dataFile", label = "Choose the file containing your adjency matrix",
                     buttonLabel = "Browse...",
                     placeholder = "No file selected")
-        )
-      ),
-      mainPanel(
-        tabsetPanel(
-          tabPanel(
-            "Raw Data",
-            # outputCodeButton(plotOutput("matrixPlot")),
-            plotOutput("matrixPlot"),
-            h = "Settings for plot of the raw adjency matrix",
-            conditionalPanel(
-              condition = "interactiveTable",
+        ),
+        conditionalPanel(
+          condition = "input.main_tab == 'tab_plot'",
+          wellPanel(
+            fluidRow(
               textInput("rowLabel",
                         label = "Specify the label for nodes in row",
                         value = NULL),
@@ -47,6 +41,24 @@ app_ui <- function(request) {
                         value = NULL),
               downloadButton("downloadrawPlot", "Download Plot")
             )
+          )
+        )
+      ),
+      mainPanel(
+        tabsetPanel(
+          id = 'main_tab',
+          tabPanel(
+            "Raw Data",value = 'tab_raw',
+            # outputCodeButton(plotOutput("matrixPlot")),
+            DT::dataTableOutput("matrixprint")),
+
+          tabPanel(
+            "Plot Data",value = 'tab_plot',
+            # outputCodeButton(plotOutput("matrixPlot")),
+            fluidRow(
+              id = "myplotrow",
+              plotOutput("matrixPlot")
+              )
           )
         )
       )
