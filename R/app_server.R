@@ -34,9 +34,6 @@ app_server <- function(input, output, session) {
     )
   })
 
-  window_height <- reactive({htmlwidgets::JS('window.innerHeight')})
-  window_width <- reactive({htmlwidgets::JS('window.innerWidth')})
-
   output$matrixPlot <- renderPlot({
     x <- datasetInput()$matrix
     sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
