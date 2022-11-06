@@ -10,56 +10,71 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     h1("Stochastic Block Model with the sbm package"),
-    sidebarLayout(
-      sidebarPanel(
-        radioButtons("whichData", "Which data do you want to use ?",
-                     choices = list("My own data" = "importData",
-                                    "SBM exemple" = "sbmData"),
-                     inline = T, selected = character(0)),
-        conditionalPanel(
-          condition = "input.whichData == 'sbmData'",
-          radioButtons("dataBase", "Which network ?",
-                       choices = list("Fungus & Trees" = "fungus_tree",
-                                      "Trees & Trees" = "tree_tree"),
-                       selected = character(0))
-        ),
-        conditionalPanel(
-          condition = "input.whichData == 'importData'",
-          fileInput("dataFile", label = "Choose the file containing your adjency matrix",
-                    buttonLabel = "Browse...",
-                    placeholder = "No file selected")
-        ),
-        conditionalPanel(
-          condition = "input.main_tab == 'tab_plot'",
-          wellPanel(
-            fluidRow(
-              textInput("rowLabel",
-                        label = "Specify the label for nodes in row",
-                        value = NULL),
-              textInput("colLabel",
-                        label = "Specify the label for nodes in col",
-                        value = NULL),
-              downloadButton("downloadrawPlot", "Download Plot")
-            )
-          )
-        )
-      ),
-      mainPanel(
-        tabsetPanel(
-          id = 'main_tab',
-          tabPanel(
-            "Raw Data",value = 'tab_raw',
-            # outputCodeButton(plotOutput("matrixPlot")),
-            DT::dataTableOutput("matrixprint")),
+    mainPanel(
+      tabsetPanel(
+        id = 'main_tab',
 
-          tabPanel(
-            "Plot Data",value = 'tab_plot',
-            # outputCodeButton(plotOutput("matrixPlot")),
-            fluidRow(
-              id = "myplotrow",
-              plotOutput("matrixPlot")
-              )
-          )
+        tabPanel("Data uploading", value = 'tab_upload',
+                 #IMPORTATION
+                 # Probleme : dev les moyens de lecture du tableau comme dans blockmodelingGUI
+                 # introduction des covariables
+                 sidebarLayout(
+                   sidebarPanel(width = 8,
+                     radioButtons("whichData", "Which data do you want to use ?",
+                                  choices = list("My own data" = "importData",
+                                                 "SBM exemple" = "sbmData"),
+                                  inline = T, selected = character(0)),
+                     conditionalPanel(
+                       condition = "input.whichData == 'sbmData'",
+                       radioButtons("dataBase", "Which network ?",
+                                    choices = list("Fungus & Trees" = "fungus_tree",
+                                                   "Trees & Trees" = "tree_tree"),
+                                    selected = character(0))
+                     ),
+                     conditionalPanel(
+                       condition = "input.whichData == 'importData'",
+                       fileInput("dataFile", label = "Choose the file containing your adjency matrix",
+                                 buttonLabel = "Browse...",
+                                 placeholder = "No file selected")
+                     )
+                   ),
+
+                   mainPanel(
+                   )
+                 )
+        ),
+
+        tabPanel("Raw Data",value = 'tab_show',
+                 # RAW DATA SHOW
+                 sidebarLayout(
+                   sidebarPanel(width = 5,
+                     radioButtons("whichshow", "Type of visualisation",
+                                  choices = list("Print" = "print",
+                                                 "Simple Plot" = "simpleplot",
+                                                 "Plot with nodes names" = "namedplot"),
+                                  selected = character(0)),
+                     conditionalPanel(
+                       condition = "input.whichshow == 'simpleplot'",
+                       wellPanel(
+                         fluidRow(
+                           textInput("rowLabel",
+                                     label = "Specify the label for nodes in row",
+                                     value = NULL),
+                           textInput("colLabel",
+                                     label = "Specify the label for nodes in col",
+                                     value = NULL),
+                           downloadButton("downloadrawPlot", "Download Plot")
+                         )
+                       )
+                     )
+                   ),
+
+                   mainPanel(
+                     DT::dataTableOutput("matrixprint"),
+                     plotOutput("matrixplot"),
+                     plotOutput("matrixplot2")
+                   )
+                 )
         )
       )
     )
