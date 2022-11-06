@@ -2,7 +2,11 @@
 
 What I want to add :
 
+<<<<<<< HEAD
 1.  All this tabset :
+=======
+1.   All this tabset :
+>>>>>>> 0cb2cac1c2d2c6e1b6aa99c0c3078611d477399a
 
     -   A tabset for data uploading
 
@@ -26,7 +30,11 @@ What I want to add :
 
         \|plot parameters\|(bigger panel) the plot\|saving the plot option\|
 
+<<<<<<< HEAD
 2.  For all those tabset :
+=======
+2.   For all those tabset :
+>>>>>>> 0cb2cac1c2d2c6e1b6aa99c0c3078611d477399a
 
     I want to put a verbatim windows to show the print and other message shown by s3 sbmMatrix managment
 
