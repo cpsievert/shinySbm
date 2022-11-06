@@ -102,3 +102,15 @@ rstudioapi::navigateToFile("dev/03_deploy.R")
 # x <- igraph::graph.adjacency(adjmatrix = UniTable$matrix, add.rownames = TRUE)
 # igraph::plot.igraph(x)
 
+
+# je suppose que c'est une interface de chargement
+#   add_busy_spinner(
+# spin = 'breeding-rhombus',
+# color = '#978E83',
+# timeout = 100,
+# position = 'top-right',
+# onstart = TRUE,
+# margins = c(10, 10)
+# ),
+
+
