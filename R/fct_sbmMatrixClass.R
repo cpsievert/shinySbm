@@ -227,7 +227,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
 #'
 #' @param x,row.names,optional,...
 #' `x` is an sbmMatrix
-#' `row.names`,`Optional`,`...` are arguments of `data.frame.default`
+#' `row.names`,`Optional`,`...` are arguments of `as.data.frame.default`
 #'
 #' @return a data.frame object that contain the values of the main matrix.
 #' If the is names in the sbmMatrix object they will be put as names in the dataframe.
@@ -235,14 +235,35 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
 #' @noRd
 as.data.frame.sbmMatrix <- function(x, row.names = NULL, optional = FALSE, ...){
   table <- data.frame(x$matrix)
-  if(identical(x$nodes_names$col,character(0)) &
-     identical(x$nodes_names$row,character(0))){
-    return(table)
+  if(!identical(x$nodes_names$col,character(0))){
+    names(table) <- x$nodes_names$col
   }
-  names(table) <- x$nodes_names$col
-  row.names(table) <- x$nodes_names$row
+  if(!identical(x$nodes_names$row,character(0))){
+    row.names(table) <- x$nodes_names$row
+  }
   return(table)
 }
 
-
+#' as.matrix.sbmMatrix
+#'
+#' @description as.matrix method for sbmMatrix object
+#'
+#' @param x,...
+#' `x` is an sbmMatrix
+#' `...` is an arguments of `as.matrix.default`
+#'
+#' @return a matrix object that contain the values of the main matrix.
+#' If the is names in the sbmMatrix object they will be put as names in the dataframe.
+#'
+#' @noRd
+as.matrix.sbmMatrix <- function(x, ...){
+  matrix <- x$matrix
+  if(!identical(x$nodes_names$col,character(0))){
+    colnames(matrix) <- x$nodes_names$col
+  }
+  if(!identical(x$nodes_names$row,character(0))){
+    rownames(matrix) <- x$nodes_names$row
+  }
+  return(matrix)
+}
 
