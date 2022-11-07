@@ -46,7 +46,7 @@ app_server <- function(input, output, session) {
     if(input$whichshow != 'simpleplot'){return(NULL)}
     x <- datasetInput()$matrix
     sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
-  }#,height = 600 ,width = 600
+  },height = 600 ,width = 600
   )
 
   output$matrixplot2 <- renderPlot({
@@ -55,8 +55,8 @@ app_server <- function(input, output, session) {
     # (meme une fois la matrice organisee)
     req(input$whichshow)
     if(input$whichshow != 'namedplot'){return(NULL)}
-    x <- datasetInput()$matrix
-    blockmodeling::plotMat(x)
-  }#,height = 600 ,width = 600
+    x <- as.matrix(datasetInput())
+    blockmodeling::plotMat(x = x, print.legend = F,main="")
+  },height = 600 ,width = 600
   )
 }
