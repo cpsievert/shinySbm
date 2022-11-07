@@ -35,7 +35,9 @@ app_ui <- function(request) {
                        condition = "input.whichData == 'importData'",
                        fileInput("dataFile", label = "Choose the file containing your adjency matrix",
                                  buttonLabel = "Browse...",
-                                 placeholder = "No file selected")
+                                 placeholder = "No file selected",
+                                 multiple = F,
+                                 accept = c("text/plain", ".csv",".tab","xls","xlsx"))
                      )
                    ),
 
