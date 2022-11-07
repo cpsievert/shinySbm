@@ -13,7 +13,7 @@ app_ui <- function(request) {
     mainPanel(
       tabsetPanel(
         id = 'main_tab',
-
+        type = 'pills',
         tabPanel("Data uploading", value = 'tab_upload',
                  #IMPORTATION
                  # Probleme : dev les moyens de lecture du tableau comme dans blockmodelingGUI
@@ -40,6 +40,16 @@ app_ui <- function(request) {
                    ),
 
                    mainPanel(
+                     fluidRow(
+                       radioButtons("whichsep", "What kind of separator should I use ?",
+                                    choices = list("tabulation" = "tab",
+                                                   "comma" = "comma",
+                                                   "semi-colon" = "semicolon"),
+                                    inline = T, selected = character(0))
+                     ),
+                     fluidRow(
+                       verbatimTextOutput("summary")
+                     )
                    )
                  )
         ),
@@ -50,8 +60,8 @@ app_ui <- function(request) {
                    sidebarPanel(width = 5,
                      radioButtons("whichshow", "Type of visualisation",
                                   choices = list("Print" = "print",
-                                                 "Simple Plot" = "simpleplot",
-                                                 "Plot with nodes names" = "namedplot"),
+                                                 "Plot" = "simpleplot",
+                                                 "Plot (nodes names)" = "namedplot"),
                                   selected = character(0)),
                      conditionalPanel(
                        condition = "input.whichshow == 'simpleplot'",
