@@ -113,4 +113,4 @@ rstudioapi::navigateToFile("dev/03_deploy.R")
 # margins = c(10, 10)
 # ),
 
-
+# install.packages('shinyiueditor')
