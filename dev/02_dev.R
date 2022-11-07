@@ -113,4 +113,8 @@ rstudioapi::navigateToFile("dev/03_deploy.R")
 # margins = c(10, 10)
 # ),
 
-# install.packages('shinyiueditor')
+# install.packages("remotes")
+# remotes::install_github("rstudio/shinyuieditor")
+
+# shinyuieditor::launch_editor(app_loc = "new-app/") nouvelle app
+# shinyuieditor::launch_editor(app_loc = "existing-app/")
