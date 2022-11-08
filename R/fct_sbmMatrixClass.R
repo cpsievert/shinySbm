@@ -4,7 +4,7 @@
 #' obj is the initial network matrix, and argument in ... are the covariables on the link between nodes
 #' ... argument should be named covariables on the interactions, so it's should be matrices of equal dimension than the network
 #'
-#' @param obj,...,Col_names,row_names
+#' @param obj,...,Col_names=NULL,row_names=NULL
 #' `Obj` can be data.frame or a matrix
 #' `...` are covariables, they can be named or not : they should dataframes or matrixes of the same dimension than the network one
 #' `col_names` (respectively. `row.names`) should the node names in columns (resp. rows) of the network matrix
@@ -98,7 +98,7 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
 #'
 #' @description A fct that analyse an supposed sbmMatrix and tell if it's correctly set.
 #'
-#' @param my_sbm_object,force_stop
+#' @param my_sbm_object,force_stop=FALSE
 #' `my_sbm_object` is an sbmMatrix
 #' `force_stop` should the function set an error or a warning when there is a problem in the object
 #'
@@ -165,7 +165,7 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
 #'
 #' @description print method for sbmMatrix object
 #'
-#' @param x,show_matrix,resume_table,show_covar,...
+#' @param x,show_matrix=TRUE,resume_table=TRUE,show_covar=FALSE,...
 #' `x` an sbmMatrix
 #' `show_matrix` a boolean, should it show the matrix ?
 #' `resume_table` a boolean, should it shorten the matrices dimensions ? (5 columns and 10 lines)
@@ -233,7 +233,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
 #'
 #' @description as.data.frame method for sbmMatrix object
 #'
-#' @param x,row.names,optional,...
+#' @param x,row.names=NULL,optional=FALSE,...
 #' `x` is an sbmMatrix
 #' `row.names`,`Optional`,`...` are arguments of `as.data.frame.default`
 #'
@@ -289,20 +289,124 @@ dim.sbmMatrix <- function(x){
   return(dim(x$matrix))
 }
 
-#' cov
+
+
+#' addindice
 #'
-#' @description return out the covariables of an sbmMatrix
+#' @description it's a function that add an numeric index to a character name if it's in the character list
 #'
-#' @param x is an sbmMatrix
+#' @param list,name,n=1
+#' `list` is a character vector
+#' `name` is character
+#' `n` is argument used for recurcive action you would better not use it.
 #'
-#' @return the list of covariables in x
+#' @return `name` or if it's already in `list` the first of `nameX` (`name1`, `name2`, etc...) that is not already in the list
 #'
 #' @noRd
-cov <- function(x){
-  if(is.sbmMatrix(x)){
+addindice <- function(list, name, n = 1){
+  if(name %in% list){
+    name_new <- paste0(name,n)
+    if(name_new %in% list){
+      n_new <- n+1
+      return(addindice(list,name,n = n_new))
+    }else{
+      return(name_new)
+    }
+  }else{
+    return(name)
+  }
+}
+
+
+#' covar
+#'
+#' @description show the covariable of an sbmMatrix
+#'
+#' @param x
+#' `x` is an sbmMatrix
+#'
+#' @return the covariable in `x$matrix`
+#'
+#' @noRd
+covar <- function(x){
+  if(is.sbmMatrix(x,force_stop = T)){
     return(x$covar)
   }
-  stop("x isn't an sbmMatrix.\n Check the problem with is.sbmMatrix(x, force_stop = T)")
+}
+
+
+#' covar<-
+#'
+#' @description covariable assignement generic
+#'
+#' @param x,value,name=NULL
+#' `x` is an sbmMatrix
+#' `value` is a new covariable
+#' `name` is the assigned name of the new covariable is untouched it will be `"covarn"` with n the position
+#'
+#' @return if x is an sbmMatrix then it call covar<-.sbmMatrix, if not covar<-.default
+#'
+#' @example
+#' `covar(my_sbm_object, name = 'new_covar_name') <- new_covar_matrix`
+#'
+#'
+#' @noRd
+"covar<-" <- function(x, value, name = NULL){
+  UseMethod("covar<-", object = x)
+}
+
+
+#' covar<-.default
+#'
+#' @description covariable assignement default method
+#'
+#' @param x,value,name=NULL
+#' `x` is an sbmMatrix
+#' `value` is a new covariable
+#' `name` is the assigned name of the new covariable is untouched it will be `"covarn"` with n the position
+#'
+#' @return error because x should be an sbmMatrix
+#'
+#' @example
+#' `covar(my_sbm_object, name = 'new_covar_name') <- new_covar_matrix`
+#'
+#'
+#' @noRd
+"covar<-.default" <- function(x,value, name = NULL){
+  stop("x should be an sbmMatrix")
+}
+
+
+
+#' covar<-.sbmMatrix
+#'
+#' @description covariable assignement sbmMatrix method
+#'
+#' @param x,value,name=NULL
+#' `x` is an sbmMatrix
+#' `value` is a new covariable
+#' `name` is the assigned name of the new covariable is untouched it will be `"covarn"` with n the position
+#'
+#' @return assign the new covariable in value to the x$covar list
+#'
+#' @example
+#' `covar(my_sbm_object, name = 'new_covar_name') <- new_covar_matrix`
+#'
+#'
+#' @noRd
+"covar<-.sbmMatrix" <- function(x, value, name = NULL){
+  if(is.data.frame(value) | is.matrix(value)){
+    if(all(dim(x)==dim(value))){
+      x$covar <- append(x$covar,list(as.matrix(value)))
+      n <- length(x$covar)
+      names(x$covar)[[n]] <- ifelse(is.null(name),paste0('covar',n),addindice(names(x$covar),name))
+      x
+    }else{
+      stop("value has not the same dimension than x")
+    }
+  }else{
+    stop("value should be a data.frame or a matrix")
+  }
 }
 
 
