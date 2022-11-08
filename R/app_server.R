@@ -32,7 +32,7 @@ app_server <- function(input, output, session) {
       class = 'nowrap',
       option = list(
         # scroll :
-        scrollY = 700, scrollX = 700, scroller = TRUE,
+        scroller = TRUE,
         lengthMenu = list(c(-1 ,50, 100),
                           c('All', '50', '100')),
         paging = T
@@ -40,23 +40,43 @@ app_server <- function(input, output, session) {
     )
   })
 
-  output$matrixplot <- renderPlot({
+  Plot <- reactive({
     # probleme : taille et position,
     req(input$whichshow)
-    if(input$whichshow != 'simpleplot'){return(NULL)}
-    x <- datasetInput()$matrix
-    sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
-  },height = 600 ,width = 600
-  )
+    if(input$whichshow == 'plot'){
+      x <- datasetInput()$matrix
+      sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
+    }else{
+      return(NULL)
+    }
+  })
 
-  output$matrixplot2 <- renderPlot({
-  # probleme : taille et position, introduce les noms de colonnes etc ...
-    # voir si la fonction plotMat est adaptable pour conserver les noms de colonnes
-    # (meme une fois la matrice organisee)
-    req(input$whichshow)
-    if(input$whichshow != 'namedplot'){return(NULL)}
-    x <- as.matrix(datasetInput())
-    blockmodeling::plotMat(x = x, print.legend = F,main="")
-  },height = 600 ,width = 600
-  )
+  output$matrixplot <- renderImage({
+    # Read myImage's width and height. These are reactive values, so this
+    # expression will re-run whenever they change.
+    width  <- session$clientData$output_matrixplot_width
+    height <- session$clientData$output_matrixplot_height
+
+    # For high-res displays, this will be greater than 1
+    pixelratio <- session$clientData$pixelratio
+
+    # A temp file to save the output.
+    outfile <- tempfile(fileext='.png')
+
+    # Generate the image file
+    png(outfile, width = width*pixelratio, height = height*pixelratio,
+        res = 50*pixelratio)
+    plot(Plot())
+    dev.off()
+
+    # Return a list containing the filename
+    list(src = outfile,
+         width = width,
+         height = height,
+         alt = "This is alternate text")
+  }, deleteFile = TRUE)
+
+
+
+
 }
