@@ -19,7 +19,7 @@ app_ui <- function(request) {
                  # Probleme : dev les moyens de lecture du tableau comme dans blockmodelingGUI
                  # introduction des covariables
                  sidebarLayout(
-                   sidebarPanel(width = 8,
+                   sidebarPanel(width = 5,
                      radioButtons("whichData", "Which data do you want to use ?",
                                   choices = list("My own data" = "importData",
                                                  "SBM exemple" = "sbmData"),
@@ -41,7 +41,7 @@ app_ui <- function(request) {
                      )
                    ),
 
-                   mainPanel(
+                   mainPanel(width = 7,
                      fluidRow(
                        radioButtons("whichsep", "What kind of separator should I use ?",
                                     choices = list("tabulation" = "tab",
@@ -59,7 +59,7 @@ app_ui <- function(request) {
         tabPanel("Raw Data",value = 'tab_show',
                  # RAW DATA SHOW
                  sidebarLayout(
-                   sidebarPanel(width = 5,
+                   sidebarPanel(width = 3,
                      radioButtons("whichshow", "Type of visualisation",
                                   choices = list("Print" = "print",
                                                  "Plot" = "simpleplot",
@@ -81,7 +81,7 @@ app_ui <- function(request) {
                      )
                    ),
 
-                   mainPanel(
+                   mainPanel(width = 9,
                      DT::dataTableOutput("matrixprint"),
                      plotOutput("matrixplot"),
                      plotOutput("matrixplot2")
