@@ -109,7 +109,7 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
   if(any(class(my_sbm_object)=='sbmMatrix')){
     if(is.list(my_sbm_object)){
       conforme <- rep(F,4)
-      dimbase <- dim(my_sbm_object$matrix)
+      dimbase <- dim(my_sbm_object)
       conforme[1] <- is.matrix(my_sbm_object$matrix)
       conforme[2] <- length(my_sbm_object$nodes_names$row)==dimbase[1] & length(my_sbm_object$nodes_names$col)==dimbase[2]
       conforme[2] <- conforme[2] & is.character(my_sbm_object$nodes_names$row) &
@@ -176,10 +176,18 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
 #'
 #' @noRd
 print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F,...){
-  dimbase <- dim(x$matrix)
+  dimbase <- dim(x)
   if(resume_table){
-    index_row <- 1:10
-    index_col <- 1:5
+    if(dimbase[1]>10){
+      index_row <- 1:10
+    }else{
+      index_row <- 1:dimbase[1]
+    }
+    if(dimbase[2]>5){
+      index_col <- 1:5
+    }else{
+      index_col <- 1:dimbase[2]
+    }
   }else{
     index_row <- 1:dimbase[1]
     index_col <- 1:dimbase[2]
@@ -266,4 +274,35 @@ as.matrix.sbmMatrix <- function(x, ...){
   }
   return(matrix)
 }
+
+
+#' dim.sbmMatrix
+#'
+#' @description dim method for sbmMatrix object
+#'
+#' @param x is an sbmMatrix
+#'
+#' @return The dimension of the network matrix
+#'
+#' @noRd
+dim.sbmMatrix <- function(x){
+  return(dim(x$matrix))
+}
+
+#' cov
+#'
+#' @description return out the covariables of an sbmMatrix
+#'
+#' @param x is an sbmMatrix
+#'
+#' @return the list of covariables in x
+#'
+#' @noRd
+cov <- function(x){
+  if(is.sbmMatrix(x)){
+    return(x$covar)
+  }
+  stop("x isn't an sbmMatrix.\n Check the problem with is.sbmMatrix(x, force_stop = T)")
+}
+
 
