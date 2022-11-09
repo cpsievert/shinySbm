@@ -46,10 +46,9 @@ app_server <- function(input, output, session) {
     })
 
   Plot <- reactive({
-    # probleme : taille et position,
     req(input$whichShow)
     if(input$whichShow == 'plot'){
-      x <- datasetUploaded()$matrix
+      x <- as.matrix(datasetUploaded())
       sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
     }else{
       return(NULL)
@@ -81,7 +80,15 @@ app_server <- function(input, output, session) {
          alt = "This is alternate text")
   }, deleteFile = TRUE)
 
-  output$showILC <- renderPlot({plot(1:50+rnorm(50))})
+
+
+  microplot <- eventReactive(c(input$NbGroup1,input$NbGroup2,input$NbGroup3),{return(plot(1:50+rnorm(50)))})
+
+
+  output$showILC1 <- renderPlot({microplot()})
+  output$showILC2 <- renderPlot({microplot()})
+  output$showILC3 <- renderPlot({microplot()})
+
 
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {

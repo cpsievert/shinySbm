@@ -104,28 +104,24 @@ app_ui <- function(request) {
                                a(strong("Visualisation settings")),
                                wellPanel(
                                  radioButtons("whichShow", "Type of visualisation",
-                                              choices = list("Print" = "print",
-                                                             "Plot" = "plot"),
-                                              inline  = T, selected = 'print'),
+                                              choices = list("print" = 'print',
+                                                             "plot" = 'plot'),
+                                              inline  = T),
                                  conditionalPanel(
                                    condition = "TRUE",
-                                   radioButtons("whichRawSbm", "Select Ploted Matrix",
+                                   radioButtons("whichRawSbmMatrix", "Select Ploted Matrix",
                                                 choices = list("Raw Matrix" = "raw",
                                                                "Reordered Matrix" = "reordered"),
-                                                inline = T, selected = 'raw')),
+                                                inline = T)),
                                  conditionalPanel(
                                    condition = "TRUE",
-                                   sliderInput(inputId = "NbGroup",
+                                   sliderInput(inputId = "NbGroup1",
                                                label = "Select the number of group:",
                                                value = 4, min = 1, max = 6,step=1),
-                                   plotOutput("showILC")),
+                                   plotOutput("showILC1")),
+                                 br(),
                                  conditionalPanel(
-                                   condition = "input.whichShow == 'print'",
-                                   wellPanel(
-                                     fluidRow(
-                                       downloadButton("downloadTable", "Download Table")))),
-                                 conditionalPanel(
-                                   condition = "input.whichShow == 'plot' || input.whichShow == 'plotSimp'",
+                                   condition = "input.whichShow = 'print'",
                                    wellPanel(
                                      fluidRow(
                                        textInput("rowLabel",
@@ -133,18 +129,18 @@ app_ui <- function(request) {
                                                  value = NULL),
                                        textInput("colLabel",
                                                  label = "Specify the label for nodes in col",
-                                                 value = NULL),
-                                       downloadButton("downloadPlot", "Download Plot")))))),
+                                                 value = NULL)))),
+                                 br(),
+                                 downloadButton("downloadPlot"))),
 
                         column(width = 1),
-
                         column(width = 6,
                                a(strong("Plot screen")),
                                conditionalPanel(
                                  condition = "input.whichShow == 'print'",
                                  DT::dataTableOutput("matrixPrint")),
                                conditionalPanel(
-                                 condition = "input.whichShow == 'plot' || input.whichShow == 'plotSimp'",
+                                 condition = "input.whichShow != 'print'",
                                  imageOutput("matrixPlot")))),
 
 
@@ -152,16 +148,66 @@ app_ui <- function(request) {
                tabPanel(
                  "SBM application",value = 'tab_sbm',
 
-                 column(width = 3),
-                 column(width = 9)),
+                 column(width = 3,
+                        a(strong("SBM settings")),
+                        wellPanel(
+                          selectInput("whichLaw",
+                                      label = "What is the density expected upon dataset ?",
+                                      choices = list("Bernoulli" = "bernoulli",
+                                                     "Poisson" = "poisson",
+                                                     "Gaussian" = "gaussian"),
+                                      selected = NULL),
+                          selectInput("whichCovar",
+                                      label = "Add covariable to the SBM:",
+                                      choices = list("None" = "NULL")),
+                          actionButton("runSbm", "Run SBM"))),
+                 column(width = 1),
+                 column(width = 8,
+                        a(strong("SBM ouputs")),
+                        wellPanel(
+                          fluidRow(
+                            column(width = 6,
+                                   strong("SBM code:"),
+                                   textOutput("sbmCode"),
+                                   hr(),
+                                   strong("SBM summary:"),
+                                   verbatimTextOutput("sbmSummary")),
+
+                            column(width = 6,
+                                   sliderInput(inputId = "NbGroup2",
+                                               label = "Select the number of group:",
+                                               value = 4, min = 1, max = 6,step=1),
+                                   plotOutput("showILC2"))
+                          )))),
 
 
                ### NETWORK VISUALISATION
                tabPanel(
                  "Network Visualisation",value = 'tab_network',
 
-                 column(width = 3),
-                 column(width = 9))))
+                 column(width = 3,
+                        a(strong("Visualisation settings")),
+                        wellPanel(
+                          conditionalPanel(
+                            condition = "TRUE",
+                            radioButtons("whichRawSbmNetwork", "Select Ploted Network:",
+                                         choices = list("Raw Network" = "raw",
+                                                        "Reordered Network" = "reordered"),
+                                         inline = T)),
+                          conditionalPanel(
+                            condition = "TRUE",
+                            sliderInput(inputId = "NbGroup3",
+                                        label = "Select the number of group:",
+                                        value = 4, min = 1, max = 6,step=1),
+                            plotOutput("showILC3")),
+                          br(),
+                          downloadButton("downloadNetworkPlot"))),
+
+                 column(width = 1),
+                 column(width = 8,
+                        a(strong("Network Visual")),
+                        imageOutput("networkPlot"),
+                        verbatimTextOutput("seeobjects")))))
   }
 
 #' Add external Resources to the Application
