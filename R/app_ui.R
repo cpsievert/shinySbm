@@ -22,10 +22,9 @@ app_ui <- function(request) {
 
                         ## Selector
                         column(width = 3,
-                               wellPanel(
-                                   a("Select your network data set:"),
-                                   h6("* should be a adjadency matrix"),
-                                   br(),
+                               fluidRow(a(strong("Network data set selector:"))),
+                               fluidRow(
+                                 wellPanel(
                                    radioButtons("whichData", "Which data do you want to use ?",
                                                 choices = list("My own data" = "importData",
                                                                "SBM exemple" = "sbmData"),
@@ -38,73 +37,89 @@ app_ui <- function(request) {
                                                   selected = character(0))),
                                    conditionalPanel(
                                      condition = "input.whichData == 'importData'",
-                                     fileInput("dataFile", label = "Choose the file containing your adjency matrix",
+                                     fileInput("mainDataFile", label = "Choose the file containing your adjency matrix",
                                                buttonLabel = "Browse...",
                                                placeholder = "No file selected",
                                                multiple = F,
                                                accept = c("text/plain", ".csv",".tab","xls","xlsx")),
-                                   actionButton(inputId = "main_selector", label = "Select file"))),
+                                     actionButton(inputId = "mainDataSelector", label = "Select file")),
+                                   h6("* should be a adjadency matrix"))),
 
-                               wellPanel(
+
                                  conditionalPanel(
-                                   condition = "isdatasetselected == TRUE",
-                                   a("Select a covar:"),
-                                   h6("* should be a adjadency matrix"),
-                                   h6("* same size than the network matrix"),
-                                   h6("* covariable on the interactions between nodes"),
-                                   br(),
-                                   fileInput("dataFile", label = "Choose the file containing your adjency matrix",
-                                             buttonLabel = "Browse...",
-                                             placeholder = "No file selected",
-                                             multiple = F,
-                                             accept = c("text/plain", ".csv",".tab","xls","xlsx")),
-                                   actionButton(inputId = "covar_selector", label = "Select file")))),
+                                   condition = "input.mainDataSelector",
+                                   fluidRow(a(strong("Covariable data set selector:"))),
+                                   fluidRow(
+                                     wellPanel(fileInput("covarDataFile", label = "Choose the file containing your covariable",
+                                                         buttonLabel = "Browse...",
+                                                         placeholder = "No file selected",
+                                                         multiple = F,
+                                                         accept = c("text/plain", ".csv",".tab","xls","xlsx")),
+                                               actionButton(inputId = "covarDataSelector", label = "Select file"),
+                                               h6("* should be a adjadency matrix"),
+                                               h6("* same size than the network matrix"),
+                                               h6("* covariable on the interactions between nodes"))))),
 
 
                         ## Reader
                         column(width = 9,
-                               fluidRow(a("Data Reader")),
-                               wellPanel(
-                                 fluidRow(
-                                   column(width = 5,
-                                          radioButtons("whichsep", "What kind of separator should I use ?",
-                                                       choices = list("tabulation" = "|",
+                               fluidRow(a(strong("Data Reader"))),
+                               fluidRow(
+                                 column(width = 5,
+                                        wellPanel(
+                                          radioButtons("whichSep", "What kind of separator should I use ?",
+                                                       choices = list("semicolon" = ";",
+                                                                      "tabulation" = "|",
                                                                       "coma" = ",",
-                                                                      "semicolon" = ";",
-                                                                      "Others" = "others"),
-                                                       selected = character(0)),
+                                                                      "others" = "others"),
+                                                       selected = "semicolon"),
                                           conditionalPanel(
-                                            condition = "input.whichsep == 'others'",
-                                                textInput("whichsep_other",
-                                                          label = "Write your sep character :",
-                                                          value = NULL))),
-                                   column(width = 5,
-                                          radioButtons("networktype", "What kind of network it is ?",
+                                            condition = "input.whichSep == 'others'",
+                                            textInput("whichSep_other",
+                                                      label = "Write your sep character :",
+                                                      value = NULL)))),
+                                 column(width = 5,
+                                        wellPanel(
+                                          radioButtons("networkType", "What kind of network it is ?",
                                                        choices = list("Unipartite" = "unipartite",
                                                                       "Bipartite" = "bipartite"),
-                                                       inline = T ,selected = character(0))),
-                                   column(width = 2,
+                                                       inline = T ,selected = character(0)))),
+                                 column(width = 2,
+                                        wellPanel(
+                                          strong("Matrix Uploader"),
                                           conditionalPanel(
-                                            condition = "input.main_selector",
-                                            actionButton(inputId = "main_uploader", label = "Upload Matrix")),
+                                            condition = "input.mainDataSelector",
+                                            actionButton(inputId = "mainDataUploader", label = "Upload Matrix")),
                                           conditionalPanel(
-                                            condition = "input.covar_selector",
-                                            actionButton(inputId = "covar_uploader", label = "Upload covar"))))),
+                                            condition = "input.covarDataSelector",
+                                            actionButton(inputId = "covarDataUploader", label = "Upload covar"))))),
                                fluidRow(
-                                 a("Importation Information"),
-                                 verbatimTextOutput("summary")))),
+                                 a(strong("Importation Information")),
+                                 verbatimTextOutput("summaryDataImport")))),
 
                ### DATA SHOW
                tabPanel("Table Visualisation",value = 'tab_show',
 
                         sidebarLayout(
                           sidebarPanel(width = 3,
-                                       radioButtons("whichshow", "Type of visualisation",
+                                       radioButtons("whichShow", "Type of visualisation",
                                                     choices = list("Print" = "print",
                                                                    "Plot" = "plot"),
-                                                    selected = 'print'),
+                                                    inline  = T, selected = 'print'),
                                        conditionalPanel(
-                                         condition = "input.whichshow == 'plot'",
+                                         condition = "TRUE",
+                                         radioButtons("whichRawSbm", "Select Ploted Matrix",
+                                                      choices = list("Raw Matrix" = "raw",
+                                                                     "Reordered Matrix" = "reordered"),
+                                                      inline = T, selected = 'raw')),
+                                       conditionalPanel(
+                                         condition = "TRUE",
+                                         sliderInput(inputId = "NbGroup",
+                                                     label = "Select the number of group:",
+                                                     value = 4, min = 1, max = 6,step=1),
+                                         plotOutput("showILC")),
+                                       conditionalPanel(
+                                         condition = "input.whichShow == 'plot' || input.whichShow == 'plotSimp'",
                                          wellPanel(
                                            fluidRow(
                                              textInput("rowLabel",
@@ -115,13 +130,16 @@ app_ui <- function(request) {
                                                        value = NULL),
                                              downloadButton("downloadrawPlot", "Download Plot"))))),
 
-                          mainPanel(width = 9,
+                          mainPanel(width = 6,
                                     conditionalPanel(
-                                      condition = "input.whichshow == 'print'",
-                                      DT::dataTableOutput("matrixprint")),
+                                      condition = "input.whichShow == 'print'",
+                                      DT::dataTableOutput("matrixPrint")),
                                     conditionalPanel(
-                                      condition = "input.whichshow == 'plot'",
-                                      imageOutput("matrixplot"))))),
+                                      condition = "input.whichShow == 'plot'",
+                                      imageOutput("matrixPlot")),
+                                    conditionalPanel(
+                                      condition = "input.whichShow == 'plotSimp'",
+                                      imageOutput("matrixPlotSimp"))))),
 
 
                ### SBM APPLICATION

@@ -6,17 +6,12 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
-  output$summary <- renderPrint({
-    print(isdatasetselected())
-    print(datasetSelected())
-  })
-
 
   datasetSelected <- reactive({
     req(input$whichData)
     if(input$whichData == 'importData'){
-      req(input$dataFile$datapath)
-      buildSbmMatrix(read.csv2(input$dataFile$datapath,row.names=1))
+      req(input$mainDataFile$datapath)
+      buildSbmMatrix(read.csv2(input$mainDataFile$datapath,row.names=1))
     }else{
       req(input$dataBase)
       switch(input$dataBase,
@@ -27,16 +22,19 @@ app_server <- function(input, output, session) {
       }
     })
 
-  isdatasetselected <- reactive({is.sbmMatrix(datasetSelected())})
 
 
   datasetUploaded <- reactive({datasetSelected()})
 
+  output$summaryDataImport <- renderPrint({
+    print(datasetSelected())
+  })
 
-  output$matrixprint <- DT::renderDataTable({
+
+  output$matrixPrint <- DT::renderDataTable({
     # probleme : taille et position, wrapping des titres, fixer la colonnne de rownames
-    req(input$whichshow)
-    if(input$whichshow != 'print'){return(NULL)}
+    req(input$whichShow)
+    if(input$whichShow != 'print'){return(NULL)}
     DT::datatable(
       as.data.frame(datasetUploaded()),
       class = 'nowrap',
@@ -50,8 +48,8 @@ app_server <- function(input, output, session) {
 
   Plot <- reactive({
     # probleme : taille et position,
-    req(input$whichshow)
-    if(input$whichshow == 'plot'){
+    req(input$whichShow)
+    if(input$whichShow == 'plot'){
       x <- datasetUploaded()$matrix
       sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
     }else{
@@ -59,11 +57,11 @@ app_server <- function(input, output, session) {
     }
   })
 
-  output$matrixplot <- renderImage({
+  output$matrixPlot <- renderImage({
     # Read myImage's width and height. These are reactive values, so this
     # expression will re-run whenever they change.
-    width  <- session$clientData$output_matrixplot_width
-    height <- session$clientData$output_matrixplot_height
+    width  <- session$clientData$output_matrixPlot_width
+    height <- session$clientData$output_matrixPlot_width
 
     # For high-res displays, this will be greater than 1
     pixelratio <- session$clientData$pixelratio
@@ -84,6 +82,7 @@ app_server <- function(input, output, session) {
          alt = "This is alternate text")
   }, deleteFile = TRUE)
 
+  output$showILC <- renderPlot({plot(1:50+rnorm(50))})
 
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {
