@@ -152,25 +152,17 @@ app_ui <- function(request) {
                tabPanel(
                  "SBM application",value = 'tab_sbm',
 
-                 sidebarLayout(
-                   sidebarPanel(width = 3,
-
-                                ),
-
-                   mainPanel(width = 9
-                             ))),
+                 column(width = 3),
+                 column(width = 9)),
 
 
                ### NETWORK VISUALISATION
                tabPanel(
                  "Network Visualisation",value = 'tab_network',
 
-                 sidebarLayout(
-                   sidebarPanel(width = 3
-                                ),
-
-                   mainPanel(width = 9
-                             )))))}
+                 column(width = 3),
+                 column(width = 9))))
+  }
 
 #' Add external Resources to the Application
 #'
