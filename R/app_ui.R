@@ -104,8 +104,8 @@ app_ui <- function(request) {
                                a(strong("Visualisation settings")),
                                wellPanel(
                                  radioButtons("whichShow", "Type of visualisation",
-                                              choices = list("print" = 'print',
-                                                             "plot" = 'plot'),
+                                              choices = list("Print" = 'print',
+                                                             "Plot" = 'plot'),
                                               inline  = T),
                                  conditionalPanel(
                                    condition = "TRUE",
@@ -121,7 +121,7 @@ app_ui <- function(request) {
                                    plotOutput("showILC1")),
                                  br(),
                                  conditionalPanel(
-                                   condition = "input.whichShow = 'print'",
+                                   condition = "input.whichShow == 'print'",
                                    wellPanel(
                                      fluidRow(
                                        textInput("rowLabel",
