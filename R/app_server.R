@@ -7,20 +7,14 @@
 app_server <- function(input, output, session) {
 
 
-  datasetSelected <- eventReactive(input$mainDataSelector,{
-    req(input$whichData)
+
+  datasetSelected <- eventReactive(input$mainDataSelector,isolate({
     if(input$whichData == 'importData'){
-      req(input$mainDataFile$datapath)
       input$mainDataFile$datapath
     }else{
-      req(input$dataBase)
-      switch(input$dataBase,
-             "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree, col_names = sbm::fungusTreeNetwork$tree_names,
-                                            row_names = sbm::fungusTreeNetwork$fungus_names),
-             "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
-                                          row_names = sbm::fungusTreeNetwork$tree_names))
+      input$dataBase
     }
-  })
+  }))
 
   sep <- reactive({
     if(input$whichSep == "others"){
@@ -30,10 +24,11 @@ app_server <- function(input, output, session) {
     }
   })
 
-  datasetUploaded <- eventReactive(input$mainDataUploader,{
-    req(input$whichData)
+  datasetUploaded <- eventReactive(input$mainDataUploader,isolate({
     if(input$whichData == 'importData'){
-      req(input$mainDataFile$datapath)
+      validate(
+        need(datasetSelected() != "", "Please select a data set")
+      )
       if(input$headerrow){
         x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
       }else{
@@ -41,9 +36,18 @@ app_server <- function(input, output, session) {
       }
       buildSbmMatrix(x)
     }else{
-      datasetSelected()
+      validate(
+        need(datasetSelected(), "Please select a data set")
+      )
+      switch(datasetSelected(),
+             "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree, col_names = sbm::fungusTreeNetwork$tree_names,
+                                            row_names = sbm::fungusTreeNetwork$fungus_names),
+             "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
+                                          row_names = sbm::fungusTreeNetwork$tree_names))
+
     }
-  })
+  }))
+
 
 
 

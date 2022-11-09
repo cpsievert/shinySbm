@@ -41,8 +41,8 @@ app_ui <- function(request) {
                                                buttonLabel = "Browse...",
                                                placeholder = "No file selected",
                                                multiple = F,
-                                               accept = c("text/plain", ".csv",".tab","xls","xlsx")),
-                                     actionButton(inputId = "mainDataSelector", label = "Select file")),
+                                               accept = c("text/plain", ".csv",".tab","xls","xlsx"))),
+                                   actionButton(inputId = "mainDataSelector", label = "Select file"),
                                    h6("* should be a adjadency matrix"))),
 
 
@@ -61,7 +61,7 @@ app_ui <- function(request) {
                                                h6("* covariable on the interactions between nodes"))))),
                         column(width = 1),
                         ## Reader
-                        column(width = 7,
+                        column(width = 8,
                                fluidRow(a(strong("Data Reader"))),
                                fluidRow(
                                  column(width = 5,
@@ -69,15 +69,15 @@ app_ui <- function(request) {
                                           radioButtons("whichSep", "What kind of separator should I use ?",
                                                        choices = list("semicolon" = ";",
                                                                       "tabulation" = "|",
-                                                                      "coma" = ",",
+                                                                      "comma" = ",",
                                                                       "others" = "others")),
                                           conditionalPanel(
                                             condition = "input.whichSep == 'others'",
                                             textInput("whichSep_other",
                                                       label = "Write your sep character :",
                                                       value = NULL)),
-                                          checkboxInput('headercol','Columns name', value = T),
-                                          checkboxInput('headerrow','Rows name',value = T))),
+                                          checkboxInput('headercol','1st row is Columns name', value = T),
+                                          checkboxInput('headerrow','1st column is Rows name',value = T))),
                                  column(width = 5,
                                         wellPanel(
                                           radioButtons("networkType", "What kind of network it is ?",
@@ -95,8 +95,7 @@ app_ui <- function(request) {
                                             actionButton(inputId = "covarDataUploader", label = "Upload covar"))))),
                                fluidRow(
                                  a(strong("Importation Information")),
-                                 verbatimTextOutput("summaryDataImport"))),
-                        column(width = 1)),
+                                 verbatimTextOutput("summaryDataImport")))),
 
                ### DATA SHOW
                tabPanel("Table Visualisation",value = 'tab_show',
