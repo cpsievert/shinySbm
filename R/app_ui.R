@@ -17,14 +17,14 @@ app_ui <- function(request) {
                ### DATA IMPORTATION
                # Probleme : dev les moyens de lecture du tableau comme dans blockmodelingGUI
                # introduction des covariables
+               # no conditionalpanel work !!!
                tabPanel("Data uploading", value = 'tab_upload',
 
                         ## Selector
                         column(width = 3,
                                wellPanel(
-                                 fluidRow(
                                    a("Select your network data set:"),
-                                   h6("It should be a adjadency matrix."),
+                                   h6("* should be a adjadency matrix"),
                                    br(),
                                    radioButtons("whichData", "Which data do you want to use ?",
                                                 choices = list("My own data" = "importData",
@@ -42,38 +42,61 @@ app_ui <- function(request) {
                                                buttonLabel = "Browse...",
                                                placeholder = "No file selected",
                                                multiple = F,
-                                               accept = c("text/plain", ".csv",".tab","xls","xlsx"))),
-                                   actionButton(inputId = "main_selector", label = "Select this file ..."))),
+                                               accept = c("text/plain", ".csv",".tab","xls","xlsx")),
+                                   actionButton(inputId = "main_selector", label = "Select file"))),
 
                                wellPanel(
-                                 fluidRow(
+                                 conditionalPanel(
+                                   condition = "isdatasetselected == TRUE",
                                    a("Select a covar:"),
-                                   h6("It should be a adjadency matrix, of the same size than the network matrix. So that the covariable is on the interactions between nodes."),
+                                   h6("* should be a adjadency matrix"),
+                                   h6("* same size than the network matrix"),
+                                   h6("* covariable on the interactions between nodes"),
                                    br(),
                                    fileInput("dataFile", label = "Choose the file containing your adjency matrix",
                                              buttonLabel = "Browse...",
                                              placeholder = "No file selected",
                                              multiple = F,
                                              accept = c("text/plain", ".csv",".tab","xls","xlsx")),
-                                   actionButton(inputId = "main_selector", label = "Select this file ...")))),
+                                   actionButton(inputId = "covar_selector", label = "Select file")))),
+
 
                         ## Reader
                         column(width = 9,
+                               fluidRow(a("Data Reader")),
                                wellPanel(
                                  fluidRow(
-                                   radioButtons("whichsep", "What kind of separator should I use ?",
-                                                choices = list("tabulation" = "|",
-                                                               "coma" = ",",
-                                                               "semicolon" = ";",
-                                                               "Others" = "others"),
-                                                selected = character(0)))),
-                               wellPanel(
-                                 fluidRow(
-                                   verbatimTextOutput("summary"))))),
-
+                                   column(width = 5,
+                                          radioButtons("whichsep", "What kind of separator should I use ?",
+                                                       choices = list("tabulation" = "|",
+                                                                      "coma" = ",",
+                                                                      "semicolon" = ";",
+                                                                      "Others" = "others"),
+                                                       selected = character(0)),
+                                          conditionalPanel(
+                                            condition = "input.whichsep == 'others'",
+                                                textInput("whichsep_other",
+                                                          label = "Write your sep character :",
+                                                          value = NULL))),
+                                   column(width = 5,
+                                          radioButtons("networktype", "What kind of network it is ?",
+                                                       choices = list("Unipartite" = "unipartite",
+                                                                      "Bipartite" = "bipartite"),
+                                                       inline = T ,selected = character(0))),
+                                   column(width = 2,
+                                          conditionalPanel(
+                                            condition = "input.main_selector",
+                                            actionButton(inputId = "main_uploader", label = "Upload Matrix")),
+                                          conditionalPanel(
+                                            condition = "input.covar_selector",
+                                            actionButton(inputId = "covar_uploader", label = "Upload covar"))))),
+                               fluidRow(
+                                 a("Importation Information"),
+                                 verbatimTextOutput("summary")))),
 
                ### DATA SHOW
                tabPanel("Table Visualisation",value = 'tab_show',
+
                         sidebarLayout(
                           sidebarPanel(width = 3,
                                        radioButtons("whichshow", "Type of visualisation",
@@ -90,52 +113,39 @@ app_ui <- function(request) {
                                              textInput("colLabel",
                                                        label = "Specify the label for nodes in col",
                                                        value = NULL),
-                                             downloadButton("downloadrawPlot", "Download Plot")
-                                           )
-                                         )
-                                       )
-                          ),
+                                             downloadButton("downloadrawPlot", "Download Plot"))))),
+
                           mainPanel(width = 9,
                                     conditionalPanel(
                                       condition = "input.whichshow == 'print'",
                                       DT::dataTableOutput("matrixprint")),
                                     conditionalPanel(
                                       condition = "input.whichshow == 'plot'",
-                                      imageOutput("matrixplot"))
-                          )
-                        )
-               ),
+                                      imageOutput("matrixplot"))))),
 
 
                ### SBM APPLICATION
                tabPanel(
                  "SBM application",value = 'tab_sbm',
+
                  sidebarLayout(
-                   sidebarPanel(width = 3,
+                   sidebarPanel(width = 3
+                                ),
 
-                   ),
-                   mainPanel(width = 9,
-
-                             )
-                 )
-               ),
+                   mainPanel(width = 9
+                             ))),
 
 
                ### NETWORK VISUALISATION
                tabPanel(
                  "Network Visualisation",value = 'tab_network',
+
                  sidebarLayout(
-                   sidebarPanel(width = 3,
+                   sidebarPanel(width = 3
+                                ),
 
-                   ),
-                   mainPanel(width = 9,
-
-                   )
-                 )
-               )
-    )
-  )
-}
+                   mainPanel(width = 9
+                             )))))}
 
 #' Add external Resources to the Application
 #'

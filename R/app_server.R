@@ -6,8 +6,13 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
+  output$summary <- renderPrint({
+    print(isdatasetselected())
+    print(datasetSelected())
+  })
 
-  datasetInput <- reactive({
+
+  datasetSelected <- reactive({
     req(input$whichData)
     if(input$whichData == 'importData'){
       req(input$dataFile$datapath)
@@ -19,8 +24,13 @@ app_server <- function(input, output, session) {
                                             row_names = sbm::fungusTreeNetwork$fungus_names),
              "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
                                           row_names = sbm::fungusTreeNetwork$tree_names))
-    }
-  })
+      }
+    })
+
+  isdatasetselected <- reactive({is.sbmMatrix(datasetSelected())})
+
+
+  datasetUploaded <- reactive({datasetSelected()})
 
 
   output$matrixprint <- DT::renderDataTable({
@@ -28,23 +38,21 @@ app_server <- function(input, output, session) {
     req(input$whichshow)
     if(input$whichshow != 'print'){return(NULL)}
     DT::datatable(
-      as.data.frame(datasetInput()),
+      as.data.frame(datasetUploaded()),
       class = 'nowrap',
       option = list(
         # scroll :
         scroller = TRUE,
         lengthMenu = list(c(-1 ,50, 100),
                           c('All', '50', '100')),
-        paging = T
-      )
-    )
-  })
+        paging = T))
+    })
 
   Plot <- reactive({
     # probleme : taille et position,
     req(input$whichshow)
     if(input$whichshow == 'plot'){
-      x <- datasetInput()$matrix
+      x <- datasetUploaded()$matrix
       sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
     }else{
       return(NULL)
