@@ -78,10 +78,12 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
       list_cov <- NULL
     }
     if(!is.null(col_names)){
-      col = as.character(col_names)
+      col <- as.character(col_names)
+      colnames(matObj) <- col
     }
     if(!is.null(row_names)){
-      row = as.character(row_names)
+      row <- as.character(row_names)
+      rownames(matObj) <- row
     }
     my_sbm_object <- structure(list(matrix = matObj, nodes_names = list(col = col,row = row),
                                     covar = list_cov, type = default.type, law = expected.law),class = "sbmMatrix")
