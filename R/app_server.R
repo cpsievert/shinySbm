@@ -65,7 +65,7 @@ app_server <- function(input, output, session) {
 
     # Generate the image file
     png(outfile, width = width*pixelratio, height = height*pixelratio,
-        res = 50*pixelratio)
+        res = 72*pixelratio)
     plot(Plot())
     dev.off()
 
@@ -77,6 +77,8 @@ app_server <- function(input, output, session) {
   }, deleteFile = TRUE)
 
 
-
-
+  # shut down the app when it's closes on the browser
+  session$onSessionEnded(function() {
+    stopApp()
+  })
 }
