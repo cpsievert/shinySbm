@@ -120,16 +120,14 @@ app_ui <- function(request) {
                                                value = 4, min = 1, max = 6,step=1),
                                    plotOutput("showILC1")),
                                  br(),
-                                 conditionalPanel(
-                                   condition = "input.whichShow == 'print'",
-                                   wellPanel(
+                                 wellPanel(
                                      fluidRow(
                                        textInput("rowLabel",
                                                  label = "Specify the label for nodes in row",
                                                  value = NULL),
                                        textInput("colLabel",
                                                  label = "Specify the label for nodes in col",
-                                                 value = NULL)))),
+                                                 value = NULL))),
                                  br(),
                                  downloadButton("downloadPlot"))),
 
