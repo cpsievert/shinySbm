@@ -199,7 +199,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
     print.default(x)
   }else{
     cat("==========================\n SBM MATRIX INFORMATION :  \n==========================\n\n")
-    cat("sbmMatrix of an", x$type, "network. The expected law upon this matrix is a poisson density.\n")
+    cat("sbmMatrix of an", x$type, "network. The expected law upon this matrix is a", x$law ,"density.\n")
     if(x$type == "unipartite"){
       cat("The network has",dimbase[1],"nodes.")
     }else if(x$type == 'bipartite'){
