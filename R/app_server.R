@@ -7,11 +7,11 @@
 app_server <- function(input, output, session) {
 
 
-  datasetSelected <- reactive({
+  datasetSelected <- eventReactive(input$mainDataSelector,{
     req(input$whichData)
     if(input$whichData == 'importData'){
       req(input$mainDataFile$datapath)
-      buildSbmMatrix(read.csv2(input$mainDataFile$datapath,row.names=1))
+      input$mainDataFile$datapath
     }else{
       req(input$dataBase)
       switch(input$dataBase,
@@ -19,16 +19,44 @@ app_server <- function(input, output, session) {
                                             row_names = sbm::fungusTreeNetwork$fungus_names),
              "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
                                           row_names = sbm::fungusTreeNetwork$tree_names))
+    }
+  })
+
+  sep <- reactive({
+    if(input$whichSep == "others"){
+      input$whichSep_other
+    }else{
+      input$whichSep
+    }
+  })
+
+  datasetUploaded <- eventReactive(input$mainDataUploader,{
+    req(input$whichData)
+    if(input$whichData == 'importData'){
+      req(input$mainDataFile$datapath)
+      if(input$headerrow){
+        x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
+      }else{
+        x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
       }
-    })
+      buildSbmMatrix(x)
+    }else{
+      datasetSelected()
+    }
+  })
 
 
-
-  datasetUploaded <- reactive({datasetSelected()})
 
   output$summaryDataImport <- renderPrint({
-    print(datasetSelected())
+    print(datasetUploaded())
   })
+
+
+
+
+
+
+
 
 
   output$matrixPrint <- DT::renderDataTable({

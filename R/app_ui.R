@@ -70,13 +70,14 @@ app_ui <- function(request) {
                                                        choices = list("semicolon" = ";",
                                                                       "tabulation" = "|",
                                                                       "coma" = ",",
-                                                                      "others" = "others"),
-                                                       selected = "semicolon"),
+                                                                      "others" = "others")),
                                           conditionalPanel(
                                             condition = "input.whichSep == 'others'",
                                             textInput("whichSep_other",
                                                       label = "Write your sep character :",
-                                                      value = NULL)))),
+                                                      value = NULL)),
+                                          checkboxInput('headercol','Columns name', value = T),
+                                          checkboxInput('headerrow','Rows name',value = T))),
                                  column(width = 5,
                                         wellPanel(
                                           radioButtons("networkType", "What kind of network it is ?",
