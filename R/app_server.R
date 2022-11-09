@@ -37,7 +37,6 @@ app_server <- function(input, output, session) {
     if(input$whichShow != 'print'){return(NULL)}
     DT::datatable(
       as.data.frame(datasetUploaded()),
-      class = 'nowrap',
       option = list(
         # scroll :
         scroller = TRUE,
