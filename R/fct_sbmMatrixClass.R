@@ -351,7 +351,7 @@ covar <- function(x){
 #'
 #'
 #' @noRd
-"covar<-" <- function(x, value, name = NULL){
+"covar<-" <- function(x,  name = NULL, value){
   UseMethod("covar<-", object = x)
 }
 
@@ -372,7 +372,7 @@ covar <- function(x){
 #'
 #'
 #' @noRd
-"covar<-.default" <- function(x,value, name = NULL){
+"covar<-.default" <- function(x, name = NULL, value){
   stop("x should be an sbmMatrix")
 }
 
@@ -394,7 +394,7 @@ covar <- function(x){
 #'
 #'
 #' @noRd
-"covar<-.sbmMatrix" <- function(x, value, name = NULL){
+"covar<-.sbmMatrix" <- function(x,  name = NULL, value){
   if(is.data.frame(value) | is.matrix(value)){
     if(all(dim(x)==dim(value))){
       x$covar <- append(x$covar,list(as.matrix(value)))
