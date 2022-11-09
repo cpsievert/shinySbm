@@ -59,10 +59,9 @@ app_ui <- function(request) {
                                                h6("* should be a adjadency matrix"),
                                                h6("* same size than the network matrix"),
                                                h6("* covariable on the interactions between nodes"))))),
-
-
+                        column(width = 1),
                         ## Reader
-                        column(width = 9,
+                        column(width = 7,
                                fluidRow(a(strong("Data Reader"))),
                                fluidRow(
                                  column(width = 5,
@@ -95,51 +94,58 @@ app_ui <- function(request) {
                                             actionButton(inputId = "covarDataUploader", label = "Upload covar"))))),
                                fluidRow(
                                  a(strong("Importation Information")),
-                                 verbatimTextOutput("summaryDataImport")))),
+                                 verbatimTextOutput("summaryDataImport"))),
+                        column(width = 1)),
 
                ### DATA SHOW
                tabPanel("Table Visualisation",value = 'tab_show',
 
-                        sidebarLayout(
-                          sidebarPanel(width = 3,
-                                       radioButtons("whichShow", "Type of visualisation",
-                                                    choices = list("Print" = "print",
-                                                                   "Plot" = "plot"),
-                                                    inline  = T, selected = 'print'),
-                                       conditionalPanel(
-                                         condition = "TRUE",
-                                         radioButtons("whichRawSbm", "Select Ploted Matrix",
-                                                      choices = list("Raw Matrix" = "raw",
-                                                                     "Reordered Matrix" = "reordered"),
-                                                      inline = T, selected = 'raw')),
-                                       conditionalPanel(
-                                         condition = "TRUE",
-                                         sliderInput(inputId = "NbGroup",
-                                                     label = "Select the number of group:",
-                                                     value = 4, min = 1, max = 6,step=1),
-                                         plotOutput("showILC")),
-                                       conditionalPanel(
-                                         condition = "input.whichShow == 'plot' || input.whichShow == 'plotSimp'",
-                                         wellPanel(
-                                           fluidRow(
-                                             textInput("rowLabel",
-                                                       label = "Specify the label for nodes in row",
-                                                       value = NULL),
-                                             textInput("colLabel",
-                                                       label = "Specify the label for nodes in col",
-                                                       value = NULL),
-                                             downloadButton("downloadrawPlot", "Download Plot"))))),
+                        column(width = 3,
+                               a(strong("Visualisation settings")),
+                               wellPanel(
+                                 radioButtons("whichShow", "Type of visualisation",
+                                              choices = list("Print" = "print",
+                                                             "Plot" = "plot"),
+                                              inline  = T, selected = 'print'),
+                                 conditionalPanel(
+                                   condition = "TRUE",
+                                   radioButtons("whichRawSbm", "Select Ploted Matrix",
+                                                choices = list("Raw Matrix" = "raw",
+                                                               "Reordered Matrix" = "reordered"),
+                                                inline = T, selected = 'raw')),
+                                 conditionalPanel(
+                                   condition = "TRUE",
+                                   sliderInput(inputId = "NbGroup",
+                                               label = "Select the number of group:",
+                                               value = 4, min = 1, max = 6,step=1),
+                                   plotOutput("showILC")),
+                                 conditionalPanel(
+                                   condition = "input.whichShow == 'print'",
+                                   wellPanel(
+                                     fluidRow(
+                                       downloadButton("downloadTable", "Download Table")))),
+                                 conditionalPanel(
+                                   condition = "input.whichShow == 'plot' || input.whichShow == 'plotSimp'",
+                                   wellPanel(
+                                     fluidRow(
+                                       textInput("rowLabel",
+                                                 label = "Specify the label for nodes in row",
+                                                 value = NULL),
+                                       textInput("colLabel",
+                                                 label = "Specify the label for nodes in col",
+                                                 value = NULL),
+                                       downloadButton("downloadPlot", "Download Plot")))))),
 
-                          mainPanel(width = 6,
-                                    conditionalPanel(
-                                      condition = "input.whichShow == 'print'",
-                                      DT::dataTableOutput("matrixPrint")),
-                                    conditionalPanel(
-                                      condition = "input.whichShow == 'plot'",
-                                      imageOutput("matrixPlot")),
-                                    conditionalPanel(
-                                      condition = "input.whichShow == 'plotSimp'",
-                                      imageOutput("matrixPlotSimp"))))),
+                        column(width = 1),
+
+                        column(width = 6,
+                               a(strong("Plot screen")),
+                               conditionalPanel(
+                                 condition = "input.whichShow == 'print'",
+                                 DT::dataTableOutput("matrixPrint")),
+                               conditionalPanel(
+                                 condition = "input.whichShow == 'plot' || input.whichShow == 'plotSimp'",
+                                 imageOutput("matrixPlot")))),
 
 
                ### SBM APPLICATION
@@ -147,7 +153,8 @@ app_ui <- function(request) {
                  "SBM application",value = 'tab_sbm',
 
                  sidebarLayout(
-                   sidebarPanel(width = 3
+                   sidebarPanel(width = 3,
+
                                 ),
 
                    mainPanel(width = 9
