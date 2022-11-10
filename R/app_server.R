@@ -95,7 +95,7 @@ app_server <- function(input, output, session) {
     if(input$whichShow == 'plot'){
       x <- as.matrix(datasetUploaded())
       if(input$runSbm){
-        data_sbm <- my_sbm()
+        data_sbm <- my_sbm()$clone()
         switch(input$whichRawSbmMatrix,
                "raw" = sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel)),
                "ordered" = plot(data_sbm, type = "data", dimLabels = list(row = input$rowLabel, col = input$colLabel)),
@@ -145,7 +145,7 @@ app_server <- function(input, output, session) {
     })
 
   observeEvent(input$runSbm,{
-    data_sbm <- my_sbm_main()
+    data_sbm <- my_sbm_main()$clone()
     value <- data_sbm$nbBlocks
     min <- min(data_sbm$storedModels$nbBlocks)
     max <- max(data_sbm$storedModels$nbBlocks)
@@ -167,16 +167,19 @@ app_server <- function(input, output, session) {
 
 
   my_sbm <- eventReactive(input$Nbblocks,{
-    data_sbm <- my_sbm_main()
+    data_sbm <- my_sbm_main()$clone()
     data_sbm$setModel(input$Nbblocks)
     data_sbm
   })
 
   observeEvent(input$Nbblocks,{
-    data_sbm <- my_sbm()
+    data_sbm <- my_sbm()$clone()
+    data_sbm_main <- my_sbm_main()$clone()
+
     microplot <- ggplot2::ggplot(data_sbm$storedModels) + ggplot2::aes(x = nbBlocks, y = ICL)  +
       ggplot2::geom_line() + ggplot2::geom_point(alpha = 0.5) +
-      ggplot2::geom_point(ggplot2::aes(x = data_sbm$nbBlocks, y = data_sbm$ICL, colour = 'r', size = 5)) +
+      ggplot2::geom_point(ggplot2::aes(x = data_sbm$nbBlocks, y = data_sbm$ICL, colour = 'b', size = 2)) +
+      ggplot2::geom_point(ggplot2::aes(x = data_sbm_main$nbBlocks, y = data_sbm_main$ICL, colour = 'r', size = 2), shape = 10) +
       ggplot2::theme(legend.position = "none")
     output$showILC1 <- renderPlot({microplot})
     output$showILC2 <- renderPlot({microplot})
@@ -186,7 +189,7 @@ app_server <- function(input, output, session) {
 
 
   output$sbmSummary <- renderPrint({
-    data_sbm <- my_sbm()
+    data_sbm <- my_sbm()$clone()
     print(data_sbm$storedModels)
     print(c(NbBlockSelected = data_sbm$nbBlocks,
             min = min(data_sbm$storedModels$nbBlocks),
@@ -195,7 +198,7 @@ app_server <- function(input, output, session) {
 
   PlotNet <- reactive({
     if(input$runSbm){
-      data_sbm <- my_sbm()
+      data_sbm <- my_sbm()$clone()
       return(plot(data_sbm, type = "meso"))
     }else{
       return(NULL)
@@ -204,7 +207,7 @@ app_server <- function(input, output, session) {
 
   output$networkPlot <- renderPlot({
     if(input$runSbm){
-      data_sbm <- my_sbm()
+      data_sbm <- my_sbm()$clone()
       plot(data_sbm, type = "meso")
     }else{
       return(NULL)

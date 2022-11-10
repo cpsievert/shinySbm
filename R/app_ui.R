@@ -81,7 +81,25 @@ app_ui <- function(request) {
                                         wellPanel(
                                           radioButtons("networkType", "What kind of network it is ?",
                                                        choices = list("Bipartite" = "bipartite"),
-                                                       inline = T))),
+                                                       inline = T),
+
+                                                       wellPanel(
+                                                         conditionalPanel(
+                                                           condition = "input.networkType == 'bipartite'",
+                                                           textInput("rowLabel",
+                                                                     label = "Specify what are the nodes in row",
+                                                                     value = NULL)),
+                                                         conditionalPanel(
+                                                           condition = "input.networkType == 'bipartite'",
+                                                           textInput("colLabel",
+                                                                     label = "Specify what are for nodes in col",
+                                                                     value = NULL)),
+                                                         conditionalPanel(
+                                                           condition = "input.networkType == 'unipartite'",
+                                                           textInput("colNodes",
+                                                                     label = "Specify what are for nodes",
+                                                                     value = NULL))))),
+
                                  column(width = 3,
                                         wellPanel(
                                           strong("Matrix Uploader"),
@@ -112,14 +130,6 @@ app_ui <- function(request) {
                                    conditionalPanel(
                                      condition = "input.runSbm",
                                      plotOutput("showILC1")),
-                                   br(),
-                                   wellPanel(
-                                     textInput("rowLabel",
-                                               label = "Specify the label for nodes in row",
-                                               value = NULL),
-                                     textInput("colLabel",
-                                               label = "Specify the label for nodes in col",
-                                               value = NULL)),
                                    br(),
                                  downloadButton("downloadPlot"))),
 
