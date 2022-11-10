@@ -47,7 +47,7 @@ app_ui <- function(request) {
 
 
                                  conditionalPanel(
-                                   condition = "input.mainDataSelector",
+                                   condition = "input.mainDataUploader",
                                    fluidRow(a(strong("Covariable data set selector:"))),
                                    fluidRow(
                                      wellPanel(fileInput("covarDataFile", label = "Choose the file containing your covariable",
@@ -59,9 +59,8 @@ app_ui <- function(request) {
                                                h6("* should be a adjadency matrix"),
                                                h6("* same size than the network matrix"),
                                                h6("* covariable on the interactions between nodes"))))),
-                        column(width = 1),
                         ## Reader
-                        column(width = 8,
+                        column(width = 9,
                                fluidRow(a(strong("Data Reader"))),
                                fluidRow(
                                  column(width = 5,
@@ -78,13 +77,12 @@ app_ui <- function(request) {
                                                       value = NULL)),
                                           checkboxInput('headercol','1st row is Columns name', value = T),
                                           checkboxInput('headerrow','1st column is Rows name',value = T))),
-                                 column(width = 5,
+                                 column(width = 4,
                                         wellPanel(
                                           radioButtons("networkType", "What kind of network it is ?",
-                                                       choices = list("Unipartite" = "unipartite",
-                                                                      "Bipartite" = "bipartite"),
-                                                       inline = T ,selected = character(0)))),
-                                 column(width = 2,
+                                                       choices = list("Bipartite" = "bipartite"),
+                                                       inline = T))),
+                                 column(width = 3,
                                         wellPanel(
                                           strong("Matrix Uploader"),
                                           conditionalPanel(
@@ -95,7 +93,9 @@ app_ui <- function(request) {
                                             actionButton(inputId = "covarDataUploader", label = "Upload covar"))))),
                                fluidRow(
                                  a(strong("Importation Information")),
-                                 verbatimTextOutput("summaryDataImport")))),
+                                 column(width = 12,
+                                        wellPanel(
+                                          verbatimTextOutput("summaryDataImport")))))),
 
                ### DATA SHOW
                tabPanel("Table Visualisation",value = 'tab_show',
@@ -103,32 +103,29 @@ app_ui <- function(request) {
                         column(width = 3,
                                a(strong("Visualisation settings")),
                                wellPanel(
-                                 radioButtons("whichShow", "Type of visualisation",
-                                              choices = list("Print" = 'print',
-                                                             "Plot" = 'plot'),
-                                              inline  = T),
-                                 conditionalPanel(
-                                   condition = "TRUE",
+                                   radioButtons("whichShow", "Type of visualisation",
+                                                choices = list("Print a table" = 'print',
+                                                               "Plot a matrix" = 'plot'),
+                                                inline  = T),
                                    radioButtons("whichRawSbmMatrix", "Select Ploted Matrix",
                                                 choices = list("Raw Matrix" = "raw",
                                                                "Reordered Matrix" = "reordered"),
-                                                inline = T)),
-                                 conditionalPanel(
-                                   condition = "TRUE",
-                                   sliderInput(inputId = "NbGroup1",
-                                               label = "Select the number of group:",
-                                               value = 4, min = 1, max = 6,step=1),
-                                   plotOutput("showILC1")),
-                                 br(),
-                                 wellPanel(
-                                     fluidRow(
-                                       textInput("rowLabel",
-                                                 label = "Specify the label for nodes in row",
-                                                 value = NULL),
-                                       textInput("colLabel",
-                                                 label = "Specify the label for nodes in col",
-                                                 value = NULL))),
-                                 br(),
+                                                inline = T),
+                                   conditionalPanel(
+                                     condition = "TRUE",
+                                     sliderInput(inputId = "Nbblocks1",
+                                                 label = "Select the number of blocks:",
+                                                 value = 4, min = 1, max = 6,step=1),
+                                     plotOutput("showILC1")),
+                                   br(),
+                                   wellPanel(
+                                     textInput("rowLabel",
+                                               label = "Specify the label for nodes in row",
+                                               value = NULL),
+                                     textInput("colLabel",
+                                               label = "Specify the label for nodes in col",
+                                               value = NULL)),
+                                   br(),
                                  downloadButton("downloadPlot"))),
 
                         column(width = 1),
@@ -158,7 +155,7 @@ app_ui <- function(request) {
                           selectInput("whichCovar",
                                       label = "Add covariable to the SBM:",
                                       choices = list("None" = "NULL")),
-                          actionButton("runSbm", "Run SBM"))),
+                          actionButton(inputId = "runSbm", "Run SBM"))),
                  column(width = 1),
                  column(width = 8,
                         a(strong("SBM ouputs")),
@@ -172,8 +169,8 @@ app_ui <- function(request) {
                                    verbatimTextOutput("sbmSummary")),
 
                             column(width = 6,
-                                   sliderInput(inputId = "NbGroup2",
-                                               label = "Select the number of group:",
+                                   sliderInput(inputId = "Nbblocks2",
+                                               label = "Select the number of blocks:",
                                                value = 4, min = 1, max = 6,step=1),
                                    plotOutput("showILC2"))
                           )))),
@@ -194,8 +191,8 @@ app_ui <- function(request) {
                                          inline = T)),
                           conditionalPanel(
                             condition = "TRUE",
-                            sliderInput(inputId = "NbGroup3",
-                                        label = "Select the number of group:",
+                            sliderInput(inputId = "Nbblocks3",
+                                        label = "Select the number of blocks:",
                                         value = 4, min = 1, max = 6,step=1),
                             plotOutput("showILC3")),
                           br(),
