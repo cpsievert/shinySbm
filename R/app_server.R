@@ -48,12 +48,53 @@ app_server <- function(input, output, session) {
     }
   }))
 
-
+  observeEvent(datasetUploaded(),{
+    if(datasetUploaded()$type == "unipartite"){
+      updateRadioButtons(session, "networkType", "What kind of network it is ?",
+                         choices = list("Unipartite" = "unipartite","Bipartite" = "bipartite"),
+                         inline = T)
+    }else{
+      updateRadioButtons(session, "networkType", "What kind of network it is ?",
+                         choices = list("Bipartite" = "bipartite"),
+                         inline = T)
+    }
+    updateSelectInput(session,"whichLaw",
+                      label = "What is the density expected upon dataset ?",
+                      choices = list("Bernoulli" = "bernoulli",
+                                     "Poisson" = "poisson",
+                                     "Gaussian" = "gaussian"),
+                      selected = datasetUploaded()$law)
+  })
 
 
   output$summaryDataImport <- renderPrint({
     print(datasetUploaded())
   })
+
+  my_sbm <- eventReactive(input$runSbm,isolate({
+    datasetup <- datasetUploaded()
+    if(input$networkType == 'unipartite'){
+      return(sbm::estimateSimpleSBM(netMat = datasetup$matrix, model = input$wichLaw))
+    }else{
+      return(sbm::estimateBipartiteSBM(netMat = datasetup$matrix, model = input$wichLaw))
+    }
+  }))
+
+  output$sbmSummary <- renderPrint({
+    dat <- my_sbm()
+    print(dat$storedModels)
+  })
+
+  # observeEvent(my_sbm(),{
+  # updateSliderInput(session,inputId = "Nbblocks2",
+  #                   label = "Select the number of blocks:",
+  #                   value = my_sbm()$nbBlocks[1], min = min(my_sbm()$storedModels$nbBlocks), max = max(my_sbm()$storedModels$nbBlocks),step=1)
+  # })
+
+
+  # microplot_base <- eventReactive(my_sbm(),isolate({
+  #   my_sbm()$storedModels %>%  ggplot() + aes(x = nbBlocks, y = ICL)  + geom_line() + geom_point(alpha = 0.5)
+  #   }))
 
 
 
@@ -114,12 +155,15 @@ app_server <- function(input, output, session) {
 
 
 
-  microplot <- eventReactive(c(input$NbGroup1,input$NbGroup2,input$NbGroup3),{return(plot(1:50+rnorm(50)))})
 
 
-  output$showILC1 <- renderPlot({microplot()})
-  output$showILC2 <- renderPlot({microplot()})
-  output$showILC3 <- renderPlot({microplot()})
+  # microplot <- eventReactive(c(input$Nbblocks1,input$Nbblocks2,input$Nbblocks3),{
+  #   return(plot(1:50+rnorm(50)))})
+  #
+  #
+  # output$showILC1 <- renderPlot({microplot()})
+  # output$showILC2 <- renderPlot({microplot()})
+  # output$showILC3 <- renderPlot({microplot()})
 
 
   # shut down the app when it's closes on the browser
