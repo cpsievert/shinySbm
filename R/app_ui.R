@@ -108,14 +108,9 @@ app_ui <- function(request) {
                                                                "Plot a matrix" = 'plot'),
                                                 inline  = T),
                                    radioButtons("whichRawSbmMatrix", "Select Ploted Matrix",
-                                                choices = list("Raw Matrix" = "raw",
-                                                               "Reordered Matrix" = "reordered"),
-                                                inline = T),
+                                                choices = list("Raw Matrix" = "raw")),
                                    conditionalPanel(
-                                     condition = "TRUE",
-                                     sliderInput(inputId = "Nbblocks1",
-                                                 label = "Select the number of blocks:",
-                                                 value = 4, min = 1, max = 6,step=1),
+                                     condition = "input.runSbm",
                                      plotOutput("showILC1")),
                                    br(),
                                    wellPanel(
@@ -169,7 +164,7 @@ app_ui <- function(request) {
                                    verbatimTextOutput("sbmSummary")),
 
                             column(width = 6,
-                                   sliderInput(inputId = "Nbblocks2",
+                                   numericInput(inputId = "Nbblocks",
                                                label = "Select the number of blocks:",
                                                value = 4, min = 1, max = 6,step=1),
                                    plotOutput("showILC2"))
@@ -183,17 +178,11 @@ app_ui <- function(request) {
                  column(width = 3,
                         a(strong("Visualisation settings")),
                         wellPanel(
+                          radioButtons("whichRawSbmNetwork", "Select Ploted Network:",
+                                       choices = list("Raw Network" = "raw"),
+                                       inline = T),
                           conditionalPanel(
-                            condition = "TRUE",
-                            radioButtons("whichRawSbmNetwork", "Select Ploted Network:",
-                                         choices = list("Raw Network" = "raw",
-                                                        "Reordered Network" = "reordered"),
-                                         inline = T)),
-                          conditionalPanel(
-                            condition = "TRUE",
-                            sliderInput(inputId = "Nbblocks3",
-                                        label = "Select the number of blocks:",
-                                        value = 4, min = 1, max = 6,step=1),
+                            condition = "input.runSbm",
                             plotOutput("showILC3")),
                           br(),
                           downloadButton("downloadNetworkPlot"))),
@@ -201,8 +190,7 @@ app_ui <- function(request) {
                  column(width = 1),
                  column(width = 8,
                         a(strong("Network Visual")),
-                        imageOutput("networkPlot"),
-                        verbatimTextOutput("seeobjects")))))
+                        plotOutput("networkPlot")))))
   }
 
 #' Add external Resources to the Application
