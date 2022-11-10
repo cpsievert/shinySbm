@@ -42,7 +42,6 @@ app_ui <- function(request) {
                                                placeholder = "No file selected",
                                                multiple = F,
                                                accept = c("text/plain", ".csv",".tab","xls","xlsx"))),
-                                   actionButton(inputId = "mainDataSelector", label = "Select file"),
                                    h6("* should be a adjadency matrix"))),
 
 
@@ -96,16 +95,14 @@ app_ui <- function(request) {
                                                                      value = NULL)),
                                                          conditionalPanel(
                                                            condition = "input.networkType == 'unipartite'",
-                                                           textInput("colNodes",
+                                                           textInput("nodLabel",
                                                                      label = "Specify what are for nodes",
                                                                      value = NULL))))),
 
                                  column(width = 3,
                                         wellPanel(
                                           strong("Matrix Uploader"),
-                                          conditionalPanel(
-                                            condition = "input.mainDataSelector",
-                                            actionButton(inputId = "mainDataUploader", label = "Upload Matrix")),
+                                          actionButton(inputId = "mainDataUploader", label = "Upload Matrix"),
                                           conditionalPanel(
                                             condition = "input.covarDataSelector",
                                             actionButton(inputId = "covarDataUploader", label = "Upload covar"))))),

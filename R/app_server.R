@@ -6,9 +6,16 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
+  labels <- eventReactive(c(input$networkType,input$rowLabel,input$colLabel,input$nodLabel),{
+    switch(input$networkType,
+           'bipartite' = list(row = input$rowLabel, col = input$colLabel),
+           'unipartite' = list(row = input$nodLabel, col = input$nodLabel))
+  })
 
 
-  datasetSelected <- eventReactive(input$mainDataSelector,{
+
+
+  datasetSelected <- eventReactive(c(input$whichData,input$dataBase,input$mainDataFile$datapath),{
     if(input$whichData == 'importData'){
       input$mainDataFile$datapath
     }else{
@@ -97,11 +104,11 @@ app_server <- function(input, output, session) {
       if(input$runSbm){
         data_sbm <- my_sbm()$clone()
         switch(input$whichRawSbmMatrix,
-               "raw" = sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel)),
-               "ordered" = plot(data_sbm, type = "data", dimLabels = list(row = input$rowLabel, col = input$colLabel)),
-               "simple" = plot(data_sbm, type = "expected", dimLabels = list(row = input$rowLabel, col = input$colLabel)))
+               "raw" = sbm::plotMyMatrix(x, dimLabels = labels()),
+               "ordered" = plot(data_sbm, type = "data", dimLabels = labels()),
+               "simple" = plot(data_sbm, type = "expected", dimLabels = labels()))
       }else{
-        sbm::plotMyMatrix(x, dimLabels = list(row = input$rowLabel, col = input$colLabel))
+        sbm::plotMyMatrix(x, dimLabels = labels())
       }
     }else{
       return(NULL)
