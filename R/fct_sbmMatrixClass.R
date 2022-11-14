@@ -87,7 +87,7 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
     }
     my_sbm_object <- structure(list(matrix = matObj, nodes_names = list(col = col,row = row),
                                     covar = list_cov, type = default.type, law = expected.law),class = "sbmMatrix")
-    is.sbmMatrix(my_sbm_object,force_stop = T)
+    is.sbmMatrix(my_sbm_object,warnings = T)
     return(my_sbm_object)
   }else{
     stop("obj is a '",class(obj),"' object.\n Should be a 'data.frame' or 'matrix' object.")
@@ -100,14 +100,48 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
 #'
 #' @description A fct that analyse an supposed sbmMatrix and tell if it's correctly set.
 #'
-#' @param my_sbm_object,force_stop=FALSE
+#' @param my_sbm_object,warnings=FALSE
 #' `my_sbm_object` is an sbmMatrix
-#' `force_stop` should the function set an error or a warning when there is a problem in the object
+#' `warnings` should the function set an error or a warning when there is a problem in the object
 #'
 #' @return `TRUE` if the format is good, `FALSE` if not
 #'
 #' @noRd
-is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
+is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
+
+  ### I'm working on it :
+
+  # if(any(class(my_sbm_object)=='sbmMatrix')){
+  #   if(warnings){
+  #     warning("my_sbm_object doesn't have the class : 'sbmMatrix'")
+  #   }
+  #   return(F)
+  # }
+  # if(is.list(my_sbm_object)){
+  #   if(warnings){
+  #     warning("my_sbm_object isn't a list")
+  #   }
+  #   return(F)
+  # }
+  #
+  # dimbase <- dim(my_sbm_object)
+  #
+  # if(!is.matrix(my_sbm_object$matrix)){
+  #   if(warnings){
+  #     warning("Network matrix has the wrong format.")
+  #   }
+  #   return(F)
+  # }
+  #
+  # if(!(is.character(my_sbm_object$nodes_names$col) | is.character(my_sbm_object$nodes_names$row))){
+  #   if(warnings){
+  #     warning("Columns and rows names should be character")
+  #   }
+  #   return(F)
+  # }
+
+
+
   if(any(class(my_sbm_object)=='sbmMatrix')){
     if(is.list(my_sbm_object)){
       conforme <- rep(F,4)
@@ -118,7 +152,7 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
         is.character(my_sbm_object$nodes_names$col)
       if(identical(my_sbm_object$nodes_names$col,character(0)) &
          identical(my_sbm_object$nodes_names$row,character(0))){
-        if(force_stop){
+        if(warnings){
           warning("You didn't give any nodes names.")
         }
 
@@ -129,7 +163,7 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
         return(is.matrix(x)|is.data.frame(x) && all(dim(x)==dimbase))))
       conforme[4] <- my_sbm_object$type %in% c('bipartite','unipartite') &
         my_sbm_object$law %in% c('poisson','gaussian','bernoulli')
-      if(force_stop){
+      if(warnings){
         if(!all(conforme)){
           warning("The is a problem in your sbmMatrix. It can't be read. You should build it with :\nbuildSbmMatrix(obj,...) ")
         }
@@ -148,13 +182,13 @@ is.sbmMatrix <- function(my_sbm_object, force_stop = FALSE){
       }
       return(all(conforme))
     }else{
-      if(force_stop){
+      if(warnings){
         stop("my_sbm_object isn't a list")
       }
       return(F)
     }
   }else{
-    if(force_stop){
+    if(warnings){
       stop("my_sbm_object doesn't have the class : 'sbmMatrix'")
     }
     return(F)
@@ -331,7 +365,7 @@ addindice <- function(list, name, n = 1){
 #'
 #' @noRd
 covar <- function(x){
-  if(is.sbmMatrix(x,force_stop = T)){
+  if(is.sbmMatrix(x,warnings = T)){
     return(x$covar)
   }
 }
