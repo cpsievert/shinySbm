@@ -79,7 +79,7 @@ app_ui <- function(request) {
                                  column(width = 4,
                                         wellPanel(
                                           radioButtons("networkType", "What kind of network it is ?",
-                                                       choices = list("Bipartite" = "bipartite"),
+                                                       choices = list("Bipartite" = "bipartite","Unipartite" = "unipartite"),
                                                        inline = T),
 
                                                        wellPanel(
