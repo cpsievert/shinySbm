@@ -32,51 +32,41 @@ app_server <- function(input, output, session) {
   })
 
   datasetUploaded <- eventReactive(input$mainDataUploader,{
+    validate(
+      need(datasetSelected(), "Please select a data set")
+    )
     if(input$whichData == 'importData'){
-      validate(
-        need(datasetSelected() != "", "Please select a data set")
-      )
       if(input$headerrow){
         x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
       }else{
         x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
       }
-      buildSbmMatrix(x)
+      dataset <- buildSbmMatrix(x)
     }else{
-      validate(
-        need(datasetSelected(), "Please select a data set")
-      )
-      switch(datasetSelected(),
-             "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree, col_names = sbm::fungusTreeNetwork$tree_names,
-                                            row_names = sbm::fungusTreeNetwork$fungus_names),
-             "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
-                                          row_names = sbm::fungusTreeNetwork$tree_names))
-
+      dataset <- switch(datasetSelected(),
+                        "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree, col_names = sbm::fungusTreeNetwork$tree_names,
+                                                       row_names = sbm::fungusTreeNetwork$fungus_names),
+                        "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
+                                                     row_names = sbm::fungusTreeNetwork$tree_names))
     }
+    dataset$type <- input$networkType
+    output$summaryDataImport <- renderPrint({
+      is.sbmMatrix(datasetUploaded())
+      print(datasetUploaded())
+    })
+    dataset
   })
+
+
 
   observeEvent(datasetUploaded(),{
 
-    if(datasetUploaded()$type == "unipartite"){
-      updateRadioButtons(session, "networkType", "What kind of network it is ?",
-                         choices = list("Unipartite" = "unipartite","Bipartite" = "bipartite"),
-                         inline = T)
-    }else{
-      updateRadioButtons(session, "networkType", "What kind of network it is ?",
-                         choices = list("Bipartite" = "bipartite"),
-                         inline = T)
-    }
     updateSelectInput(session,"whichLaw",
                       label = "What is the density expected upon dataset ?",
                       choices = list("Bernoulli" = "bernoulli",
                                      "Poisson" = "poisson",
                                      "Gaussian" = "gaussian"),
                       selected = datasetUploaded()$law)
-  })
-
-
-  output$summaryDataImport <- renderPrint({
-    print(datasetUploaded())
   })
 
 
