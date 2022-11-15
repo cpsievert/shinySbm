@@ -111,36 +111,48 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
 
   ### I'm working on it :
 
-  # if(any(class(my_sbm_object)=='sbmMatrix')){
-  #   if(warnings){
-  #     warning("my_sbm_object doesn't have the class : 'sbmMatrix'")
-  #   }
-  #   return(F)
-  # }
-  # if(is.list(my_sbm_object)){
-  #   if(warnings){
-  #     warning("my_sbm_object isn't a list")
-  #   }
-  #   return(F)
-  # }
-  #
-  # dimbase <- dim(my_sbm_object)
-  #
-  # if(!is.matrix(my_sbm_object$matrix)){
-  #   if(warnings){
-  #     warning("Network matrix has the wrong format.")
-  #   }
-  #   return(F)
-  # }
-  #
-  # if(!(is.character(my_sbm_object$nodes_names$col) | is.character(my_sbm_object$nodes_names$row))){
-  #   if(warnings){
-  #     warning("Columns and rows names should be character")
-  #   }
-  #   return(F)
-  # }
+  if(!any(class(my_sbm_object)=='sbmMatrix')){
+    if(warnings){
+      warning("my_sbm_object doesn't have the class : 'sbmMatrix'")
+    }
+    return(F)
+  }
+  if(!is.list(my_sbm_object)){
+    if(warnings){
+      warning("my_sbm_object isn't a list")
+    }
+    return(F)
+  }
 
+  dimbase <- dim(my_sbm_object)
 
+  if(!is.matrix(my_sbm_object$matrix)){
+    if(warnings){
+      warning("Network matrix has the wrong format.")
+    }
+    return(F)
+  }
+
+  if(!(is.character(my_sbm_object$nodes_names$col) | is.character(my_sbm_object$nodes_names$row))){
+    if(warnings){
+      warning("Columns and rows names should be characters")
+    }
+    return(F)
+  }
+
+  if(!(is.character(my_sbm_object$nodes_names$col) & is.character(my_sbm_object$nodes_names$row))){
+    if(warnings){
+      warning("Columns and rows names should be characters")
+    }
+    return(F)
+  }else if(!(length(my_sbm_object$nodes_names$row) == dimbase[1] & length(my_sbm_object$nodes_names$col) == dimbase[2])){
+    if(warnings){
+      warning("Columns and rows names are not of the same dimenssion that the network matrix")
+    }
+    return(F)
+  }
+
+  ### Old code
 
   if(any(class(my_sbm_object)=='sbmMatrix')){
     if(is.list(my_sbm_object)){
