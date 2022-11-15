@@ -111,12 +111,14 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
 
   ### I'm working on it :
 
+  # check class
   if(!any(class(my_sbm_object)=='sbmMatrix')){
     if(warnings){
       warning("my_sbm_object doesn't have the class : 'sbmMatrix'")
     }
     return(F)
   }
+  # check list
   if(!is.list(my_sbm_object)){
     if(warnings){
       warning("my_sbm_object isn't a list")
@@ -126,85 +128,146 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
 
   dimbase <- dim(my_sbm_object)
 
+  # check matrix and numeric
   if(!is.matrix(my_sbm_object$matrix)){
     if(warnings){
-      warning("Network matrix has the wrong format.")
+      warning("Network matrix has the wrong format")
     }
     return(F)
   }
-
-  if(!(is.character(my_sbm_object$nodes_names$col) | is.character(my_sbm_object$nodes_names$row))){
+  if(!is.numeric(my_sbm_object$matrix)){
     if(warnings){
-      warning("Columns and rows names should be characters")
+      warning("Network matrix is not numeric")
     }
     return(F)
   }
 
+  # check names class length
   if(!(is.character(my_sbm_object$nodes_names$col) & is.character(my_sbm_object$nodes_names$row))){
     if(warnings){
       warning("Columns and rows names should be characters")
     }
     return(F)
   }else if(!(length(my_sbm_object$nodes_names$row) == dimbase[1] & length(my_sbm_object$nodes_names$col) == dimbase[2])){
-    if(warnings){
-      warning("Columns and rows names are not of the same dimenssion that the network matrix")
-    }
-    return(F)
-  }
-
-  ### Old code
-
-  if(any(class(my_sbm_object)=='sbmMatrix')){
-    if(is.list(my_sbm_object)){
-      conforme <- rep(F,4)
-      dimbase <- dim(my_sbm_object)
-      conforme[1] <- is.matrix(my_sbm_object$matrix)
-      conforme[2] <- length(my_sbm_object$nodes_names$row)==dimbase[1] & length(my_sbm_object$nodes_names$col)==dimbase[2]
-      conforme[2] <- conforme[2] & is.character(my_sbm_object$nodes_names$row) &
-        is.character(my_sbm_object$nodes_names$col)
-      if(identical(my_sbm_object$nodes_names$col,character(0)) &
-         identical(my_sbm_object$nodes_names$row,character(0))){
-        if(warnings){
-          warning("You didn't give any nodes names.")
-        }
-
-        conforme[2] <- T
-      }
-      conforme[3] <- conforme[3] | is.null(my_sbm_object$covar)
-      conforme[3] <- conforme[3] | all(sapply(my_sbm_object$covar,function(x,dimbase=dimbase)
-        return(is.matrix(x)|is.data.frame(x) && all(dim(x)==dimbase))))
-      conforme[4] <- my_sbm_object$type %in% c('bipartite','unipartite') &
-        my_sbm_object$law %in% c('poisson','gaussian','bernoulli')
-      if(warnings){
-        if(!all(conforme)){
-          warning("The is a problem in your sbmMatrix. It can't be read. You should build it with :\nbuildSbmMatrix(obj,...) ")
-        }
-        if(!conforme[1]){
-          stop("Network matrix has the wrong format.")
-        }
-        if(!conforme[2]){
-          stop("Nodes names aren't correctly set.")
-        }
-        if(!conforme[3]){
-          stop("Covariables aren't correct.")
-        }
-        if(!conforme[4]){
-          stop("type of network or density's law can't be read.")
-        }
-      }
-      return(all(conforme))
+    if(identical(my_sbm_object$nodes_names$col,character(0)) &
+       identical(my_sbm_object$nodes_names$row,character(0))){
+      warning("Nodes names on rows and/or columns are missing")
     }else{
       if(warnings){
-        stop("my_sbm_object isn't a list")
+        warning("Columns and rows names are not of the same dimension that the network matrix")
       }
       return(F)
     }
-  }else{
+  }
+
+  # check covariables
+  if(!is.null(my_sbm_object$covar)){
+    if(!all(sapply(my_sbm_object$covar,function(x,dimbase=dimbase)
+      return(is.matrix(x) && all(dim(x)==dimbase))))){
+      if(warnings){
+        warning("Covariables should be matrix of the same dimension than the network matrix")
+      }
+      return(F)
+    }
     if(warnings){
-      stop("my_sbm_object doesn't have the class : 'sbmMatrix'")
+      warning("Covariable list should be NULL if it's empty")
     }
     return(F)
   }
+
+  #check type
+  if(!my_sbm_object$type %in% c('bipartite','unipartite')){
+    if(warnings){
+      warning("Network  type can only be 'bipartite' or 'unipartite'")
+    }
+    return(F)
+  }else if(my_sbm_object$type == 'unipartite' && dimbase[1] != dimbase[2]){
+    if(warnings){
+      warning("Network is set as 'unipartite' but has different number of columns and rows")
+    }
+  }
+
+  #check law
+  if(!my_sbm_object$law %in% c('poisson','gaussian','bernoulli')){
+    if(warnings){
+      warning("Network law density can only be 'poisson', 'gaussian' or 'bernoulli'")
+    }
+    return(F)
+
+  }else if(warnings){
+    if(my_sbm_object$law == 'poisson' && any(my_sbm_object$matrix != round(my_sbm_object$matrix))){
+      warning("Network law density is set as 'poisson' but has non-interger values")
+
+    }else if(my_sbm_object$law == 'poisson' && all(my_sbm_object$matrix %in% c(0,1))){
+      warning("Network law density is set as 'poisson' but has only binary values")
+
+    }else if(my_sbm_object$law == 'bernoulli' && !all(my_sbm_object$matrix %in% c(0,1))){
+      warning("Network law density is set as 'bernoulli' but has non-binary values")
+
+    }else if(my_sbm_object$law == 'gaussian' && all(my_sbm_object$matrix == round(my_sbm_object$matrix))){
+      if(all(my_sbm_object$matrix %in% c(0,1))){
+        warning("Network law density is set as 'gaussian' and has only binary values")
+      }else{
+        warning("Network law density is set as 'gaussian' and has only integer values")
+      }
+    }
+  }
+  #### IL FAUT TESTER CE DERNIER CHUNK
+
+  return(T)
+  ### Old code
+
+  # if(any(class(my_sbm_object)=='sbmMatrix')){
+  #   if(is.list(my_sbm_object)){
+  #     conforme <- rep(F,4)
+  #     dimbase <- dim(my_sbm_object)
+  #     conforme[1] <- is.matrix(my_sbm_object$matrix)
+  #     conforme[2] <- length(my_sbm_object$nodes_names$row)==dimbase[1] & length(my_sbm_object$nodes_names$col)==dimbase[2]
+  #     conforme[2] <- conforme[2] & is.character(my_sbm_object$nodes_names$row) &
+  #       is.character(my_sbm_object$nodes_names$col)
+  #     if(identical(my_sbm_object$nodes_names$col,character(0)) &
+  #        identical(my_sbm_object$nodes_names$row,character(0))){
+  #       if(warnings){
+  #         warning("You didn't give any nodes names.")
+  #       }
+  #
+  #       conforme[2] <- T
+  #     }
+  #     conforme[3] <- conforme[3] | is.null(my_sbm_object$covar)
+  #     conforme[3] <- conforme[3] | all(sapply(my_sbm_object$covar,function(x,dimbase=dimbase)
+  #       return(is.matrix(x) && all(dim(x)==dimbase))))
+  #     conforme[4] <- my_sbm_object$type %in% c('bipartite','unipartite') &
+  #       my_sbm_object$law %in% c('poisson','gaussian','bernoulli')
+  #     if(warnings){
+  #       if(!all(conforme)){
+  #         warning("The is a problem in your sbmMatrix. It can't be read. You should build it with :\nbuildSbmMatrix(obj,...) ")
+  #       }
+  #       if(!conforme[1]){
+  #         stop("Network matrix has the wrong format.")
+  #       }
+  #       if(!conforme[2]){
+  #         stop("Nodes names aren't correctly set.")
+  #       }
+  #       if(!conforme[3]){
+  #         stop("Covariables aren't correct.")
+  #       }
+  #       if(!conforme[4]){
+  #         stop("type of network or density's law can't be read.")
+  #       }
+  #     }
+  #     return(all(conforme))
+  #   }else{
+  #     if(warnings){
+  #       stop("my_sbm_object isn't a list")
+  #     }
+  #     return(F)
+  #   }
+  # }else{
+  #   if(warnings){
+  #     stop("my_sbm_object doesn't have the class : 'sbmMatrix'")
+  #   }
+  #   return(F)
+  # }
 }
 
 
