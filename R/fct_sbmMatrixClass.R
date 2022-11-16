@@ -151,7 +151,9 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   }else if(!(length(my_sbm_object$nodes_names$row) == dimbase[1] & length(my_sbm_object$nodes_names$col) == dimbase[2])){
     if(identical(my_sbm_object$nodes_names$col,character(0)) &
        identical(my_sbm_object$nodes_names$row,character(0))){
-      warning("Nodes names on rows and/or columns are missing")
+      if(warnings){
+        warning("Nodes names on rows and/or columns are missing")
+      }
     }else{
       if(warnings){
         warning("Columns and rows names are not of the same dimension that the network matrix")
@@ -195,24 +197,18 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
     return(F)
 
   }else if(warnings){
-    if(my_sbm_object$law == 'poisson' && any(my_sbm_object$matrix != round(my_sbm_object$matrix))){
-      warning("Network law density is set as 'poisson' but has non-interger values")
+    if(my_sbm_object$law %in% c('poisson','bernoulli') && any(my_sbm_object$matrix != round(my_sbm_object$matrix))){
+      warning("Network law density is set as '",my_sbm_object$law,"' but has non-interger values")
 
-    }else if(my_sbm_object$law == 'poisson' && all(my_sbm_object$matrix %in% c(0,1))){
-      warning("Network law density is set as 'poisson' but has only binary values")
-
-    }else if(my_sbm_object$law == 'bernoulli' && !all(my_sbm_object$matrix %in% c(0,1))){
-      warning("Network law density is set as 'bernoulli' but has non-binary values")
+    }else if(my_sbm_object$law %in% c('poisson','gaussian') && all(my_sbm_object$matrix %in% c(0,1))){
+      warning("Network law density is set as '",my_sbm_object$law,"' but has only binary values")
 
     }else if(my_sbm_object$law == 'gaussian' && all(my_sbm_object$matrix == round(my_sbm_object$matrix))){
-      if(all(my_sbm_object$matrix %in% c(0,1))){
-        warning("Network law density is set as 'gaussian' and has only binary values")
-      }else{
-        warning("Network law density is set as 'gaussian' and has only integer values")
-      }
+      warning("Network law density is set as '",my_sbm_object$law,"' and has only integer values")
+    }else if(my_sbm_object$law == 'bernoulli' && !all(my_sbm_object$matrix %in% c(0,1))){
+      warning("Network law density is set as '",my_sbm_object$law,"' and has non-binary values")
     }
   }
-  #### IL FAUT TESTER CE DERNIER CHUNK
 
   return(T)
   ### Old code
