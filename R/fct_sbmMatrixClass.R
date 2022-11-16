@@ -169,45 +169,71 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   }
 
 
-
-  # check names class length
-  if(!(is.character(my_sbm_object$nodes_names$col) & is.character(my_sbm_object$nodes_names$row))){
+  still_sbm <- F
+  # check row names
+  if(!is.character(my_sbm_object$nodes_names$row)){
     if(warnings){
-      warning("Columns and rows names should be characters")
+      warning("Rows names should be characters")
     }
     return(F)
-  }else if(length(my_sbm_object$nodes_names$row) == dimbase[1] &
-           length(my_sbm_object$nodes_names$col) == dimbase[2]){
+  }else if(length(my_sbm_object$nodes_names$row) == dimbase[1]){
     if(warnings){
       dup_row <- duplicated(my_sbm_object$nodes_names$row)
-      dup_col <- duplicated(my_sbm_object$nodes_names$col)
       if(any(dup_row)){
-        warning("Some nodes names on rows are repeated :",
+        warning("Some nodes names on rows are repeated : ",
                 paste(my_sbm_object$nodes_names$row[dup_row],collapse = ', '))
-      }
-      if(any(dup_col)){
-        warning("Some nodes names on columns are repeated :",
-                paste(my_sbm_object$nodes_names$row[dup_col],collapse = ', '))
       }
     }
   }else{
-    if(identical(my_sbm_object$nodes_names$col,character(0)) &
-       identical(my_sbm_object$nodes_names$row,character(0))){
+    if(identical(my_sbm_object$nodes_names$row,character(0))){
       if(warnings){
-        warning("Nodes names on rows and/or columns are missing.\nNotes : You still can apply sbm.")
+        still_sbm <- T
+        warning("\n  Nodes names on rows are missing")
       }
     }else{
       if(warnings){
-        warning("Columns and rows names are not of the same dimension that the network matrix")
+        warning("Rows names are not of the same dimension that the network matrix")
       }
       return(F)
     }
   }
 
+  # check col names
+  if(!is.character(my_sbm_object$nodes_names$col)){
+    if(warnings){
+      warning("Columns names should be characters")
+    }
+    return(F)
+  }else if(length(my_sbm_object$nodes_names$col) == dimbase[2]){
+    if(warnings){
+      dup_col <- duplicated(my_sbm_object$nodes_names$col)
+      if(any(dup_col)){
+        warning("Some nodes names on columns are repeated :",
+                paste(my_sbm_object$nodes_names$col[dup_col],collapse = ', '))
+      }
+    }
+  }else{
+    if(identical(my_sbm_object$nodes_names$col,character(0))){
+      if(warnings){
+        still_sbm <- T
+        warning("Nodes names on columns are missing")
+      }
+    }else{
+      if(warnings){
+        warning("Columns names are not of the same dimension that the network matrix")
+      }
+      return(F)
+    }
+  }
+  if(still_sbm){
+    message("Notes : You still can apply sbm without problems")
+  }
+
+
   # check covariables
   if(!is.null(my_sbm_object$covar)){
-    if(!all(sapply(my_sbm_object$covar,function(x,dimbase=dimbase)
-      return(is.matrix(x) && is.numeric(x) && all(dim(x)==dimbase))))){
+    if(!all(sapply(my_sbm_object$covar,function(x,dimB=dimbase)
+      return(is.matrix(x) && is.numeric(x) && all(dim(x)==dimB))))){
       if(warnings){
         warning("Covariables should be numeric matrix of the same dimension than the network matrix")
       }
@@ -460,8 +486,9 @@ covar <- function(x){
 #' @noRd
 "covar<-.sbmMatrix" <- function(x,  name = NULL, value){
   if(is.data.frame(value) | is.matrix(value)){
-    if(all(dim(x)==dim(value))){
-      x$covar <- append(x$covar,list(as.matrix(value)))
+    matValue <- as.matrix(value)
+    if(is.numeric(matValue) & all(dim(x)==dim(matValue))){
+      x$covar <- append(x$covar,list(matValue))
       n <- length(x$covar)
       names(x$covar)[[n]] <- ifelse(is.null(name),paste0('covar',n),addindice(names(x$covar),name))
       x
