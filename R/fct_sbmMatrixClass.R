@@ -1,3 +1,30 @@
+#' addindice
+#'
+#' @description it's a function that add an numeric index to a character name if it's in the character list
+#'
+#' @param list,name,n=1
+#' `list` is a character vector
+#' `name` is character
+#' `n` is argument used for recurcive action you would better not use it.
+#'
+#' @return `name` or if it's already in `list` the first of `nameX` (`name1`, `name2`, etc...) that is not already in the list
+#'
+#' @noRd
+addindice <- function(list, name, n = 1){
+  if(name %in% list){
+    name_new <- paste0(name,n)
+    if(name_new %in% list){
+      n_new <- n+1
+      return(addindice(list,name,n = n_new))
+    }else{
+      return(name_new)
+    }
+  }else{
+    return(name)
+  }
+}
+
+
 #' buildSbmMatrix
 #'
 #' @description A fct that build an S3 object from a data.frame or a matrix
@@ -109,8 +136,6 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
 #' @noRd
 is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
 
-  ### I'm working on it :
-
   # check class
   if(!any(class(my_sbm_object)=='sbmMatrix')){
     if(warnings){
@@ -165,16 +190,12 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   # check covariables
   if(!is.null(my_sbm_object$covar)){
     if(!all(sapply(my_sbm_object$covar,function(x,dimbase=dimbase)
-      return(is.matrix(x) && all(dim(x)==dimbase))))){
+      return(is.matrix(x) && is.numeric(x) && all(dim(x)==dimbase))))){
       if(warnings){
-        warning("Covariables should be matrix of the same dimension than the network matrix")
+        warning("Covariables should be numeric matrix of the same dimension than the network matrix")
       }
       return(F)
     }
-    if(warnings){
-      warning("Covariable list should be NULL if it's empty")
-    }
-    return(F)
   }
 
   #check type
@@ -211,59 +232,6 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   }
 
   return(T)
-  ### Old code
-
-  # if(any(class(my_sbm_object)=='sbmMatrix')){
-  #   if(is.list(my_sbm_object)){
-  #     conforme <- rep(F,4)
-  #     dimbase <- dim(my_sbm_object)
-  #     conforme[1] <- is.matrix(my_sbm_object$matrix)
-  #     conforme[2] <- length(my_sbm_object$nodes_names$row)==dimbase[1] & length(my_sbm_object$nodes_names$col)==dimbase[2]
-  #     conforme[2] <- conforme[2] & is.character(my_sbm_object$nodes_names$row) &
-  #       is.character(my_sbm_object$nodes_names$col)
-  #     if(identical(my_sbm_object$nodes_names$col,character(0)) &
-  #        identical(my_sbm_object$nodes_names$row,character(0))){
-  #       if(warnings){
-  #         warning("You didn't give any nodes names.")
-  #       }
-  #
-  #       conforme[2] <- T
-  #     }
-  #     conforme[3] <- conforme[3] | is.null(my_sbm_object$covar)
-  #     conforme[3] <- conforme[3] | all(sapply(my_sbm_object$covar,function(x,dimbase=dimbase)
-  #       return(is.matrix(x) && all(dim(x)==dimbase))))
-  #     conforme[4] <- my_sbm_object$type %in% c('bipartite','unipartite') &
-  #       my_sbm_object$law %in% c('poisson','gaussian','bernoulli')
-  #     if(warnings){
-  #       if(!all(conforme)){
-  #         warning("The is a problem in your sbmMatrix. It can't be read. You should build it with :\nbuildSbmMatrix(obj,...) ")
-  #       }
-  #       if(!conforme[1]){
-  #         stop("Network matrix has the wrong format.")
-  #       }
-  #       if(!conforme[2]){
-  #         stop("Nodes names aren't correctly set.")
-  #       }
-  #       if(!conforme[3]){
-  #         stop("Covariables aren't correct.")
-  #       }
-  #       if(!conforme[4]){
-  #         stop("type of network or density's law can't be read.")
-  #       }
-  #     }
-  #     return(all(conforme))
-  #   }else{
-  #     if(warnings){
-  #       stop("my_sbm_object isn't a list")
-  #     }
-  #     return(F)
-  #   }
-  # }else{
-  #   if(warnings){
-  #     stop("my_sbm_object doesn't have the class : 'sbmMatrix'")
-  #   }
-  #   return(F)
-  # }
 }
 
 
@@ -394,34 +362,6 @@ as.matrix.sbmMatrix <- function(x, ...){
 #' @noRd
 dim.sbmMatrix <- function(x){
   return(dim(x$matrix))
-}
-
-
-
-#' addindice
-#'
-#' @description it's a function that add an numeric index to a character name if it's in the character list
-#'
-#' @param list,name,n=1
-#' `list` is a character vector
-#' `name` is character
-#' `n` is argument used for recurcive action you would better not use it.
-#'
-#' @return `name` or if it's already in `list` the first of `nameX` (`name1`, `name2`, etc...) that is not already in the list
-#'
-#' @noRd
-addindice <- function(list, name, n = 1){
-  if(name %in% list){
-    name_new <- paste0(name,n)
-    if(name_new %in% list){
-      n_new <- n+1
-      return(addindice(list,name,n = n_new))
-    }else{
-      return(name_new)
-    }
-  }else{
-    return(name)
-  }
 }
 
 
