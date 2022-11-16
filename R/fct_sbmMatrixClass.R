@@ -493,7 +493,7 @@ covar <- function(x){
       names(x$covar)[[n]] <- ifelse(is.null(name),paste0('covar',n),addindice(names(x$covar),name))
       x
     }else{
-      stop("value has not the same dimension than x")
+      stop("value should be a numeric matrix or data.frame with same dimension than x")
     }
   }else{
     stop("value should be a data.frame or a matrix")
