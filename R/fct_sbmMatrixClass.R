@@ -232,15 +232,49 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
 
   # check covariables
   if(!is.null(my_sbm_object$covar)){
-    if(!all(sapply(my_sbm_object$covar,function(x,dimB=dimbase)
-      return(is.matrix(x) && is.numeric(x) && all(dim(x)==dimB))))){
+
+    is_no_good_covar <- !sapply(my_sbm_object$covar,function(x,dimB=dimbase)
+      return(is.matrix(x) && is.numeric(x) && all(dim(x)==dimB)))
+
+    if(any(is_no_good_covar)){
       if(warnings){
-        warning("Covariables should be numeric matrix of the same dimension than the network matrix")
+        warning("Covariables should be numeric matrix of the same dimension than the network matrix\n  ",
+                paste("Problematic covariables :",
+                      paste(names(my_sbm_object$covar)[is_no_good_covar],collapse = ', '),
+                      sep=' '))
       }
       return(F)
+    }else{
+      if(warnings){
+
+        is_like_netMat <- sapply(my_sbm_object$covar,function(x,netMat = my_sbm_object$matrix)
+          return(all(x==netMat)))
+
+        if(any(is_like_netMat)){
+          warning("Covariable ",
+                  paste(names(my_sbm_object$covar)[is_like_netMat],collapse = ', '),
+                  " is equal to the network matrix")
+        }else{
+
+          is_like_covar <- sapply(1:length(my_sbm_object$covar),
+                                  function(i,sbmMat1 = my_sbm_object){
+                                    any(sapply(1:i,function(y,compare = i,sbmMat2 = sbmMat1){
+                                      if(compare == y){
+                                        return(F)
+                                      }else{
+                                        return(all(sbmMat2$covar[[compare]]==sbmMat2$covar[[y]]))
+                                      }
+                                    }))
+                                  })
+          if(any(is_like_covar)){
+            warning("Covariable ",
+                    paste(names(my_sbm_object$covar)[is_like_covar],collapse = ', '),
+                    " is repeated")
+          }
+        }
+      }
     }
   }
-  # identical with network and between them
 
   #check type
   if(!my_sbm_object$type %in% c('bipartite','unipartite')){
