@@ -126,10 +126,11 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
 #' is.sbmMatrix
 #'
 #' @description A fct that analyse an supposed sbmMatrix and tell if it's correctly set.
+#' The warnings argument will show or not the warnings if something strange is seen.
 #'
 #' @param my_sbm_object,warnings=FALSE
 #' `my_sbm_object` is an sbmMatrix
-#' `warnings` should the function set an error or a warning when there is a problem in the object
+#' `warnings` should the function show warnings when there is a problem or strange parameters in the object
 #'
 #' @return `TRUE` if the format is good, `FALSE` if not
 #'
@@ -167,17 +168,33 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
     return(F)
   }
 
+
+
   # check names class length
   if(!(is.character(my_sbm_object$nodes_names$col) & is.character(my_sbm_object$nodes_names$row))){
     if(warnings){
       warning("Columns and rows names should be characters")
     }
     return(F)
-  }else if(!(length(my_sbm_object$nodes_names$row) == dimbase[1] & length(my_sbm_object$nodes_names$col) == dimbase[2])){
+  }else if(length(my_sbm_object$nodes_names$row) == dimbase[1] &
+           length(my_sbm_object$nodes_names$col) == dimbase[2]){
+    if(warnings){
+      dup_row <- duplicated(my_sbm_object$nodes_names$row)
+      dup_col <- duplicated(my_sbm_object$nodes_names$col)
+      if(any(dup_row)){
+        warning("Some nodes names on rows are repeated :",
+                paste(my_sbm_object$nodes_names$row[dup_row],collapse = ', '))
+      }
+      if(any(dup_col)){
+        warning("Some nodes names on columns are repeated :",
+                paste(my_sbm_object$nodes_names$row[dup_col],collapse = ', '))
+      }
+    }
+  }else{
     if(identical(my_sbm_object$nodes_names$col,character(0)) &
        identical(my_sbm_object$nodes_names$row,character(0))){
       if(warnings){
-        warning("Nodes names on rows and/or columns are missing")
+        warning("Nodes names on rows and/or columns are missing.\nNotes : You still can apply sbm.")
       }
     }else{
       if(warnings){
