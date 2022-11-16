@@ -226,7 +226,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
     }
   }
   if(still_sbm){
-    message("Notes : You still can apply sbm without problems")
+    message("Notes : You still can apply sbm without nodes names but this information is useful for analysis")
   }
 
 
@@ -240,6 +240,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
       return(F)
     }
   }
+  # identical with network and between them
 
   #check type
   if(!my_sbm_object$type %in% c('bipartite','unipartite')){
