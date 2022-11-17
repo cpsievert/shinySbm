@@ -110,6 +110,7 @@ app_ui <- function(request) {
                                  a(strong("Importation Information")),
                                  column(width = 12,
                                         wellPanel(
+                                          verbatimTextOutput("errorImportation"),
                                           verbatimTextOutput("summaryDataImport")))))),
 
                ### DATA SHOW

@@ -50,8 +50,11 @@ app_server <- function(input, output, session) {
                                                      row_names = sbm::fungusTreeNetwork$tree_names))
     }
     dataset$type <- input$networkType
+    output$errorImportation <- renderText({
+      paste("Success ?\n",tryCatch(is.sbmMatrix(datasetUploaded(),warnings = T),
+               warning = function(w) { w$message }))
+    })
     output$summaryDataImport <- renderPrint({
-      try(is.sbmMatrix(datasetUploaded()))
       print(datasetUploaded())
     })
     dataset
