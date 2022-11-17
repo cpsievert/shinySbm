@@ -53,6 +53,7 @@ app_server <- function(input, output, session) {
     output$errorImportation <- renderText({
       paste("Success ?\n",tryCatch(is.sbmMatrix(datasetUploaded(),warnings = T),
                warning = function(w) { w$message }))
+      ##### WHAT IF MANY WARNS
     })
     output$summaryDataImport <- renderPrint({
       print(datasetUploaded())
