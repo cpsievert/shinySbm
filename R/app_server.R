@@ -51,7 +51,7 @@ app_server <- function(input, output, session) {
     }
     dataset$type <- input$networkType
     output$summaryDataImport <- renderPrint({
-      is.sbmMatrix(datasetUploaded())
+      try(is.sbmMatrix(datasetUploaded()))
       print(datasetUploaded())
     })
     dataset
