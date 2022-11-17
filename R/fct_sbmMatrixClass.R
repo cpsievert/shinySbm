@@ -1,3 +1,8 @@
+# source("R/fct_sbmMatrixClass.R")
+# dat <- read.csv2("../data_set/fungus_vs_tree_data.csv",row.names = 1)
+
+
+
 #' addindice
 #'
 #' @description it's a function that add an numeric index to a character name if it's in the character list
