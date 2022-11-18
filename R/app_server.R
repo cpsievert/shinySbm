@@ -54,7 +54,11 @@ app_server <- function(input, output, session) {
   })
 
   observeEvent(datasetUploaded(),{
-
+    updateRadioButtons(session,"networkType",
+                      "What kind of network it is ?",
+                      choices = list("Bipartite" = "bipartite","Unipartite" = "unipartite"),
+                      inline = T,
+                      selected = datasetUploaded()$type)
     updateSelectInput(session,"whichLaw",
                       label = "What is the density expected upon dataset ?",
                       choices = list("Bernoulli" = "bernoulli",
@@ -102,6 +106,7 @@ app_server <- function(input, output, session) {
                           c('All', '50', '100')),
         paging = T))
     })
+
 
   PlotMat <- reactive({
     req(input$whichShow)
@@ -159,11 +164,11 @@ app_server <- function(input, output, session) {
 
   observeEvent(input$runSbm,{
     data_sbm <- my_sbm_main()$clone()
-    value <- data_sbm$nbBlocks
+    value <- sum(data_sbm$nbBlocks)
     min <- min(data_sbm$storedModels$nbBlocks)
     max <- max(data_sbm$storedModels$nbBlocks)
     updateNumericInput(session,inputId = "Nbblocks",
-                       label = "Select the number of blocks:",
+                       label = "Select the total number of blocks:",
                        value = value, min = min, max = max ,step=1)
 
     updateRadioButtons(session,"whichRawSbmMatrix", "Select Ploted Matrix",
@@ -181,7 +186,7 @@ app_server <- function(input, output, session) {
 
   my_sbm <- eventReactive(input$Nbblocks,{
     data_sbm <- my_sbm_main()$clone()
-    data_sbm$setModel(input$Nbblocks)
+    data_sbm$setModel(which(data_sbm$storedModels$nbBlocks == input$Nbblocks))
     data_sbm
   })
 
@@ -192,8 +197,8 @@ app_server <- function(input, output, session) {
     microplot <- ggplot2::ggplot(data_sbm$storedModels) + ggplot2::aes(x = nbBlocks, y = ICL,linetype = "ICL") +
       ggplot2::geom_line() + ggplot2::geom_point(alpha = 0.5) +
       ggplot2::geom_line(ggplot2::aes(x = nbBlocks, y = loglik,linetype = "Log Likelihood")) +
-      ggplot2::geom_point(ggplot2::aes(x = data_sbm$nbBlocks, y = data_sbm$ICL, colour = 'Selected Block Nb'),  size = 4) +
-      ggplot2::geom_point(ggplot2::aes(x = data_sbm_main$nbBlocks, y = data_sbm_main$ICL, colour = 'Best Block Nb'), size = 4, shape = 10) +
+      ggplot2::geom_point(ggplot2::aes(x = sum(data_sbm$nbBlocks), y = data_sbm$ICL, colour = 'Selected Block Nb'),  size = 4) +
+      ggplot2::geom_point(ggplot2::aes(x = sum(data_sbm_main$nbBlocks), y = data_sbm_main$ICL, colour = 'Best Block Nb'), size = 4, shape = 10) +
       ggplot2::labs(linetype = "Curves", colour = "Number of Blocks") +
       ggplot2::theme(
         legend.position = c(.40, .05),
@@ -207,13 +212,14 @@ app_server <- function(input, output, session) {
   })
 
 
+  output$sbmSummarySelect <- renderPrint({
+    data_sbm <- my_sbm()$clone()
+    print(c(NbBlockSelected = data_sbm$nbBlocks))
+  })
 
   output$sbmSummary <- renderPrint({
     data_sbm <- my_sbm()$clone()
     print(data_sbm$storedModels)
-    print(c(NbBlockSelected = data_sbm$nbBlocks,
-            min = min(data_sbm$storedModels$nbBlocks),
-            max = max(data_sbm$storedModels$nbBlocks)))
   })
 
   PlotNet <- reactive({

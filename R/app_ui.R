@@ -160,8 +160,7 @@ app_ui <- function(request) {
                                       label = "Add covariable to the SBM:",
                                       choices = list("None" = "NULL")),
                           actionButton(inputId = "runSbm", "Run SBM"))),
-                 column(width = 1),
-                 column(width = 8,
+                 column(width = 9,
                         a(strong("SBM ouputs")),
                         wellPanel(
                           fluidRow(
@@ -170,11 +169,13 @@ app_ui <- function(request) {
                                    textOutput("sbmCode"),
                                    hr(),
                                    strong("SBM summary:"),
+                                   verbatimTextOutput("sbmSummarySelect"),
+                                   tags$head(tags$style("#sbmSummarySelect{font-weight: bold}")),
                                    verbatimTextOutput("sbmSummary")),
 
                             column(width = 6,
                                    numericInput(inputId = "Nbblocks",
-                                               label = "Select the number of blocks:",
+                                               label = "Select the total number of blocks:",
                                                value = 4, min = 1, max = 6,step=1),
                                    plotOutput("showILC2"))
                           )))),
