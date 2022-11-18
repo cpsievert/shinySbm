@@ -50,10 +50,11 @@ app_server <- function(input, output, session) {
                                                      row_names = sbm::fungusTreeNetwork$tree_names))
     }
     dataset$type <- input$networkType
-    output$errorImportation <- renderText({
-      paste("Success ?\n",tryCatch(is.sbmMatrix(datasetUploaded(),warnings = T),
-               warning = function(w) { w$message }))
-      ##### WHAT IF MANY WARNS
+
+    output$warningDataImport <- renderPrint({
+      warn <- tryCatch(is.sbmMatrix(datasetUploaded(),warnings = T),
+                       warning = function(w) { w$message })
+      ifelse(warn == TRUE,"",warn)
     })
     output$summaryDataImport <- renderPrint({
       print(datasetUploaded())
