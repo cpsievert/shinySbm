@@ -6,6 +6,7 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
+
   labels <- eventReactive(c(input$networkType,input$rowLabel,input$colLabel,input$nodLabel),{
     switch(input$networkType,
            'bipartite' = list(row = input$rowLabel, col = input$colLabel),
@@ -49,20 +50,8 @@ app_server <- function(input, output, session) {
                         "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
                                                      row_names = sbm::fungusTreeNetwork$tree_names))
     }
-    dataset$type <- input$networkType
-
-    output$warningDataImport <- renderPrint({
-      warn <- tryCatch(is.sbmMatrix(datasetUploaded(),warnings = T),
-                       warning = function(w) { w$message })
-      ifelse(warn == TRUE,"",warn)
-    })
-    output$summaryDataImport <- renderPrint({
-      print(datasetUploaded())
-    })
     dataset
   })
-
-
 
   observeEvent(datasetUploaded(),{
 
@@ -74,6 +63,28 @@ app_server <- function(input, output, session) {
                       selected = datasetUploaded()$law)
   })
 
+  workingDataset <- eventReactive(c(datasetUploaded(),input$networkType,input$whichLaw),{
+      data <- datasetUploaded()
+      data$type <- input$networkType
+      data$law <- input$whichLaw
+      data
+  })
+
+  output$warningDataImport <- renderPrint({
+    warns <- list()
+    withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
+                        warning = function(w){warns <<- c(warns,list(w))})
+    warning_messages <- sapply(warns,function(warn)warn$message)
+
+    if(!identical(warning_messages,list())){
+      cat("Warnings :\n")
+      print(warning_messages)
+    }
+  })
+  output$summaryDataImport <- renderPrint({
+    print(workingDataset())
+  })
+
 
 
 
@@ -83,7 +94,7 @@ app_server <- function(input, output, session) {
     req(input$whichShow)
     if(input$whichShow != 'print'){return(NULL)}
     DT::datatable(
-      as.data.frame(datasetUploaded()),
+      as.data.frame(workingDataset()),
       option = list(
         # scroll :
         scroller = TRUE,
@@ -95,7 +106,7 @@ app_server <- function(input, output, session) {
   PlotMat <- reactive({
     req(input$whichShow)
     if(input$whichShow == 'plot'){
-      x <- as.matrix(datasetUploaded())
+      x <- as.matrix(workingDataset())
       if(input$runSbm){
         data_sbm <- my_sbm()$clone()
         switch(input$whichRawSbmMatrix,
@@ -137,7 +148,7 @@ app_server <- function(input, output, session) {
 
   ### Problem : with bipartite two graphs ans two input
   my_sbm_main <- eventReactive(input$runSbm,{
-    datasetup <- datasetUploaded()
+    datasetup <- workingDataset()
     data_res <- withProgress(message = "SBM is Running", {
       switch (input$networkType,
               "unipartite" = sbm::estimateSimpleSBM(netMat = as.matrix(datasetup), model = input$whichLaw, estimOptions = list(verbosity = 0, plot = F)),
