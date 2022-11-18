@@ -110,8 +110,8 @@ app_ui <- function(request) {
                                  a(strong("Importation Information")),
                                  column(width = 12,
                                         wellPanel(
-                                          verbatimTextOutput("warningDataImport"),
-                                          tags$head(tags$style("#warningDataImport{color: red}")),
+                                          verbatimTextOutput("warningDataImport1"),
+                                          tags$head(tags$style("#warningDataImport1{color: red}")),
                                           verbatimTextOutput("summaryDataImport")))))),
 
                ### DATA SHOW
@@ -164,16 +164,18 @@ app_ui <- function(request) {
                         a(strong("SBM ouputs")),
                         wellPanel(
                           fluidRow(
-                            column(width = 6,
+                            column(width = 8,
                                    strong("SBM code:"),
-                                   textOutput("sbmCode"),
+                                   verbatimTextOutput("sbmCode"),
+                                   verbatimTextOutput("warningDataImport2"),
+                                   tags$head(tags$style("#warningDataImport2{color: red}")),
                                    hr(),
                                    strong("SBM summary:"),
                                    verbatimTextOutput("sbmSummarySelect"),
                                    tags$head(tags$style("#sbmSummarySelect{font-weight: bold}")),
                                    verbatimTextOutput("sbmSummary")),
 
-                            column(width = 6,
+                            column(width = 4,
                                    numericInput(inputId = "Nbblocks",
                                                label = "Select the total number of blocks:",
                                                value = 4, min = 1, max = 6,step=1),

@@ -74,7 +74,18 @@ app_server <- function(input, output, session) {
       data
   })
 
-  output$warningDataImport <- renderPrint({
+  output$warningDataImport1 <- renderPrint({
+    warns <- list()
+    withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
+                        warning = function(w){warns <<- c(warns,list(w))})
+    warning_messages <- sapply(warns,function(warn)warn$message)
+
+    if(!identical(warning_messages,list())){
+      cat("Warnings :\n")
+      print(warning_messages)
+    }
+  })
+  output$warningDataImport2 <- renderPrint({
     warns <- list()
     withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
                         warning = function(w){warns <<- c(warns,list(w))})
@@ -167,6 +178,14 @@ app_server <- function(input, output, session) {
     value <- sum(data_sbm$nbBlocks)
     min <- min(data_sbm$storedModels$nbBlocks)
     max <- max(data_sbm$storedModels$nbBlocks)
+    output$sbmCode <- renderText({
+      switch (input$networkType,
+              "unipartite" = paste0("mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
+                                    workingDataset()$law,", estimOptions = list(verbosity = 1))"),
+              "bipartite" = paste0("mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
+                                   workingDataset()$law,"', estimOptions = list(verbosity = 1))"))
+
+    })
     updateNumericInput(session,inputId = "Nbblocks",
                        label = "Select the total number of blocks:",
                        value = value, min = min, max = max ,step=1)
@@ -190,7 +209,7 @@ app_server <- function(input, output, session) {
     data_sbm
   })
 
-  observeEvent(input$Nbblocks,{
+  observeEvent(c(input$Nbblocks,input$runSbm),{
     data_sbm <- my_sbm()$clone()
     data_sbm_main <- my_sbm_main()$clone()
 
@@ -209,17 +228,22 @@ app_server <- function(input, output, session) {
     output$showILC1 <- renderPlot({microplot})
     output$showILC2 <- renderPlot({microplot})
     output$showILC3 <- renderPlot({microplot})
-  })
 
+    output$sbmSummarySelect <- renderPrint({
+      data_sbm <- my_sbm()$clone()
+      print(c(NbBlockSelected = data_sbm$nbBlocks))
+    })
 
-  output$sbmSummarySelect <- renderPrint({
-    data_sbm <- my_sbm()$clone()
-    print(c(NbBlockSelected = data_sbm$nbBlocks))
-  })
+    output$sbmSummary <- renderPrint({
+      data_sbm <- my_sbm()$clone()
+      cat('Connectivity:\n')
+      print(data_sbm$connectParam$mean)
+      cat('\nBlock Proportions:\n')
+      print(data_sbm$blockProp)
+      cat('\nStored Model:\n')
+      print(data_sbm$storedModels)
+    })
 
-  output$sbmSummary <- renderPrint({
-    data_sbm <- my_sbm()$clone()
-    print(data_sbm$storedModels)
   })
 
   PlotNet <- reactive({
