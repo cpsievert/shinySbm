@@ -151,8 +151,8 @@ app_server <- function(input, output, session) {
     datasetup <- workingDataset()
     data_res <- withProgress(message = "SBM is Running", {
       switch (input$networkType,
-              "unipartite" = sbm::estimateSimpleSBM(netMat = as.matrix(datasetup), model = input$whichLaw, estimOptions = list(verbosity = 0, plot = F)),
-              "bipartite" = sbm::estimateBipartiteSBM(netMat = as.matrix(datasetup), model = input$whichLaw, estimOptions = list(verbosity = 0, plot = F)))
+              "unipartite" = sbm::estimateSimpleSBM(netMat = as.matrix(datasetup), model = datasetup$law, estimOptions = list(verbosity = 0, plot = F)),
+              "bipartite" = sbm::estimateBipartiteSBM(netMat = as.matrix(datasetup), model = datasetup$law, estimOptions = list(verbosity = 0, plot = F)))
     })
     return(data_res)
     })
@@ -189,11 +189,18 @@ app_server <- function(input, output, session) {
     data_sbm <- my_sbm()$clone()
     data_sbm_main <- my_sbm_main()$clone()
 
-    microplot <- ggplot2::ggplot(data_sbm$storedModels) + ggplot2::aes(x = nbBlocks, y = ICL)  +
+    microplot <- ggplot2::ggplot(data_sbm$storedModels) + ggplot2::aes(x = nbBlocks, y = ICL,linetype = "ICL") +
       ggplot2::geom_line() + ggplot2::geom_point(alpha = 0.5) +
-      ggplot2::geom_point(ggplot2::aes(x = data_sbm$nbBlocks, y = data_sbm$ICL, colour = 'b', size = 2)) +
-      ggplot2::geom_point(ggplot2::aes(x = data_sbm_main$nbBlocks, y = data_sbm_main$ICL, colour = 'r', size = 2), shape = 10) +
-      ggplot2::theme(legend.position = "none")
+      ggplot2::geom_line(ggplot2::aes(x = nbBlocks, y = loglik,linetype = "Log Likelihood")) +
+      ggplot2::geom_point(ggplot2::aes(x = data_sbm$nbBlocks, y = data_sbm$ICL, colour = 'Selected Block Nb'),  size = 4) +
+      ggplot2::geom_point(ggplot2::aes(x = data_sbm_main$nbBlocks, y = data_sbm_main$ICL, colour = 'Best Block Nb'), size = 4, shape = 10) +
+      ggplot2::labs(linetype = "Curves", colour = "Number of Blocks") +
+      ggplot2::theme(
+        legend.position = c(.40, .05),
+        legend.justification = c("left", "bottom"),
+        legend.box.just = "left",
+        legend.margin = ggplot2::margin(6, 6, 6, 6)
+      )
     output$showILC1 <- renderPlot({microplot})
     output$showILC2 <- renderPlot({microplot})
     output$showILC3 <- renderPlot({microplot})
