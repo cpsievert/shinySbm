@@ -26,7 +26,11 @@ app_server <- function(input, output, session) {
 
   sep <- reactive({
     if(input$whichSep == "others"){
-      input$whichSep_other
+      if(input$whichSep_other == ""){
+        ";"
+      }else{
+        input$whichSep_other
+      }
     }else{
       input$whichSep
     }
@@ -85,6 +89,7 @@ app_server <- function(input, output, session) {
       print(warning_messages)
     }
   })
+
   output$warningDataImport2 <- renderPrint({
     warns <- list()
     withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
@@ -162,13 +167,15 @@ app_server <- function(input, output, session) {
          alt = "This is alternate text")
   }, deleteFile = TRUE)
 
-  ### Problem : with bipartite two graphs ans two input
+
   my_sbm_main <- eventReactive(input$runSbm,{
     datasetup <- workingDataset()
     data_res <- withProgress(message = "SBM is Running", {
       switch (input$networkType,
-              "unipartite" = sbm::estimateSimpleSBM(netMat = as.matrix(datasetup), model = datasetup$law, estimOptions = list(verbosity = 0, plot = F)),
-              "bipartite" = sbm::estimateBipartiteSBM(netMat = as.matrix(datasetup), model = datasetup$law, estimOptions = list(verbosity = 0, plot = F)))
+              "unipartite" = sbm::estimateSimpleSBM(netMat = as.matrix(datasetup),
+                                                    model = datasetup$law, estimOptions = list(verbosity = 5, plot = T)),
+              "bipartite" = sbm::estimateBipartiteSBM(netMat = as.matrix(datasetup),
+                                                      model = datasetup$law, estimOptions = list(verbosity = 5, plot = T)))
     })
     return(data_res)
     })
@@ -202,10 +209,13 @@ app_server <- function(input, output, session) {
                                       selected = 'ordered', inline = T)
   })
 
-
   my_sbm <- eventReactive(input$Nbblocks,{
     data_sbm <- my_sbm_main()$clone()
-    data_sbm$setModel(which(data_sbm$storedModels$nbBlocks == input$Nbblocks))
+    min <- min(data_sbm$storedModels$nbBlocks)
+    max <- max(data_sbm$storedModels$nbBlocks)
+    if(input$Nbblocks %in% min:max){
+      data_sbm$setModel(which(data_sbm$storedModels$nbBlocks == input$Nbblocks))
+    }
     data_sbm
   })
 
