@@ -72,8 +72,7 @@ app_ui <- function(request) {
                                           conditionalPanel(
                                             condition = "input.whichSep == 'others'",
                                             textInput("whichSep_other",
-                                                      label = "Write your sep character :",
-                                                      value = NULL)),
+                                                      label = "Write your sep character :")),
                                           checkboxInput('headercol','1st row is Columns name', value = T),
                                           checkboxInput('headerrow','1st column is Rows name',value = T))),
                                  column(width = 4,
