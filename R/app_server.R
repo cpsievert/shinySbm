@@ -173,9 +173,9 @@ app_server <- function(input, output, session) {
     data_res <- withProgress(message = "SBM is Running", {
       switch (input$networkType,
               "unipartite" = sbm::estimateSimpleSBM(netMat = as.matrix(datasetup),
-                                                    model = datasetup$law, estimOptions = list(verbosity = 5, plot = T)),
+                                                    model = datasetup$law, estimOptions = list(verbosity = 3, plot = T)),
               "bipartite" = sbm::estimateBipartiteSBM(netMat = as.matrix(datasetup),
-                                                      model = datasetup$law, estimOptions = list(verbosity = 5, plot = T)))
+                                                      model = datasetup$law, estimOptions = list(verbosity = 3, plot = T)))
     })
     return(data_res)
     })
