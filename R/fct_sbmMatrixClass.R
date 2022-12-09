@@ -50,7 +50,7 @@ addindice <- function(list, name, n = 1){
 #' 5 - The supposed density upon the data adjacency matrix.
 #'
 #' @noRd
-buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
+buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL){
   if(is.sbmMatrix(obj)){
     message("obj is already an sbmMatrix")
     return(obj)
@@ -71,6 +71,15 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
     }else{
       default.type <- "bipartite"
     }
+    cols_numeric <- all(apply(obj[-1],2,is.numeric))
+
+    if(!(is.numeric(obj[[1]]) & cols_numeric)){
+      warning(ifelse(cols_numeric,"First column is","Some columns are"),
+              "n't considered as numeric\n",
+              "1 - try activate : ",
+              ifelse(cols_numeric,'1st column is Rows names','1st row is Columns names'),
+              "button\n2 - check your matrix for non-numerical characters")
+    }
     message("Network is considered ",default.type)
     matObj <- as.matrix(obj)
     if(all(matObj==round(matObj))){
@@ -85,30 +94,6 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
     message("Default density is set to ",expected.law,"'s law.")
     # Section d'analyse des covariables
     cat('\n')
-    list_cov <- list(...)
-    # Set the names of covariables
-    if(length(list_cov)!=0){
-      good_covar <- sapply(list_cov,function(x,dimbase=dim(matObj))
-        return(is.matrix(x)|is.data.frame(x)&&all(dim(x)==dimbase)))
-      if(length(which(!good_covar))!=0){
-        list_cov <- list_cov[which(good_covar)]
-        warning("Covariable ",paste(paste0("n ",which(!good_covar)),collapse=', '),
-                " deleted because dimensions are wrong,\n  Covaribles should be data.frames or matrixes of the same dimention than the network matrix.")
-      }
-      if(length(which(good_covar))!=0){
-        if(is.null(names(list_cov))){
-          names(list_cov) <- paste0('covar',1:length(list_cov))
-        }else{
-          list_unamed <- names(list_cov)==""
-          names(list_cov)[list_unamed] <- paste0('covar',which(list_unamed))
-        }
-        list_cov <- sapply(list_cov,as.matrix,simplify = F)
-      }else{
-        list_cov <- NULL
-      }
-    }else{
-      list_cov <- NULL
-    }
     if(!is.null(col_names)){
       col <- as.character(col_names)
       colnames(matObj) <- col
@@ -118,7 +103,7 @@ buildSbmMatrix <- function(obj, ..., col_names = NULL, row_names = NULL){
       rownames(matObj) <- row
     }
     my_sbm_object <- structure(list(matrix = matObj, nodes_names = list(col = col,row = row),
-                                    covar = list_cov, type = default.type, law = expected.law),class = "sbmMatrix")
+                                    covar = NULL, type = default.type, law = expected.law),class = "sbmMatrix")
     is.sbmMatrix(my_sbm_object,warnings = T)
     return(my_sbm_object)
   }else{
@@ -539,5 +524,32 @@ covar <- function(x){
     stop("value should be a data.frame or a matrix")
   }
 }
+
+
+# add_covar !
+# list_cov <- list(...)
+# # Set the names of covariables
+# if(length(list_cov)!=0){
+#   good_covar <- sapply(list_cov,function(x,dimbase=dim(matObj))
+#     return(is.matrix(x)|is.data.frame(x)&&all(dim(x)==dimbase)))
+#   if(length(which(!good_covar))!=0){
+#     list_cov <- list_cov[which(good_covar)]
+#     warning("Covariable ",paste(paste0("n ",which(!good_covar)),collapse=', '),
+#             " deleted because dimensions are wrong,\n  Covaribles should be data.frames or matrixes of the same dimention than the network matrix.")
+#   }
+#   if(length(which(good_covar))!=0){
+#     if(is.null(names(list_cov))){
+#       names(list_cov) <- paste0('covar',1:length(list_cov))
+#     }else{
+#       list_unamed <- names(list_cov)==""
+#       names(list_cov)[list_unamed] <- paste0('covar',which(list_unamed))
+#     }
+#     list_cov <- sapply(list_cov,as.matrix,simplify = F)
+#   }else{
+#     list_cov <- NULL
+#   }
+# }else{
+#   list_cov <- NULL
+# }
 
 
