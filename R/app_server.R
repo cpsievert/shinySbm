@@ -79,22 +79,14 @@ app_server <- function(input, output, session) {
     withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
                         warning = function(w){warns <<- c(warns,list(w))})
     warning_messages <- sapply(warns,function(warn)warn$message)
-
-    if(!identical(warning_messages,list())){
-      cat("Warnings :\n")
-      print(warning_messages)
-    }
+    print_messages(warnings = warning_messages)
   })
   output$warningDataImport2 <- renderPrint({
     warns <- list()
     withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
                         warning = function(w){warns <<- c(warns,list(w))})
     warning_messages <- sapply(warns,function(warn)warn$message)
-
-    if(!identical(warning_messages,list())){
-      cat("Warnings :\n")
-      print(warning_messages)
-    }
+    print_messages(warnings = warning_messages)
   })
   output$summaryDataImport <- renderPrint({
     print(workingDataset())
