@@ -74,8 +74,8 @@ app_ui <- function(request) {
                                             textInput("whichSep_other",
                                                       label = "Write your sep character :",
                                                       value = NULL)),
-                                          checkboxInput('headercol','1st row is Columns name', value = T),
-                                          checkboxInput('headerrow','1st column is Rows name',value = T))),
+                                          checkboxInput('headercol','1st row is Columns names', value = T),
+                                          checkboxInput('headerrow','1st column is Rows names',value = T))),
                                  column(width = 4,
                                         wellPanel(
                                           radioButtons("networkType", "What kind of network it is ?",
