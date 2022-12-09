@@ -174,7 +174,8 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   if(!is.numeric(my_sbm_object$matrix)){
     warning("The matrix isn't numeric\n",
             "1 - try activate : '1st column is Rows names' and/or '1st row is Columns names' buttons\n",
-            "2 - check your matrix for non-numerical characters")
+            "2 - check the separator",
+            "3 - check in your matrix for non-numerical characters")
     return(F)
   }
 
