@@ -1,7 +1,31 @@
-# source("R/fct_sbmMatrixClass.R")
-# dat <- read.csv2("../data_set/fungus_vs_tree_data.csv",row.names = 1)
 
 
+#' print_messages
+#'
+#' @description print stored messages, warnings and errors
+#'
+#' @param messages,warnings,errors
+#' `messages` stored in a list
+#' `warnings` stored in a list
+#' `errors` stored in a list
+#'
+#' @return beautifull cat
+#'
+#' @noRd
+print_messages <- function(messages = list(),warnings = list(),errors = list()){
+  if(!identical(messages,list())){
+    cat("Messages :\n")
+    for(i in 1:length(messages)){cat("[",i,"] ",messages[[i]],'\n',sep = "")}
+  }
+  if(!identical(warnings,list())){
+    cat("Warnings :\n")
+    for(i in 1:length(warnings)){cat("[",i,"] ",warnings[[i]],'\n',sep = "")}
+  }
+  if(!identical(errors,list())){
+    cat("Errors :\n")
+    for(i in 1:length(errors)){cat("[",i,"] ",errors[[i]],'\n',sep = "")}
+  }
+}
 
 #' addindice
 #'
@@ -71,25 +95,20 @@ buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL){
     }else{
       default.type <- "bipartite"
     }
-    cols_numeric <- all(apply(obj[-1],2,is.numeric))
-
-    if(!(is.numeric(obj[[1]]) & cols_numeric)){
-      warning(ifelse(cols_numeric,"First column is","Some columns are"),
-              "n't considered as numeric\n",
-              "1 - try activate : ",
-              ifelse(cols_numeric,'1st column is Rows names','1st row is Columns names'),
-              "button\n2 - check your matrix for non-numerical characters")
-    }
     message("Network is considered ",default.type)
     matObj <- as.matrix(obj)
-    if(all(matObj==round(matObj))){
-      if(all(matObj %in% c(0,1))){
-        expected.law <- "bernoulli"
+    if(all(apply(obj,2,is.numeric))){
+      if(all(matObj==round(matObj))){
+        if(all(matObj %in% c(0,1))){
+          expected.law <- "bernoulli"
+        }else{
+          expected.law <- "poisson"
+        }
       }else{
-        expected.law <- "poisson"
+        expected.law <- "gaussian"
       }
     }else{
-      expected.law <- "gaussian"
+      expected.law <- "bernoulli"
     }
     message("Default density is set to ",expected.law,"'s law.")
     # Section d'analyse des covariables
@@ -151,13 +170,13 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
     }
     return(F)
   }
+
   if(!is.numeric(my_sbm_object$matrix)){
-    if(warnings){
-      warning("Network matrix is not numeric")
-    }
+    warning("The matrix isn't numeric\n",
+            "1 - try activate : '1st column is Rows names' and/or '1st row is Columns names' buttons\n",
+            "2 - check your matrix for non-numerical characters")
     return(F)
   }
-
 
   still_sbm <- F
   # check row names
@@ -551,5 +570,7 @@ covar <- function(x){
 # }else{
 #   list_cov <- NULL
 # }
+
+
 
 
