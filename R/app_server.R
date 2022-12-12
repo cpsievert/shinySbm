@@ -14,8 +14,6 @@ app_server <- function(input, output, session) {
   })
 
 
-
-
   datasetSelected <- eventReactive(c(input$whichData,input$dataBase,input$mainDataFile$datapath),{
     if(input$whichData == 'importData'){
       input$mainDataFile$datapath
