@@ -124,7 +124,8 @@ rstudioapi::navigateToFile("dev/03_deploy.R")
 # shinyuieditor::launch_editor(app_loc = "new-app/") nouvelle app
 # shinyuieditor::launch_editor(app_loc = "existing-app/")
 
-
+# les icones
+# https://fontawesome.com/v4/icons/
 
 mytheme <- fresh::create_theme(
   fresh::adminlte_color(

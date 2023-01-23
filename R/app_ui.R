@@ -14,11 +14,11 @@ app_ui <- function(request) {
       shinydashboard::dashboardHeader(title = "ShinySBM"),
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
-          shinydashboard::menuItem("Data Loading", tabName = "tab_upload", icon = icon("dashboard")),
-          shinydashboard::menuItem("Data Plots", tabName = "tab_show", icon = icon("th")),
-          shinydashboard::menuItem("SBM application", tabName = "tab_sbm", icon = icon("th")),
-          shinydashboard::menuItem("Network Plots", tabName = "tab_network", icon = icon("th")),
-          shinydashboard::menuItem("Generated Groups", tabName = "tab_extraction", icon = icon("th"))
+          shinydashboard::menuItem("Data Loading", tabName = "tab_upload", icon = icon("th")),
+          shinydashboard::menuItem("Data Plots", tabName = "tab_show", icon = icon("eye",lib="font-awesome")),
+          shinydashboard::menuItem("SBM application", tabName = "tab_sbm", icon = icon("cogs",lib="font-awesome")),
+          shinydashboard::menuItem("Network Plots", tabName = "tab_network", icon = icon("share-alt",lib="font-awesome")),
+          shinydashboard::menuItem("Generated Groups", tabName = "tab_extraction", icon = icon("line-chart",lib="font-awesome"))
       )),
       ### DATA IMPORTATION
       # Probleme : dev les moyens de lecture du tableau comme dans blockmodelingGUI
