@@ -1,5 +1,3 @@
-
-
 #' print_messages
 #'
 #' @description print stored messages, warnings and errors
@@ -12,18 +10,24 @@
 #' @return beautifull cat
 #'
 #' @noRd
-print_messages <- function(messages = list(),warnings = list(),errors = list()){
-  if(!identical(messages,list())){
+print_messages <- function(messages = list(), warnings = list(), errors = list()) {
+  if (!identical(messages, list())) {
     cat("Messages :\n")
-    for(i in 1:length(messages)){cat("[",i,"] ",messages[[i]],'\n',sep = "")}
+    for (i in 1:length(messages)) {
+      cat("[", i, "] ", messages[[i]], "\n", sep = "")
+    }
   }
-  if(!identical(warnings,list())){
+  if (!identical(warnings, list())) {
     cat("Warnings :\n")
-    for(i in 1:length(warnings)){cat("[",i,"] ",warnings[[i]],'\n',sep = "")}
+    for (i in 1:length(warnings)) {
+      cat("[", i, "] ", warnings[[i]], "\n", sep = "")
+    }
   }
-  if(!identical(errors,list())){
+  if (!identical(errors, list())) {
     cat("Errors :\n")
-    for(i in 1:length(errors)){cat("[",i,"] ",errors[[i]],'\n',sep = "")}
+    for (i in 1:length(errors)) {
+      cat("[", i, "] ", errors[[i]], "\n", sep = "")
+    }
   }
 }
 
@@ -39,16 +43,16 @@ print_messages <- function(messages = list(),warnings = list(),errors = list()){
 #' @return `name` or if it's already in `list` the first of `nameX` (`name1`, `name2`, etc...) that is not already in the list
 #'
 #' @noRd
-addindice <- function(list, name, n = 1){
-  if(name %in% list){
-    name_new <- paste0(name,n)
-    if(name_new %in% list){
-      n_new <- n+1
-      return(addindice(list,name,n = n_new))
-    }else{
+addindice <- function(list, name, n = 1) {
+  if (name %in% list) {
+    name_new <- paste0(name, n)
+    if (name_new %in% list) {
+      n_new <- n + 1
+      return(addindice(list, name, n = n_new))
+    } else {
       return(name_new)
     }
-  }else{
+  } else {
     return(name)
   }
 }
@@ -74,59 +78,61 @@ addindice <- function(list, name, n = 1){
 #' 5 - The supposed density upon the data adjacency matrix.
 #'
 #' @noRd
-buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL){
-  if(is.sbmMatrix(obj)){
+buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL) {
+  if (is.sbmMatrix(obj)) {
     message("obj is already an sbmMatrix")
     return(obj)
   }
   message("===========================\n  COMPILATION INFORMATION  \n===========================")
   # Section d'analyse d'obj
-  if(is.matrix(obj)|is.data.frame(obj)){
-    if(is.matrix(obj)){
-      col = character(0)
-      row = character(0)
-    }else{
+  if (is.matrix(obj) | is.data.frame(obj)) {
+    if (is.matrix(obj)) {
+      col <- character(0)
+      row <- character(0)
+    } else {
       message("Nodes names are extrated from your table")
-      col = colnames(obj)
-      row = row.names(obj)
+      col <- colnames(obj)
+      row <- row.names(obj)
     }
-    if(dim(obj)[1]==dim(obj)[2]){
+    if (dim(obj)[1] == dim(obj)[2]) {
       default.type <- "unipartite"
-    }else{
+    } else {
       default.type <- "bipartite"
     }
-    message("Network is considered ",default.type)
+    message("Network is considered ", default.type)
     matObj <- as.matrix(obj)
-    if(all(apply(obj,2,is.numeric))){
-      if(all(matObj==round(matObj))){
-        if(all(matObj %in% c(0,1))){
+    if (all(apply(obj, 2, is.numeric))) {
+      if (all(matObj == round(matObj))) {
+        if (all(matObj %in% c(0, 1))) {
           expected.law <- "bernoulli"
-        }else{
+        } else {
           expected.law <- "poisson"
         }
-      }else{
+      } else {
         expected.law <- "gaussian"
       }
-    }else{
+    } else {
       expected.law <- "bernoulli"
     }
-    message("Default density is set to ",expected.law,"'s law.")
+    message("Default density is set to ", expected.law, "'s law.")
     # Section d'analyse des covariables
-    cat('\n')
-    if(!is.null(col_names)){
+    cat("\n")
+    if (!is.null(col_names)) {
       col <- as.character(col_names)
       colnames(matObj) <- col
     }
-    if(!is.null(row_names)){
+    if (!is.null(row_names)) {
       row <- as.character(row_names)
       rownames(matObj) <- row
     }
-    my_sbm_object <- structure(list(matrix = matObj, nodes_names = list(col = col,row = row),
-                                    covar = NULL, type = default.type, law = expected.law),class = "sbmMatrix")
-    is.sbmMatrix(my_sbm_object,warnings = T)
+    my_sbm_object <- structure(list(
+      matrix = matObj, nodes_names = list(col = col, row = row),
+      covar = NULL, type = default.type, law = expected.law
+    ), class = "sbmMatrix")
+    is.sbmMatrix(my_sbm_object, warnings = T)
     return(my_sbm_object)
-  }else{
-    stop("obj is a '",class(obj),"' object.\n Should be a 'data.frame' or 'matrix' object.")
+  } else {
+    stop("obj is a '", class(obj), "' object.\n Should be a 'data.frame' or 'matrix' object.")
   }
 }
 
@@ -144,18 +150,17 @@ buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL){
 #' @return `TRUE` if the format is good, `FALSE` if not
 #'
 #' @noRd
-is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
-
+is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
   # check class
-  if(!any(class(my_sbm_object)=='sbmMatrix')){
-    if(warnings){
+  if (!any(class(my_sbm_object) == "sbmMatrix")) {
+    if (warnings) {
       warning("my_sbm_object doesn't have the class : 'sbmMatrix'")
     }
     return(F)
   }
   # check list
-  if(!is.list(my_sbm_object)){
-    if(warnings){
+  if (!is.list(my_sbm_object)) {
+    if (warnings) {
       warning("my_sbm_object isn't a list")
     }
     return(F)
@@ -164,44 +169,48 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   dimbase <- dim(my_sbm_object)
 
   # check matrix and numeric
-  if(!is.matrix(my_sbm_object$matrix)){
-    if(warnings){
+  if (!is.matrix(my_sbm_object$matrix)) {
+    if (warnings) {
       warning("Network matrix has the wrong format")
     }
     return(F)
   }
 
-  if(!is.numeric(my_sbm_object$matrix)){
-    warning("The matrix isn't numeric\n",
-            "1 - try activate : '1st column is Rows names' and/or '1st row is Columns names' buttons\n",
-            "2 - check the separator\n",
-            "3 - check in your matrix for non-numerical characters")
+  if (!is.numeric(my_sbm_object$matrix)) {
+    warning(
+      "The matrix isn't numeric\n",
+      "1 - try activate : '1st column is Rows names' and/or '1st row is Columns names' buttons\n",
+      "2 - check the separator\n",
+      "3 - check in your matrix for non-numerical characters"
+    )
     return(F)
   }
 
   still_sbm <- F
   # check row names
-  if(!is.character(my_sbm_object$nodes_names$row)){
-    if(warnings){
+  if (!is.character(my_sbm_object$nodes_names$row)) {
+    if (warnings) {
       warning("Rows names should be characters")
     }
     return(F)
-  }else if(length(my_sbm_object$nodes_names$row) == dimbase[1]){
-    if(warnings){
+  } else if (length(my_sbm_object$nodes_names$row) == dimbase[1]) {
+    if (warnings) {
       dup_row <- duplicated(my_sbm_object$nodes_names$row)
-      if(any(dup_row)){
-        warning("Some nodes names on rows are repeated : ",
-                paste(my_sbm_object$nodes_names$row[dup_row],collapse = ', '))
+      if (any(dup_row)) {
+        warning(
+          "Some nodes names on rows are repeated : ",
+          paste(my_sbm_object$nodes_names$row[dup_row], collapse = ", ")
+        )
       }
     }
-  }else{
-    if(identical(my_sbm_object$nodes_names$row,character(0))){
-      if(warnings){
+  } else {
+    if (identical(my_sbm_object$nodes_names$row, character(0))) {
+      if (warnings) {
         still_sbm <- T
         warning("\n  Nodes names on rows are missing")
       }
-    }else{
-      if(warnings){
+    } else {
+      if (warnings) {
         warning("Rows names are not of the same dimension that the network matrix")
       }
       return(F)
@@ -209,113 +218,120 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
   }
 
   # check col names
-  if(!is.character(my_sbm_object$nodes_names$col)){
-    if(warnings){
+  if (!is.character(my_sbm_object$nodes_names$col)) {
+    if (warnings) {
       warning("Columns names should be characters")
     }
     return(F)
-  }else if(length(my_sbm_object$nodes_names$col) == dimbase[2]){
-    if(warnings){
+  } else if (length(my_sbm_object$nodes_names$col) == dimbase[2]) {
+    if (warnings) {
       dup_col <- duplicated(my_sbm_object$nodes_names$col)
-      if(any(dup_col)){
-        warning("Some nodes names on columns are repeated :",
-                paste(my_sbm_object$nodes_names$col[dup_col],collapse = ', '))
+      if (any(dup_col)) {
+        warning(
+          "Some nodes names on columns are repeated :",
+          paste(my_sbm_object$nodes_names$col[dup_col], collapse = ", ")
+        )
       }
     }
-  }else{
-    if(identical(my_sbm_object$nodes_names$col,character(0))){
-      if(warnings){
+  } else {
+    if (identical(my_sbm_object$nodes_names$col, character(0))) {
+      if (warnings) {
         still_sbm <- T
         warning("Nodes names on columns are missing")
       }
-    }else{
-      if(warnings){
+    } else {
+      if (warnings) {
         warning("Columns names are not of the same dimension that the network matrix")
       }
       return(F)
     }
   }
-  if(still_sbm){
+  if (still_sbm) {
     message("Notes : You still can apply sbm without nodes names but this information is useful for analysis")
   }
 
 
   # check covariables
-  if(!is.null(my_sbm_object$covar)){
+  if (!is.null(my_sbm_object$covar)) {
+    is_no_good_covar <- !sapply(my_sbm_object$covar, function(x, dimB = dimbase) {
+      return(is.matrix(x) && is.numeric(x) && all(dim(x) == dimB))
+    })
 
-    is_no_good_covar <- !sapply(my_sbm_object$covar,function(x,dimB=dimbase)
-      return(is.matrix(x) && is.numeric(x) && all(dim(x)==dimB)))
-
-    if(any(is_no_good_covar)){
-      if(warnings){
-        warning("Covariables should be numeric matrix of the same dimension than the network matrix\n  ",
-                paste("Problematic covariables :",
-                      paste(names(my_sbm_object$covar)[is_no_good_covar],collapse = ', '),
-                      sep=' '))
+    if (any(is_no_good_covar)) {
+      if (warnings) {
+        warning(
+          "Covariables should be numeric matrix of the same dimension than the network matrix\n  ",
+          paste("Problematic covariables :",
+            paste(names(my_sbm_object$covar)[is_no_good_covar], collapse = ", "),
+            sep = " "
+          )
+        )
       }
       return(F)
-    }else{
-      if(warnings){
+    } else {
+      if (warnings) {
+        is_like_netMat <- sapply(my_sbm_object$covar, function(x, netMat = my_sbm_object$matrix) {
+          return(all(x == netMat))
+        })
 
-        is_like_netMat <- sapply(my_sbm_object$covar,function(x,netMat = my_sbm_object$matrix)
-          return(all(x==netMat)))
-
-        if(any(is_like_netMat)){
-          warning("Covariable ",
-                  paste(names(my_sbm_object$covar)[is_like_netMat],collapse = ', '),
-                  " is equal to the network matrix")
-        }else{
-
-          is_like_covar <- sapply(1:length(my_sbm_object$covar),
-                                  function(i,sbmMat1 = my_sbm_object){
-                                    any(sapply(1:i,function(y,compare = i,sbmMat2 = sbmMat1){
-                                      if(compare == y){
-                                        return(F)
-                                      }else{
-                                        return(all(sbmMat2$covar[[compare]]==sbmMat2$covar[[y]]))
-                                      }
-                                    }))
-                                  })
-          if(any(is_like_covar)){
-            warning("Covariable ",
-                    paste(names(my_sbm_object$covar)[is_like_covar],collapse = ', '),
-                    " is repeated")
+        if (any(is_like_netMat)) {
+          warning(
+            "Covariable ",
+            paste(names(my_sbm_object$covar)[is_like_netMat], collapse = ", "),
+            " is equal to the network matrix"
+          )
+        } else {
+          is_like_covar <- sapply(
+            1:length(my_sbm_object$covar),
+            function(i, sbmMat1 = my_sbm_object) {
+              any(sapply(1:i, function(y, compare = i, sbmMat2 = sbmMat1) {
+                if (compare == y) {
+                  return(F)
+                } else {
+                  return(all(sbmMat2$covar[[compare]] == sbmMat2$covar[[y]]))
+                }
+              }))
+            }
+          )
+          if (any(is_like_covar)) {
+            warning(
+              "Covariable ",
+              paste(names(my_sbm_object$covar)[is_like_covar], collapse = ", "),
+              " is repeated"
+            )
           }
         }
       }
     }
   }
 
-  #check type
-  if(!my_sbm_object$type %in% c('bipartite','unipartite')){
-    if(warnings){
+  # check type
+  if (!my_sbm_object$type %in% c("bipartite", "unipartite")) {
+    if (warnings) {
       warning("Network  type can only be 'bipartite' or 'unipartite'")
     }
     return(F)
-  }else if(my_sbm_object$type == 'unipartite' && dimbase[1] != dimbase[2]){
-    if(warnings){
+  } else if (my_sbm_object$type == "unipartite" && dimbase[1] != dimbase[2]) {
+    if (warnings) {
       warning("Network is set as 'unipartite' but has different number of columns and rows")
     }
   }
 
-  #check law
-  if(!my_sbm_object$law %in% c('poisson','gaussian','bernoulli')){
-    if(warnings){
+  # check law
+  if (!my_sbm_object$law %in% c("poisson", "gaussian", "bernoulli")) {
+    if (warnings) {
       warning("Network law density can only be 'poisson', 'gaussian' or 'bernoulli'")
     }
     return(F)
-
-  }else if(warnings){
-    if(my_sbm_object$law %in% c('poisson','bernoulli') && any(my_sbm_object$matrix != round(my_sbm_object$matrix))){
-      warning("Network law density is set as '",my_sbm_object$law,"' but has non-interger values")
-
-    }else if(my_sbm_object$law %in% c('poisson','gaussian') && all(my_sbm_object$matrix %in% c(0,1))){
-      warning("Network law density is set as '",my_sbm_object$law,"' but has only binary values")
-
-    }else if(my_sbm_object$law == 'gaussian' && all(my_sbm_object$matrix == round(my_sbm_object$matrix))){
-      warning("Network law density is set as '",my_sbm_object$law,"' and has only integer values")
-    }else if(my_sbm_object$law == 'bernoulli' && !all(my_sbm_object$matrix %in% c(0,1))){
-      warning("Network law density is set as '",my_sbm_object$law,"' and has non-binary values")
+  } else if (warnings) {
+    if (my_sbm_object$law %in% c("poisson", "bernoulli") && any(my_sbm_object$matrix != round(my_sbm_object$matrix))) {
+      warning("Network law density is set as '", my_sbm_object$law, "' but has non-interger values")
+    } else if (my_sbm_object$law %in% c("poisson", "gaussian") && all(my_sbm_object$matrix %in% c(0, 1))) {
+      warning("Network law density is set as '", my_sbm_object$law, "' but has only binary values")
+    } else if (my_sbm_object$law == "gaussian" && all(my_sbm_object$matrix == round(my_sbm_object$matrix))) {
+      warning("Network law density is set as '", my_sbm_object$law, "' and has only integer values")
+    } else if (my_sbm_object$law == "bernoulli" && !all(my_sbm_object$matrix %in% c(0, 1))) {
+      warning("Network law density is set as '", my_sbm_object$law, "' and has non-binary values")
     }
   }
 
@@ -338,54 +354,54 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE){
 #' @return No Values returned
 #'
 #' @noRd
-print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F,...){
+print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F, ...) {
   dimbase <- dim(x)
-  if(resume_table){
-    if(dimbase[1]>10){
+  if (resume_table) {
+    if (dimbase[1] > 10) {
       index_row <- 1:10
-    }else{
+    } else {
       index_row <- 1:dimbase[1]
     }
-    if(dimbase[2]>5){
+    if (dimbase[2] > 5) {
       index_col <- 1:5
-    }else{
+    } else {
       index_col <- 1:dimbase[2]
     }
-  }else{
+  } else {
     index_row <- 1:dimbase[1]
     index_col <- 1:dimbase[2]
   }
-  if(!is.sbmMatrix(x)){
+  if (!is.sbmMatrix(x)) {
     warning("x object got the sbmMatrix class but got a wrong format.")
     print.default(x)
-  }else{
+  } else {
     cat("==========================\n SBM MATRIX INFORMATION :  \n==========================\n\n")
-    cat("sbmMatrix of an", x$type, "network. The expected law upon this matrix is a", x$law ,"density.\n")
-    if(x$type == "unipartite"){
-      cat("The network has",dimbase[1],"nodes.")
-    }else if(x$type == 'bipartite'){
-      cat("The network has",dimbase[1],"row nodes &",dimbase[2],"column nodes.")
+    cat("sbmMatrix of an", x$type, "network. The expected law upon this matrix is a", x$law, "density.\n")
+    if (x$type == "unipartite") {
+      cat("The network has", dimbase[1], "nodes.")
+    } else if (x$type == "bipartite") {
+      cat("The network has", dimbase[1], "row nodes &", dimbase[2], "column nodes.")
     }
-    if(identical(x$nodes_names$col,character(0)) &
-       identical(x$nodes_names$row,character(0))){
+    if (identical(x$nodes_names$col, character(0)) &
+      identical(x$nodes_names$row, character(0))) {
       cat(" The nodes names aren't registered.\n")
     }
-    if(show_matrix){
-      cat('\n')
-      print(x$matrix[index_row,index_col])
+    if (show_matrix) {
+      cat("\n")
+      print(x$matrix[index_row, index_col])
     }
-    if(is.null(x$covar)){
+    if (is.null(x$covar)) {
       cat("\nThere is no covariables.\n\n")
-    }else{
-      cat("\nThere is",length(x$covar)," covariables : ")
-      if(!show_covar){
-        cat(paste(names(x$covar),collapse = ', '),'\n')
-      }else{
-        cat('\n\n')
-        for(i in 1:length(x$covar)){
+    } else {
+      cat("\nThere is", length(x$covar), " covariables : ")
+      if (!show_covar) {
+        cat(paste(names(x$covar), collapse = ", "), "\n")
+      } else {
+        cat("\n\n")
+        for (i in 1:length(x$covar)) {
           print(names(x$covar)[i])
-          print(x$covar[[i]][index_row,index_col])
-          cat('\n')
+          print(x$covar[[i]][index_row, index_col])
+          cat("\n")
         }
       }
     }
@@ -404,12 +420,12 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
 #' If the is names in the sbmMatrix object they will be put as names in the dataframe.
 #'
 #' @noRd
-as.data.frame.sbmMatrix <- function(x, row.names = NULL, optional = FALSE, ...){
+as.data.frame.sbmMatrix <- function(x, row.names = NULL, optional = FALSE, ...) {
   table <- data.frame(x$matrix)
-  if(!identical(x$nodes_names$col,character(0))){
+  if (!identical(x$nodes_names$col, character(0))) {
     names(table) <- x$nodes_names$col
   }
-  if(!identical(x$nodes_names$row,character(0))){
+  if (!identical(x$nodes_names$row, character(0))) {
     row.names(table) <- x$nodes_names$row
   }
   return(table)
@@ -427,12 +443,12 @@ as.data.frame.sbmMatrix <- function(x, row.names = NULL, optional = FALSE, ...){
 #' If the is names in the sbmMatrix object they will be put as names in the dataframe.
 #'
 #' @noRd
-as.matrix.sbmMatrix <- function(x, ...){
+as.matrix.sbmMatrix <- function(x, ...) {
   matrix <- x$matrix
-  if(!identical(x$nodes_names$col,character(0))){
+  if (!identical(x$nodes_names$col, character(0))) {
     colnames(matrix) <- x$nodes_names$col
   }
-  if(!identical(x$nodes_names$row,character(0))){
+  if (!identical(x$nodes_names$row, character(0))) {
     rownames(matrix) <- x$nodes_names$row
   }
   return(matrix)
@@ -448,7 +464,7 @@ as.matrix.sbmMatrix <- function(x, ...){
 #' @return The dimension of the network matrix
 #'
 #' @noRd
-dim.sbmMatrix <- function(x){
+dim.sbmMatrix <- function(x) {
   return(dim(x$matrix))
 }
 
@@ -463,8 +479,8 @@ dim.sbmMatrix <- function(x){
 #' @return the covariable in `x$matrix`
 #'
 #' @noRd
-covar <- function(x){
-  if(is.sbmMatrix(x,warnings = T)){
+covar <- function(x) {
+  if (is.sbmMatrix(x, warnings = T)) {
     return(x$covar)
   }
 }
@@ -486,7 +502,7 @@ covar <- function(x){
 #'
 #'
 #' @noRd
-"covar<-" <- function(x,  name = NULL, value){
+"covar<-" <- function(x, name = NULL, value) {
   UseMethod("covar<-", object = x)
 }
 
@@ -507,7 +523,7 @@ covar <- function(x){
 #'
 #'
 #' @noRd
-"covar<-.default" <- function(x, name = NULL, value){
+"covar<-.default" <- function(x, name = NULL, value) {
   stop("x should be an sbmMatrix")
 }
 
@@ -529,18 +545,18 @@ covar <- function(x){
 #'
 #'
 #' @noRd
-"covar<-.sbmMatrix" <- function(x,  name = NULL, value){
-  if(is.data.frame(value) | is.matrix(value)){
+"covar<-.sbmMatrix" <- function(x, name = NULL, value) {
+  if (is.data.frame(value) | is.matrix(value)) {
     matValue <- as.matrix(value)
-    if(is.numeric(matValue) & all(dim(x)==dim(matValue))){
-      x$covar <- append(x$covar,list(matValue))
+    if (is.numeric(matValue) & all(dim(x) == dim(matValue))) {
+      x$covar <- append(x$covar, list(matValue))
       n <- length(x$covar)
-      names(x$covar)[[n]] <- ifelse(is.null(name),paste0('covar',n),addindice(names(x$covar),name))
+      names(x$covar)[[n]] <- ifelse(is.null(name), paste0("covar", n), addindice(names(x$covar), name))
       x
-    }else{
+    } else {
       stop("value should be a numeric matrix or data.frame with same dimension than x")
     }
-  }else{
+  } else {
     stop("value should be a data.frame or a matrix")
   }
 }
@@ -571,7 +587,3 @@ covar <- function(x){
 # }else{
 #   list_cov <- NULL
 # }
-
-
-
-
