@@ -16,7 +16,9 @@ Imports:
     golem (>= 0.3.5),
     magrittr,
     sbm,
-    shiny (>= 1.7.2)
+    shiny (>= 1.7.2),
+    shinydashboard,
+    shinydashboardPlus
 Suggests: 
     spelling,
     testthat (>= 3.0.0)

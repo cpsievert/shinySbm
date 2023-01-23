@@ -174,7 +174,7 @@ usethis::use_package("readxl")
 usethis::use_package("openxlsx")
 
 
-
+golem::add_module(name = "name_of_module1", with_test = TRUE)
 
 
 a = sortable::rank_list(
