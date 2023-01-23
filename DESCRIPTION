@@ -12,6 +12,7 @@ Imports:
     blockmodeling,
     config (>= 0.3.1),
     DT,
+    fresh,
     ggplot2,
     golem (>= 0.3.5),
     magrittr,

@@ -1,3 +1,23 @@
+# mytheme <- fresh::create_theme(
+#   fresh::adminlte_color(
+#     light_blue = "#000000"
+#   ),
+#   fresh::adminlte_sidebar(
+#     width = "200px",
+#     dark_bg = "#9e999c",
+#     dark_hover_bg = "#4d4b4b",
+#     dark_color = "#000000",
+#     dark_submenu_bg = "#7b7b7b",
+#     dark_submenu_color = "#000000"
+#   ),
+#   fresh::adminlte_global(
+#     content_bg = "#FFF",
+#     box_bg = "#ffffff",
+#     info_box_bg = "#ffffff"
+#   )
+# )
+
+
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
@@ -25,102 +45,10 @@ app_ui <- function(request) {
       # introduction des covariables
       # no conditionalpanel work !!!
       shinydashboard::dashboardBody(
+        # fresh::use_theme(mytheme),
         shinydashboard::tabItems(
           shinydashboard::tabItem(tabName = 'tab_upload',
-                             ## Selector
-                             column(width = 3,
-                                    fluidRow(a(strong("Network data set selector:"))),
-                                    fluidRow(
-                                      wellPanel(
-                                        radioButtons("whichData", "Which data do you want to use ?",
-                                                     choices = list("My own data" = "importData",
-                                                                    "SBM exemple" = "sbmData"),
-                                                     inline = T, selected = "importData"),
-                                        conditionalPanel(
-                                          condition = "input.whichData == 'sbmData'",
-                                          radioButtons("dataBase", "Which network ?",
-                                                       choices = list("Fungus & Trees" = "fungus_tree",
-                                                                      "Trees & Trees" = "tree_tree"),
-                                                       selected = character(0))),
-                                        conditionalPanel(
-                                          condition = "input.whichData == 'importData'",
-                                          fileInput("mainDataFile", label = "Choose the file containing your adjency matrix",
-                                                    buttonLabel = "Browse...",
-                                                    placeholder = "No file selected",
-                                                    multiple = F,
-                                                    accept = c("text/plain", ".csv",".tab","xls","xlsx"))),
-                                        h6("* should be a adjadency matrix"))),
-
-
-                                    conditionalPanel(
-                                      condition = "input.mainDataUploader",
-                                      fluidRow(a(strong("Covariable data set selector:"))),
-                                      fluidRow(
-                                        wellPanel(fileInput("covarDataFile", label = "Choose the file containing your covariable",
-                                                            buttonLabel = "Browse...",
-                                                            placeholder = "No file selected",
-                                                            multiple = F,
-                                                            accept = c("text/plain", ".csv",".tab","xls","xlsx")),
-                                                  actionButton(inputId = "covarDataSelector", label = "Select file"),
-                                                  h6("* should be a adjadency matrix"),
-                                                  h6("* same size than the network matrix"),
-                                                  h6("* covariable on the interactions between nodes"))))),
-                             ## Reader
-                             column(width = 9,
-                                    fluidRow(a(strong("Data Reader"))),
-                                    fluidRow(
-                                      column(width = 5,
-                                             wellPanel(
-                                               radioButtons("whichSep", "What kind of separator should I use ?",
-                                                            choices = list("semicolon" = ";",
-                                                                           "tabulation" = "|",
-                                                                           "comma" = ",",
-                                                                           "others" = "others")),
-                                               conditionalPanel(
-                                                 condition = "input.whichSep == 'others'",
-                                                 textInput("whichSep_other",
-                                                           label = "Write your sep character :",
-                                                           value = NULL)),
-                                               checkboxInput('headercol','1st row is Columns names', value = T),
-                                               checkboxInput('headerrow','1st column is Rows names',value = T))),
-
-                                      column(width = 4,
-                                             wellPanel(
-                                               radioButtons("networkType", "What kind of network it is ?",
-                                                            choices = list("Bipartite" = "bipartite","Unipartite" = "unipartite"),
-                                                            inline = T),
-
-                                               wellPanel(
-                                                 conditionalPanel(
-                                                   condition = "input.networkType == 'bipartite'",
-                                                   textInput("rowLabel",
-                                                             label = "Specify what are the nodes in row",
-                                                             value = NULL)),
-                                                 conditionalPanel(
-                                                   condition = "input.networkType == 'bipartite'",
-                                                   textInput("colLabel",
-                                                             label = "Specify what are for nodes in col",
-                                                             value = NULL)),
-                                                 conditionalPanel(
-                                                   condition = "input.networkType == 'unipartite'",
-                                                   textInput("nodLabel",
-                                                             label = "Specify what are for nodes",
-                                                             value = NULL))))),
-
-                                      column(width = 3,
-                                             wellPanel(
-                                               strong("Matrix Uploader"),
-                                               actionButton(inputId = "mainDataUploader", label = "Upload Matrix"),
-                                               conditionalPanel(
-                                                 condition = "input.covarDataSelector",
-                                                 actionButton(inputId = "covarDataUploader", label = "Upload covar"))))),
-                                    fluidRow(
-                                      a(strong("Importation Information")),
-                                      column(width = 12,
-                                             wellPanel(
-                                               verbatimTextOutput("warningDataImport1"),
-                                               tags$head(tags$style("#warningDataImport1{color: red}")),
-                                               verbatimTextOutput("summaryDataImport")))))),
+                                  mod_tab_upload_ui("tab_upload_1")),
 
                     ### DATA SHOW
           shinydashboard::tabItem(tabName = 'tab_show',
