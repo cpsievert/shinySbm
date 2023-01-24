@@ -36,7 +36,8 @@ mod_tab_show_ui <- function(id) {
       status = "info", width = 12,
       conditionalPanel(
         condition = "input.whichShow == 'print'", ns = ns,
-        DT::dataTableOutput(ns("matrixPrint"))
+        DT::dataTableOutput(ns("matrixPrint")),
+        tags$head(tags$style(css_big_table(ns("matrixPrint"))))
       ),
       conditionalPanel(
         condition = "input.whichShow != 'print'", ns = ns,
@@ -60,16 +61,17 @@ mod_tab_show_server <- function(id, dataset, labels) {
       }
       DT::datatable(
         as.data.frame(dataset()),
+        extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
         option = list(
-          # scroll :
-          scroller = TRUE,
-          lengthMenu = list(
-            c(-1, 50, 100),
-            c("All", "50", "100")
-          ),
-          paging = T
+          fixedHeader = TRUE,
+          fixedColumns = list(leftColumns = 1),
+          scrollX = T,
+          scrollY = T,
+          keys = TRUE,
+          paging = F
         )
-      )
+      ) %>%
+        DT::formatStyle(c(1:dim(dataset())[2]), border = "1px solid #ddd")
     })
 
 
