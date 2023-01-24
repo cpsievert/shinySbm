@@ -106,8 +106,7 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Importation Details", solidHeader = T,
         status = "info", width = 8,
-        verbatimTextOutput(ns("warningDataImport1")),
-        tags$head(tags$style("#tab_upload_1-warningDataImport1{color: red}")),
+        mod_importation_error_ui(ns("error_1")),
         verbatimTextOutput(ns("summaryDataImport"))
       )
     )
@@ -176,7 +175,7 @@ mod_tab_upload_server <- function(id) {
     })
 
     observeEvent(datasetUploaded(), {
-      updateRadioButtons(session, ns("networkType"),
+      updateRadioButtons(session, "networkType",
         "What kind of network it is ?",
         choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
         inline = T,
@@ -200,19 +199,10 @@ mod_tab_upload_server <- function(id) {
       data
     })
 
+    mod_importation_error_server("error_1", workingDataset)
+
     output$summaryDataImport <- renderPrint({
       print(workingDataset())
-    })
-
-    output$warningDataImport1 <- renderPrint({
-      warns <- list()
-      withCallingHandlers(is.sbmMatrix(workingDataset(), warnings = T),
-        warning = function(w) {
-          warns <<- c(warns, list(w))
-        }
-      )
-      warning_messages <- sapply(warns, function(warn) warn$message)
-      print_messages(warnings = warning_messages)
     })
 
     return(workingDataset)

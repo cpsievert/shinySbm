@@ -151,9 +151,14 @@ usethis::use_package("moments")
 usethis::use_package("readxl")
 usethis::use_package("openxlsx")
 
-
+## USED modules
 golem::add_module(name = "tab_upload", with_test = TRUE)
-
+golem::add_module(name = "tab_show", with_test = TRUE)
+golem::add_module(name = "tab_sbm", with_test = TRUE)
+golem::add_module(name = "tab_network", with_test = TRUE)
+golem::add_module(name = "tab_extraction", with_test = TRUE)
+golem::add_module(name = "importation_error", with_test = TRUE)
+golem::add_module(name = "select_nb_groups", with_test = TRUE)
 
 a = sortable::rank_list(
   text = "Cliquer glisser dans l'ordre souhaité (plusieurs selection possible avec la touche CTRL)",
