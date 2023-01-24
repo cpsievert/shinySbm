@@ -7,12 +7,12 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_select_nb_groups_ui <- function(id){
+mod_select_nb_groups_ui <- function(id) {
   ns <- NS(id)
   tagList(
     numericInput(ns("Nbblocks"),
-                 label = "Select the total number of blocks:",
-                 value = 4, min = 1, max = 6, step = 1
+      label = "Select the total number of blocks:",
+      value = 4, min = 1, max = 6, step = 1
     ),
     plotOutput(ns("showILC"))
   )
@@ -21,8 +21,8 @@ mod_select_nb_groups_ui <- function(id){
 #' select_nb_groups Server Functions
 #'
 #' @noRd
-mod_select_nb_groups_server <- function(id, my_sbm_main, runSbm){
-  moduleServer( id, function(input, output, session){
+mod_select_nb_groups_server <- function(id, my_sbm_main, runSbm) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     observe({
@@ -31,9 +31,10 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, runSbm){
       min <- min(data_sbm$storedModels$nbBlocks)
       max <- max(data_sbm$storedModels$nbBlocks)
       updateNumericInput(session,
-                         inputId = "Nbblocks",
-                         label = "Select the total number of blocks:",
-                         value = value, min = min, max = max, step = 1)
+        inputId = "Nbblocks",
+        label = "Select the total number of blocks:",
+        value = value, min = min, max = max, step = 1
+      )
     })
 
     my_sbm <- eventReactive(input$Nbblocks, {
@@ -48,14 +49,18 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, runSbm){
     })
 
     observeEvent(c(input$Nbblocks, runSbm), {
-        data_sbm <- my_sbm()$clone()
-        data_sbm_main <- my_sbm_main()$clone()
-        output$showILC <- renderPlot({
-          ILC_plot(data_sbm,data_sbm_main)
-        })
+      data_sbm <- my_sbm()$clone()
+      data_sbm_main <- my_sbm_main()$clone()
+      output$showILC <- renderPlot({
+        ILC_plot(data_sbm, data_sbm_main)
+      })
     })
-    return(list(Nbblocks = reactive({input$Nbblocks}),
-                my_sbm = my_sbm))
+    return(list(
+      Nbblocks = reactive({
+        input$Nbblocks
+      }),
+      my_sbm = my_sbm
+    ))
   })
 }
 
