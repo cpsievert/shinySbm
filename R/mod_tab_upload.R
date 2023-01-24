@@ -121,6 +121,7 @@ mod_tab_upload_ui <- function(id) {
 mod_tab_upload_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
       switch(input$networkType,
         "bipartite" = list(row = input$rowLabel, col = input$colLabel),
@@ -205,7 +206,10 @@ mod_tab_upload_server <- function(id) {
       print(workingDataset())
     })
 
-    return(workingDataset)
+    return(list(
+      labels = labels,
+      workingDataset = workingDataset
+    ))
   })
 }
 

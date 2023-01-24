@@ -5,80 +5,13 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
-  workingDataset <- mod_tab_upload_server("tab_upload_1")
+  ## Importing the data set
+  tab_upload_res <- mod_tab_upload_server("tab_upload_1")
+  workingDataset <- tab_upload_res$workingDataset
+  labels <- tab_upload_res$labels
 
-  output$matrixPrint <- DT::renderDataTable({
-    # probleme : taille et position, wrapping des titres, fixer la colonnne de rownames
-    req(input$whichShow)
-    if (input$whichShow != "print") {
-      return(NULL)
-    }
-    DT::datatable(
-      as.data.frame(workingDataset()),
-      option = list(
-        # scroll :
-        scroller = TRUE,
-        lengthMenu = list(
-          c(-1, 50, 100),
-          c("All", "50", "100")
-        ),
-        paging = T
-      )
-    )
-  })
-
-
-  PlotMat <- reactive({
-    req(input$whichShow)
-    if (input$whichShow == "plot") {
-      x <- as.matrix(workingDataset())
-      if (input$runSbm) {
-        data_sbm <- my_sbm()$clone()
-        switch(input$whichRawSbmMatrix,
-          "raw" = sbm::plotMyMatrix(x, dimLabels = labels()),
-          "ordered" = plot(data_sbm, type = "data", dimLabels = labels()),
-          "simple" = plot(data_sbm, type = "expected", dimLabels = labels())
-        )
-      } else {
-        sbm::plotMyMatrix(x, dimLabels = labels())
-      }
-    } else {
-      return(NULL)
-    }
-  })
-
-  output$matrixPlot <- renderImage(
-    {
-      # Read myImage's width and height. These are reactive values, so this
-      # expression will re-run whenever they change.
-      width <- session$clientData$output_matrixPlot_width
-      height <- session$clientData$output_matrixPlot_height
-
-      # For high-res displays, this will be greater than 1
-      pixelratio <- session$clientData$pixelratio
-
-      # A temp file to save the output.
-      outfile <- tempfile(fileext = ".png")
-
-      # Generate the image file
-      png(outfile,
-        width = width * pixelratio, height = height * pixelratio,
-        res = 72 * pixelratio
-      )
-      plot(PlotMat())
-      dev.off()
-
-      # Return a list containing the filename
-      list(
-        src = outfile,
-        width = width,
-        height = height,
-        alt = "This is alternate text"
-      )
-    },
-    deleteFile = TRUE
-  )
-
+  ## Visualisation part
+  mod_tab_show_server("tab_show_1", workingDataset, labels)
 
   my_sbm_main <- eventReactive(input$runSbm, {
     datasetup <- workingDataset()
@@ -120,22 +53,22 @@ app_server <- function(input, output, session) {
       value = value, min = min, max = max, step = 1
     )
 
-    updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
-      choices = list(
-        "Raw Matrix" = "raw",
-        "Reordered Matrix" = "ordered",
-        "Simplified Matrix" = "simple"
-      ),
-      selected = "ordered"
-    )
-
-    updateRadioButtons(session, "whichRawSbmNetwork", "Select Ploted Network:",
-      choices = list(
-        "Raw network" = "raw",
-        "Ordered Network" = "ordered"
-      ),
-      selected = "ordered", inline = T
-    )
+    # updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
+    #   choices = list(
+    #     "Raw Matrix" = "raw",
+    #     "Reordered Matrix" = "ordered",
+    #     "Simplified Matrix" = "simple"
+    #   ),
+    #   selected = "ordered"
+    # )
+    #
+    # updateRadioButtons(session, "whichRawSbmNetwork", "Select Ploted Network:",
+    #   choices = list(
+    #     "Raw network" = "raw",
+    #     "Ordered Network" = "ordered"
+    #   ),
+    #   selected = "ordered", inline = T
+    # )
   })
 
   my_sbm <- eventReactive(input$Nbblocks, {

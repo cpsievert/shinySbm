@@ -54,49 +54,17 @@ app_ui <- function(request) {
       shinydashboard::dashboardBody(
         fresh::use_theme(built_theme),
         shinydashboard::tabItems(
+
+          ## Data uploading
           shinydashboard::tabItem(
             tabName = "tab_upload",
             mod_tab_upload_ui("tab_upload_1")
           ),
 
-          ### DATA SHOW
+          ### Matrix plots
           shinydashboard::tabItem(
             tabName = "tab_show",
-            column(
-              width = 3,
-              a(strong("Visualisation settings")),
-              wellPanel(
-                radioButtons("whichShow", "Type of visualisation",
-                  choices = list(
-                    "Print a table" = "print",
-                    "Plot a matrix" = "plot"
-                  ),
-                  inline = T
-                ),
-                radioButtons("whichRawSbmMatrix", "Select Ploted Matrix",
-                  choices = list("Raw Matrix" = "raw")
-                ),
-                conditionalPanel(
-                  condition = "input.runSbm",
-                  plotOutput("showILC1")
-                ),
-                br(),
-                downloadButton("downloadPlot")
-              )
-            ),
-            column(width = 1),
-            column(
-              width = 6,
-              a(strong("Plot screen")),
-              conditionalPanel(
-                condition = "input.whichShow == 'print'",
-                DT::dataTableOutput("matrixPrint")
-              ),
-              conditionalPanel(
-                condition = "input.whichShow != 'print'",
-                imageOutput("matrixPlot")
-              )
-            )
+            mod_tab_show_ui("tab_show_1")
           ),
 
 
