@@ -24,10 +24,7 @@ mod_tab_sbm_ui <- function(id) {
           ),
           selected = NULL
         ),
-        div(
-          style = "display:inline-block; float:right",
-        actionButton(ns("runSbm"), strong("Run SBM"))
-        )
+        uiOutput(ns("sbmButton"))
       ),
       conditionalPanel(
         condition = "input.runSbm", ns = ns,
@@ -66,6 +63,31 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    output$sbmButton <- renderUI({
+      if(!is.null(workingDataset())){
+        tagList(
+          hr(),
+          div(
+            style = "display:inline-block; float:right",
+            actionButton(ns("runSbm"), strong("Run SBM"))
+          )
+        )
+      }
+    })
+
+    output$sbmCode <- renderText({
+      switch(networkType(),
+             "unipartite" = paste0(
+               "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
+               workingDataset()$law, ", estimOptions = list(verbosity = 1))"
+             ),
+             "bipartite" = paste0(
+               "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
+               workingDataset()$law, "', estimOptions = list(verbosity = 1))"
+             )
+      )
+    })
+
     mod_importation_error_server("error_2", workingDataset)
 
     my_sbm_main <- eventReactive(input$runSbm, {
@@ -103,6 +125,8 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
       })
     })
 
+    return(list(sbm = my_sbm,
+                main_sbm = my_sbm_main))
   })
 }
 
