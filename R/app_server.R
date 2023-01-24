@@ -6,98 +6,7 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
-
-  labels <- eventReactive(c(input$networkType,input$rowLabel,input$colLabel,input$nodLabel),{
-    switch(input$networkType,
-           'bipartite' = list(row = input$rowLabel, col = input$colLabel),
-           'unipartite' = list(row = input$nodLabel, col = input$nodLabel))
-  })
-
-
-  datasetSelected <- eventReactive(c(input$whichData,input$dataBase,input$mainDataFile$datapath),{
-    if(input$whichData == 'importData'){
-      input$mainDataFile$datapath
-    }else{
-      input$dataBase
-    }
-  })
-
-  sep <- reactive({
-    if(input$whichSep == "others"){
-      if(input$whichSep_other == ""){
-        ";"
-      }else{
-        input$whichSep_other
-      }
-    }else{
-      input$whichSep
-    }
-  })
-
-  datasetUploaded <- eventReactive(input$mainDataUploader,{
-    validate(
-      need(datasetSelected(), "Please select a data set")
-    )
-    if(input$whichData == 'importData'){
-      if(input$headerrow){
-        x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
-      }else{
-        x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
-      }
-      dataset <- buildSbmMatrix(x)
-    }else{
-      dataset <- switch(datasetSelected(),
-                        "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree, col_names = sbm::fungusTreeNetwork$tree_names,
-                                                       row_names = sbm::fungusTreeNetwork$fungus_names),
-                        "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree, col_names = sbm::fungusTreeNetwork$tree_names,
-                                                     row_names = sbm::fungusTreeNetwork$tree_names))
-    }
-    dataset
-  })
-
-  observeEvent(datasetUploaded(),{
-    updateRadioButtons(session,"networkType",
-                      "What kind of network it is ?",
-                      choices = list("Bipartite" = "bipartite","Unipartite" = "unipartite"),
-                      inline = T,
-                      selected = datasetUploaded()$type)
-    updateSelectInput(session,"whichLaw",
-                      label = "What is the density expected upon dataset ?",
-                      choices = list("Bernoulli" = "bernoulli",
-                                     "Poisson" = "poisson",
-                                     "Gaussian" = "gaussian"),
-                      selected = datasetUploaded()$law)
-  })
-
-  workingDataset <- eventReactive(c(datasetUploaded(),input$networkType,input$whichLaw),{
-      data <- datasetUploaded()
-      data$type <- input$networkType
-      data$law <- input$whichLaw
-      data
-  })
-
-  output$warningDataImport1 <- renderPrint({
-    warns <- list()
-    withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
-                        warning = function(w){warns <<- c(warns,list(w))})
-    warning_messages <- sapply(warns,function(warn)warn$message)
-    print_messages(warnings = warning_messages)
-  })
-
-  output$warningDataImport2 <- renderPrint({
-    warns <- list()
-    withCallingHandlers(is.sbmMatrix(workingDataset(),warnings = T),
-                        warning = function(w){warns <<- c(warns,list(w))})
-    warning_messages <- sapply(warns,function(warn)warn$message)
-    print_messages(warnings = warning_messages)
-  })
-  output$summaryDataImport <- renderPrint({
-    print(workingDataset())
-  })
-
-
-
-
+  workingDataset <- mod_tab_upload_server("tab_upload_1")
 
   output$matrixPrint <- DT::renderDataTable({
     # probleme : taille et position, wrapping des titres, fixer la colonnne de rownames
@@ -263,14 +172,6 @@ app_server <- function(input, output, session) {
       return(NULL)
     }
   })
-
-
-
-
-
-
-
-
 
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {

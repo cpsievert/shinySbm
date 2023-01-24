@@ -1,4 +1,6 @@
-mytheme <- fresh::create_theme(
+
+# Here are defined the colors used to build the dashboard objects
+built_theme <- fresh::create_theme(
   fresh::adminlte_color(
     light_blue = "#086A87",
     aqua = "#00a3a6"
@@ -32,22 +34,25 @@ app_ui <- function(request) {
 
     # Beautiful title
     shinydashboard::dashboardPage(
-      shinydashboard::dashboardHeader(title = div(img(src = "www/favicon.png", height = "50", width = "50"), "Shiny SBM")),
+      shinydashboard::dashboardHeader(title = div(img(src = "www/favicon.png",
+                                                      height = "50", width = "50"),
+                                                  "Shiny SBM")),
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
-          shinydashboard::menuItem("Data Loading", tabName = "tab_upload", icon = icon("th")),
-          shinydashboard::menuItem("Data Plots", tabName = "tab_show", icon = icon("eye", lib = "font-awesome")),
-          shinydashboard::menuItem("SBM application", tabName = "tab_sbm", icon = icon("cogs", lib = "font-awesome")),
-          shinydashboard::menuItem("Network Plots", tabName = "tab_network", icon = icon("share-alt", lib = "font-awesome")),
-          shinydashboard::menuItem("Generated Groups", tabName = "tab_extraction", icon = icon("line-chart", lib = "font-awesome"))
+          shinydashboard::menuItem("Data Loading", tabName = "tab_upload",
+                                   icon = icon("th")),
+          shinydashboard::menuItem("Data Plots", tabName = "tab_show",
+                                   icon = icon("eye", lib = "font-awesome")),
+          shinydashboard::menuItem("SBM application", tabName = "tab_sbm",
+                                   icon = icon("cogs", lib = "font-awesome")),
+          shinydashboard::menuItem("Network Plots", tabName = "tab_network",
+                                   icon = icon("share-alt", lib = "font-awesome")),
+          shinydashboard::menuItem("Generated Groups", tabName = "tab_extraction",
+                                   icon = icon("line-chart", lib = "font-awesome"))
         )
       ),
-      ### DATA IMPORTATION
-      # Probleme : dev les moyens de lecture du tableau comme dans blockmodelingGUI
-      # introduction des covariables
-      # no conditionalpanel work !!!
       shinydashboard::dashboardBody(
-        fresh::use_theme(mytheme),
+        fresh::use_theme(built_theme),
         shinydashboard::tabItems(
           shinydashboard::tabItem(
             tabName = "tab_upload",

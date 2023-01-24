@@ -50,7 +50,7 @@ usethis::use_test("app")
 golem::add_fct( "helpers" )
 golem::add_utils( "helpers" )
 
-usethis::use_package("pkg.you.want.to.add").
+usethis::use_package("pkg.you.want.to.add")
 
 ## Vignette ----
 usethis::use_vignette("shinySbm")
@@ -127,48 +127,25 @@ rstudioapi::navigateToFile("dev/03_deploy.R")
 # les icones
 # https://fontawesome.com/v4/icons/
 
-mytheme <- fresh::create_theme(
-  fresh::adminlte_color(
-    light_blue = "#000000"
-  ),
-  fresh::adminlte_sidebar(
-    width = "200px",
-    dark_bg = "#9e999c",
-    dark_hover_bg = "#4d4b4b",
-    dark_color = "#000000",
-    dark_submenu_bg = "#7b7b7b",
-    dark_submenu_color = "#000000"
-  ),
-  fresh::adminlte_global(
-    content_bg = "#FFF",
-    box_bg = "#ffffff",
-    info_box_bg = "#ffffff"
-  )
-)
 
 
 
 
 usethis::use_pipe(export = TRUE)
 
+usethis::use_package("visNetwork")
+usethis::use_package("plotly")
+usethis::use_package("shinyalert")
+usethis::use_package("flextable")
 
-
-
-
-
+usethis::use_package("plyr")
 usethis::use_package("shinyWidgets")
 usethis::use_package("shinydashboardPlus")
-usethis::use_package("tidyverse")
-usethis::use_package("plyr")
-usethis::use_package("plotly")
 usethis::use_package("shinythemes")
-usethis::use_package("shinyalert")
 usethis::use_package("ggsignif")
 usethis::use_package("sortable")
-usethis::use_package("flextable")
 usethis::use_package("officer")
 usethis::use_package("webshot2")
-usethis::use_package("fresh")
 usethis::use_package("Rmisc")
 usethis::use_package("moments")
 usethis::use_package("readxl")
