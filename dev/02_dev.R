@@ -160,6 +160,11 @@ golem::add_module(name = "tab_extraction", with_test = TRUE)
 golem::add_module(name = "importation_error", with_test = TRUE)
 golem::add_module(name = "select_nb_groups", with_test = TRUE)
 
+## USED functions
+golem::add_fct( "sbmMatrixClass" )
+golem::add_fct( "specific_css_style" )
+golem::add_fct("specific_plots")
+
 a = sortable::rank_list(
   text = "Cliquer glisser dans l'ordre souhaité (plusieurs selection possible avec la touche CTRL)",
   labels = label,
