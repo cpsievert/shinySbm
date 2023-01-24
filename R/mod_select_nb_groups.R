@@ -4,28 +4,32 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList
 mod_select_nb_groups_ui <- function(id){
   ns <- NS(id)
   tagList(
- 
+    numericInput(ns("Nbblocks"),
+                 label = "Select the total number of blocks:",
+                 value = 4, min = 1, max = 6, step = 1
+    ),
+    plotOutput(ns("showILC"))
   )
 }
-    
+
 #' select_nb_groups Server Functions
 #'
-#' @noRd 
+#' @noRd
 mod_select_nb_groups_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
- 
+
   })
 }
-    
+
 ## To be copied in the UI
 # mod_select_nb_groups_ui("select_nb_groups_1")
-    
+
 ## To be copied in the server
 # mod_select_nb_groups_server("select_nb_groups_1")

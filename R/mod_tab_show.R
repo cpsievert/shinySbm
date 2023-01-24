@@ -28,7 +28,10 @@ mod_tab_show_ui <- function(id) {
       ),
       column(
         6,
-        # small plot
+        conditionalPanel(
+          condition = "input.runSbm",ns = ns,
+        mod_select_nb_groups_ui(ns("select_nb_groups_1"))
+      )
       )
     ),
     shinydashboard::box(

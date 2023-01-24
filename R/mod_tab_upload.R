@@ -44,7 +44,7 @@ mod_tab_upload_ui <- function(id) {
         h6("* should be a adjadency matrix"),
         hr(),
         div(
-          style = "display:inline-block; float:rigth",
+          style = "display:inline-block; float:right",
           actionButton(ns("mainDataUploader"), label = strong("Matrix Uploader"))
         )
       ),
@@ -105,7 +105,7 @@ mod_tab_upload_ui <- function(id) {
     fluidRow(
       shinydashboard::box(
         title = "Importation Details", solidHeader = T,
-        status = "info", width = 8,
+        status = "info", width = 12,
         mod_importation_error_ui(ns("error_1")),
         verbatimTextOutput(ns("summaryDataImport"))
       )
@@ -208,7 +208,8 @@ mod_tab_upload_server <- function(id) {
 
     return(list(
       labels = labels,
-      workingDataset = workingDataset
+      workingDataset = workingDataset,
+      networkType = reactive({input$networkType})
     ))
   })
 }
