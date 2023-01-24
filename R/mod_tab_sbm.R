@@ -74,11 +74,11 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
         switch(networkType(),
                "unipartite" = sbm::estimateSimpleSBM(
                  netMat = as.matrix(datasetup),
-                 model = datasetup$law, estimOptions = list(verbosity = 0, plot = F)
+                 model = datasetup$law, estimOptions = list(verbosity = 3, plot = F)
                ),
                "bipartite" = sbm::estimateBipartiteSBM(
                  netMat = as.matrix(datasetup),
-                 model = datasetup$law, estimOptions = list(verbosity = 0, plot = F)
+                 model = datasetup$law, estimOptions = list(verbosity = 3, plot = F)
                )
         )
       })
@@ -87,14 +87,16 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
 
     my_sbm <- my_sbm_main
 
-    output$sbmSummary <- renderPrint({
+    observeEvent(my_sbm(),{
       data_sbm <- my_sbm()$clone()
-      cat("Connectivity:\n")
-      print(data_sbm$connectParam$mean)
-      cat("\nBlock Proportions:\n")
-      print(data_sbm$blockProp)
-      cat("\nStored Model:\n")
-      print(data_sbm$storedModels)
+      output$sbmSummary <- renderPrint({
+        cat("Connectivity:\n")
+        print(data_sbm$connectParam$mean)
+        cat("\nBlock Proportions:\n")
+        print(data_sbm$blockProp)
+        cat("\nStored Model:\n")
+        print(data_sbm$storedModels)
+      })
     })
 
   })
