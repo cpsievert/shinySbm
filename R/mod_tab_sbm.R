@@ -85,7 +85,11 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
       return(data_res)
     })
 
-    my_sbm <- my_sbm_main
+
+
+    my_sbm <- mod_select_nb_groups_server("select_nb_groups_2",
+                                          my_sbm_main,input$runSbm)$my_sbm
+
 
     observeEvent(my_sbm(),{
       data_sbm <- my_sbm()$clone()

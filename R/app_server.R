@@ -51,11 +51,11 @@ app_server <- function(input, output, session) {
   #       )
   #     )
   #   })
-  #   updateNumericInput(session,
-  #     inputId = "Nbblocks",
-  #     label = "Select the total number of blocks:",
-  #     value = value, min = min, max = max, step = 1
-  #   )
+    # updateNumericInput(session,
+    #   inputId = "Nbblocks",
+    #   label = "Select the total number of blocks:",
+    #   value = value, min = min, max = max, step = 1
+    # )
 
     # updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
     #   choices = list(
@@ -88,21 +88,7 @@ app_server <- function(input, output, session) {
   # observeEvent(c(input$Nbblocks, input$runSbm), {
   #   data_sbm <- my_sbm()$clone()
   #   data_sbm_main <- my_sbm_main()$clone()
-  #
-  #   microplot <- ggplot2::ggplot(data_sbm$storedModels) +
-  #     ggplot2::aes(x = nbBlocks, y = ICL, linetype = "ICL") +
-  #     ggplot2::geom_line() +
-  #     ggplot2::geom_point(alpha = 0.5) +
-  #     ggplot2::geom_line(ggplot2::aes(x = nbBlocks, y = loglik, linetype = "Log Likelihood")) +
-  #     ggplot2::geom_point(ggplot2::aes(x = sum(data_sbm$nbBlocks), y = data_sbm$ICL, colour = "Selected Block Nb"), size = 4) +
-  #     ggplot2::geom_point(ggplot2::aes(x = sum(data_sbm_main$nbBlocks), y = data_sbm_main$ICL, colour = "Best Block Nb"), size = 4, shape = 10) +
-  #     ggplot2::labs(linetype = "Curves", colour = "Number of Blocks") +
-  #     ggplot2::theme(
-  #       legend.position = c(.40, .05),
-  #       legend.justification = c("left", "bottom"),
-  #       legend.box.just = "left",
-  #       legend.margin = ggplot2::margin(6, 6, 6, 6)
-  #     )
+  # ILC_plot(data_sbm,data_sbm_main)
   #   output$showILC1 <- renderPlot({
   #     microplot
   #   })
