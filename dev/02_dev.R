@@ -159,6 +159,7 @@ golem::add_module(name = "tab_network", with_test = TRUE)
 golem::add_module(name = "tab_extraction", with_test = TRUE)
 golem::add_module(name = "importation_error", with_test = TRUE)
 golem::add_module(name = "select_nb_groups", with_test = TRUE)
+golem::add_module(name = "select_net_type", with_test = TRUE)
 
 ## USED functions
 golem::add_fct( "sbmMatrixClass" )
