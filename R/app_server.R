@@ -34,14 +34,7 @@ app_server <- function(input, output, session) {
   #   min <- min(data_sbm$storedModels$nbBlocks)
   #   max <- max(data_sbm$storedModels$nbBlocks)
 
-  # updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
-  #   choices = list(
-  #     "Raw Matrix" = "raw",
-  #     "Reordered Matrix" = "ordered",
-  #     "Simplified Matrix" = "simple"
-  #   ),
-  #   selected = "ordered"
-  # )
+
   #
   # updateRadioButtons(session, "whichRawSbmNetwork", "Select Ploted Network:",
   #   choices = list(
@@ -67,22 +60,8 @@ app_server <- function(input, output, session) {
   #     microplot
   #   })
   #
-  #   output$sbmSummarySelect <- renderPrint({
-  #     data_sbm <- my_sbm()$clone()
-  #     print(c(NbBlockSelected = data_sbm$nbBlocks))
-  #   })
-  #
-  #   output$sbmSummary <- renderPrint({
-  #     data_sbm <- my_sbm()$clone()
-  #     cat("Connectivity:\n")
-  #     print(data_sbm$connectParam$mean)
-  #     cat("\nBlock Proportions:\n")
-  #     print(data_sbm$blockProp)
-  #     cat("\nStored Model:\n")
-  #     print(data_sbm$storedModels)
-  #   })
-  # })
-  #
+
+
   # PlotNet <- reactive({
   #   if (input$runSbm) {
   #     data_sbm <- my_sbm()$clone()

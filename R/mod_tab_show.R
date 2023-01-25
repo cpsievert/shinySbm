@@ -25,8 +25,7 @@ mod_tab_show_ui <- function(id) {
       ),
       radioButtons(ns("whichRawSbmMatrix"), "Select Ploted Matrix",
         choices = list("Raw Matrix" = "raw")
-      ),
-      verbatimTextOutput(ns('try'))
+      )
     ),
     conditionalPanel(
       condition = "input.runSbm", ns = ns_tab_sbm,
@@ -84,11 +83,6 @@ mod_tab_show_server <- function(id, r) {
         )
       ) %>%
         DT::formatStyle(c(1:dim(r$upload$Dataset())[2]), border = "1px solid #ddd")
-    })
-
-    output$try <- renderPrint({
-      print(!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0)
-      print(r$sbm$runSbm())
     })
 
     PlotMat <- reactive({

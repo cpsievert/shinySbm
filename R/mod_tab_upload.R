@@ -191,6 +191,10 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         ),
         selected = datasetUploaded()$law
       )
+      updateRadioButtons(parent_session, "tab_show_1-whichRawSbmMatrix",
+                         "Select Ploted Matrix",
+                         choices = list("Raw Matrix" = "raw")
+      )
       updateActionButton(parent_session,"tab_sbm_1-runSbm")
     })
 
