@@ -18,48 +18,19 @@ app_server <- function(input, output, session) {
     parent_session = session
   )
 
-  ## Visualisation part
-  r$show <- mod_tab_show_server("tab_show_1", r)
-
   ## SBM part
   r$sbm <- mod_tab_sbm_server("tab_sbm_1", r,
                               parent_session = session
-                              )
+  )
+
+  ## Visualisation part
+  r$show <- mod_tab_show_server("tab_show_1", r)
 
 
-
-  # observeEvent(input$runSbm, {
-  #   data_sbm <- my_sbm_main()$clone()
-  #   value <- sum(data_sbm$nbBlocks)
-  #   min <- min(data_sbm$storedModels$nbBlocks)
-  #   max <- max(data_sbm$storedModels$nbBlocks)
+  ## Network visualisation part
+  r$network <- mod_tab_network_server("tab_network_1", r)
 
 
-  #
-  # updateRadioButtons(session, "whichRawSbmNetwork", "Select Ploted Network:",
-  #   choices = list(
-  #     "Raw network" = "raw",
-  #     "Ordered Network" = "ordered"
-  #   ),
-  #   selected = "ordered", inline = T
-  # )
-  # })
-
-
-  # observeEvent(c(input$Nbblocks, input$runSbm), {
-  #   data_sbm <- my_sbm()$clone()
-  #   data_sbm_main <- my_sbm_main()$clone()
-  # ILC_plot(data_sbm,data_sbm_main)
-  #   output$showILC1 <- renderPlot({
-  #     microplot
-  #   })
-  #   output$showILC2 <- renderPlot({
-  #     microplot
-  #   })
-  #   output$showILC3 <- renderPlot({
-  #     microplot
-  #   })
-  #
 
 
   # PlotNet <- reactive({

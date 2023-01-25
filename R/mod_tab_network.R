@@ -4,28 +4,58 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList
 mod_tab_network_ui <- function(id){
   ns <- NS(id)
+  ns_tab_sbm <- function(id) {
+    paste0("tab_sbm_1-", id)
+  }
   tagList(
- 
+    shinydashboard::box(
+      title = "Visual settings", solidHeader = T,
+      status = "info", collapsible = T,
+      radioButtons(ns("whichNetwork"), "Select Ploted Network",
+                   choices = list("Raw Network" = "raw")
+      )
+    ),
+    conditionalPanel(
+      condition = "input.runSbm", ns = ns_tab_sbm,
+      shinydashboard::box(
+        title = "Block settings", solidHeader = T,
+        status = "info", collapsible = T,
+        mod_select_nb_groups_ui(ns("select_nb_groups_3"))
+      )
+    ),
+    shinydashboard::box(
+      title = "Network", solidHeader = T,
+      status = "info", width = 12
+    )
   )
 }
-    
+
 #' tab_network Server Functions
 #'
-#' @noRd 
-mod_tab_network_server <- function(id){
+#' @noRd
+mod_tab_network_server <- function(id,r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
- 
+
+    mod_select_nb_groups_res <- mod_select_nb_groups_server(
+      "select_nb_groups_3",
+      r$sbm$main_sbm, r$sbm$NbBlocks
+    )
+    my_sbm <- mod_select_nb_groups_res$my_sbm
+
+    return(list(
+      NbBlocks = mod_select_nb_groups_res$Nbblocks
+    ))
   })
 }
-    
+
 ## To be copied in the UI
 # mod_tab_network_ui("tab_network_1")
-    
+
 ## To be copied in the server
 # mod_tab_network_server("tab_network_1")

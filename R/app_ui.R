@@ -41,10 +41,10 @@ app_ui <- function(request) {
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem("Data Loading", tabName = "tab_upload",
                                    icon = icon("th")),
-          shinydashboard::menuItem("Data Plots", tabName = "tab_show",
-                                   icon = icon("eye", lib = "font-awesome")),
           shinydashboard::menuItem("SBM application", tabName = "tab_sbm",
                                    icon = icon("cogs", lib = "font-awesome")),
+          shinydashboard::menuItem("Data Plots", tabName = "tab_show",
+                                   icon = icon("eye", lib = "font-awesome")),
           shinydashboard::menuItem("Network Plots", tabName = "tab_network",
                                    icon = icon("share-alt", lib = "font-awesome")),
           shinydashboard::menuItem("Generated Groups", tabName = "tab_extraction",
@@ -61,6 +61,12 @@ app_ui <- function(request) {
             mod_tab_upload_ui("tab_upload_1")
           ),
 
+          ### SBM APPLICATION
+          shinydashboard::tabItem(
+            tabName = "tab_sbm",
+            mod_tab_sbm_ui("tab_sbm_1")
+          ),
+
           ### Matrix plots
           shinydashboard::tabItem(
             tabName = "tab_show",
@@ -68,39 +74,12 @@ app_ui <- function(request) {
           ),
 
 
-          ### SBM APPLICATION
-          shinydashboard::tabItem(
-            tabName = "tab_sbm",
-            mod_tab_sbm_ui("tab_sbm_1")
-            ),
-
 
           ### NETWORK VISUALISATION
           shinydashboard::tabItem(
             tabName = "tab_network",
-            column(
-              width = 3,
-              a(strong("Visualisation settings")),
-              wellPanel(
-                radioButtons("whichRawSbmNetwork", "Select Ploted Network:",
-                  choices = list("Raw Network" = "raw"),
-                  inline = T
-                ),
-                conditionalPanel(
-                  condition = "input.runSbm",
-                  plotOutput("showILC3")
-                ),
-                br(),
-                downloadButton("downloadNetworkPlot")
-              )
+            mod_tab_network_ui("tab_network_1")
             ),
-            column(width = 1),
-            column(
-              width = 8,
-              a(strong("Network Visual")),
-              plotOutput("networkPlot")
-            )
-          ),
           ### GEN GROUPS
           shinydashboard::tabItem(tabName = "tab_extraction")
         )

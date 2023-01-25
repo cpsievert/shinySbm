@@ -14,7 +14,7 @@ mod_tab_show_ui <- function(id) {
   }
   tagList(
     shinydashboard::box(
-      title = "Visualisation settings", solidHeader = T,
+      title = "Visual settings", solidHeader = T,
       status = "info", collapsible = T,
       radioButtons(ns("whichShow"), "Type of visualisation",
         choices = list(
@@ -23,7 +23,7 @@ mod_tab_show_ui <- function(id) {
         ),
         inline = T
       ),
-      radioButtons(ns("whichRawSbmMatrix"), "Select Ploted Matrix",
+      radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
         choices = list("Raw Matrix" = "raw")
       )
     ),
@@ -99,7 +99,7 @@ mod_tab_show_server <- function(id, r) {
         }
         if (!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0) {
           data_sbm <- my_sbm()$clone()
-          switch(input$whichRawSbmMatrix,
+          switch(input$whichMatrix,
             "raw" = sbm::plotMyMatrix(x, dimLabels = labels_list),
             "ordered" = plot(data_sbm, type = "data", dimLabels = r$upload$labels()),
             "simple" = plot(data_sbm, type = "expected", dimLabels = r$upload$labels())

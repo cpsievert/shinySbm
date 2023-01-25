@@ -114,7 +114,7 @@ mod_tab_sbm_server <- function(id, r,parent_session) {
     })
 
     observeEvent(my_sbm_main(),{
-      updateRadioButtons(parent_session, "tab_show_1-whichRawSbmMatrix",
+      updateRadioButtons(parent_session, "tab_show_1-whichMatrix",
                          "Select Ploted Matrix",
         choices = list(
           "Raw Matrix" = "raw",
@@ -122,6 +122,14 @@ mod_tab_sbm_server <- function(id, r,parent_session) {
           "Simplified Matrix" = "simple"
         ),
         selected = "ordered"
+      )
+      updateRadioButtons(parent_session, "tab_network_1-whichNetwork",
+                         "Select Ploted Network",
+                         choices = list(
+                           "Raw Network" = "raw",
+                           "Grouped Network" = "grouped"
+                         ),
+                         selected = "grouped"
       )
     })
 
