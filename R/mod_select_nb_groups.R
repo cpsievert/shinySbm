@@ -21,11 +21,23 @@ mod_select_nb_groups_ui <- function(id) {
 #' select_nb_groups Server Functions
 #'
 #' @noRd
-mod_select_nb_groups_server <- function(id, my_sbm_main, runSbm) {
+mod_select_nb_groups_server <- function(id, my_sbm_main, Nbblocks) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    observe({
+    observeEvent(Nbblocks(), {
+      req(Nbblocks())
+      if (Nbblocks() != input$Nbblocks) {
+        updateNumericInput(session,
+          inputId = "Nbblocks",
+          label = "Select the total number of blocks:",
+          value = Nbblocks()
+        )
+      }
+    })
+
+
+    observeEvent(my_sbm_main(), {
       data_sbm <- my_sbm_main()$clone()
       value <- sum(data_sbm$nbBlocks)
       min <- min(data_sbm$storedModels$nbBlocks)
@@ -48,7 +60,7 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, runSbm) {
       data_sbm
     })
 
-    observeEvent(c(input$Nbblocks, runSbm), {
+    observeEvent(c(input$Nbblocks, my_sbm_main()), {
       data_sbm <- my_sbm()$clone()
       data_sbm_main <- my_sbm_main()$clone()
       output$showILC <- renderPlot({

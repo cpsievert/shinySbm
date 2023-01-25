@@ -14,7 +14,7 @@ mod_tab_sbm_ui <- function(id) {
       width = 3,
       shinydashboard::box(
         title = "SBM settings", solidHeader = T,
-        status = "info",width = 12,
+        status = "info", width = 12,
         selectInput(ns("whichLaw"),
           label = "What is the density expected upon dataset ?",
           choices = list(
@@ -30,7 +30,7 @@ mod_tab_sbm_ui <- function(id) {
         condition = "input.runSbm", ns = ns,
         shinydashboard::box(
           title = "Block Selection", solidHeader = T,
-          status = "info",width = 12,
+          status = "info", width = 12,
           mod_select_nb_groups_ui(ns("select_nb_groups_2"))
         )
       )
@@ -39,7 +39,7 @@ mod_tab_sbm_ui <- function(id) {
       width = 9,
       shinydashboard::box(
         title = "SBM outputs", solidHeader = T,
-        status = "info",width = 12,
+        status = "info", width = 12,
         strong("SBM code:"),
         verbatimTextOutput(ns("sbmCode")),
         mod_importation_error_ui(ns("error_2")),
@@ -59,12 +59,12 @@ mod_tab_sbm_ui <- function(id) {
 #' tab_sbm Server Functions
 #'
 #' @noRd
-mod_tab_sbm_server <- function(id, workingDataset, networkType) {
+mod_tab_sbm_server <- function(id, r,parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     output$sbmButton <- renderUI({
-      if(!is.null(workingDataset())){
+      if (!is.null(r$upload$Dataset())) {
         tagList(
           hr(),
           div(
@@ -76,51 +76,64 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
     })
 
 
-    Dataset <- eventReactive(c(workingDataset(),input$whichLaw),{
-      data <- workingDataset()
+    Dataset <- eventReactive(c(r$upload$Dataset(), input$whichLaw), {
+      data <- r$upload$Dataset()
       data$law <- input$whichLaw
       data
     })
 
     output$sbmCode <- renderText({
-      switch(networkType(),
-             "unipartite" = paste0(
-               "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
-               Dataset()$law, ", estimOptions = list(verbosity = 1))"
-             ),
-             "bipartite" = paste0(
-               "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
-               Dataset()$law, "', estimOptions = list(verbosity = 1))"
-             )
+      switch(r$upload$networkType(),
+        "unipartite" = paste0(
+          "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
+          Dataset()$law, ", estimOptions = list(verbosity = 1))"
+        ),
+        "bipartite" = paste0(
+          "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
+          Dataset()$law, "', estimOptions = list(verbosity = 1))"
+        )
       )
     })
 
     mod_importation_error_server("error_2", Dataset)
 
     my_sbm_main <- eventReactive(input$runSbm, {
-      datasetup <- Dataset()
       data_res <- withProgress(message = "SBM is Running", {
-        switch(networkType(),
-               "unipartite" = sbm::estimateSimpleSBM(
-                 netMat = as.matrix(datasetup),
-                 model = datasetup$law, estimOptions = list(verbosity = 3, plot = F)
-               ),
-               "bipartite" = sbm::estimateBipartiteSBM(
-                 netMat = as.matrix(datasetup),
-                 model = datasetup$law, estimOptions = list(verbosity = 3, plot = F)
-               )
+        switch(r$upload$networkType(),
+          "unipartite" = sbm::estimateSimpleSBM(
+            netMat = as.matrix(Dataset()),
+            model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
+          ),
+          "bipartite" = sbm::estimateBipartiteSBM(
+            netMat = as.matrix(Dataset()),
+            model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
+          )
         )
       })
       return(data_res)
     })
 
+    observeEvent(my_sbm_main(),{
+      updateRadioButtons(parent_session, "tab_show_1-whichRawSbmMatrix",
+                         "Select Ploted Matrix",
+        choices = list(
+          "Raw Matrix" = "raw",
+          "Reordered Matrix" = "ordered",
+          "Simplified Matrix" = "simple"
+        ),
+        selected = "ordered"
+      )
+    })
 
 
-    my_sbm <- mod_select_nb_groups_server("select_nb_groups_2",
-                                          my_sbm_main,input$runSbm)$my_sbm
+    mod_select_nb_groups_res <- mod_select_nb_groups_server(
+      "select_nb_groups_2",
+      my_sbm_main, r$sbm$NbBlocks
+    )
 
+    my_sbm <- mod_select_nb_groups_res$my_sbm
 
-    observeEvent(my_sbm(),{
+    observeEvent(my_sbm(), {
       data_sbm <- my_sbm()$clone()
       output$sbmSummary <- renderPrint({
         cat("Connectivity:\n")
@@ -132,9 +145,12 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
       })
     })
 
-    return(list(workingDataset = Dataset,
-                sbm = my_sbm,
-                main_sbm = my_sbm_main))
+    return(list(
+      Dataset = Dataset,
+      NbBlocks = mod_select_nb_groups_res$Nbblocks,
+      main_sbm = my_sbm_main,
+      runSbm = reactive({input$runSbm})
+    ))
   })
 }
 

@@ -5,23 +5,28 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
-  ## Importing the data set
-  tab_upload_res <- mod_tab_upload_server("tab_upload_1",
-                                          parent_session = session)
+  r <- reactiveValues(
+    upload = reactiveValues(),
+    show = reactiveValues(),
+    sbm = reactiveValues(),
+    network = reactiveValues(),
+    extraction = reactiveValues()
+  )
 
-  workingDataset <- tab_upload_res$workingDataset
-  labels <- tab_upload_res$labels
-  networkType <- tab_upload_res$networkType
+  ## Importing the data set
+  r$upload <- mod_tab_upload_server("tab_upload_1", r,
+    parent_session = session
+  )
 
   ## Visualisation part
-  mod_tab_show_server("tab_show_1", workingDataset, labels)
+  r$show <- mod_tab_show_server("tab_show_1", r)
 
   ## SBM part
-  tab_sbm_res <- mod_tab_sbm_server("tab_sbm_1",isolate(workingDataset),networkType)
+  r$sbm <- mod_tab_sbm_server("tab_sbm_1", r,
+                              parent_session = session
+                              )
 
-  workingDataset <- tab_upload_res$workingDataset
-  my_sbm <- tab_sbm_res$sbm
-  my_sbm_main <- tab_sbm_res$main_sbm
+
 
   # observeEvent(input$runSbm, {
   #   data_sbm <- my_sbm_main()$clone()
@@ -29,22 +34,22 @@ app_server <- function(input, output, session) {
   #   min <- min(data_sbm$storedModels$nbBlocks)
   #   max <- max(data_sbm$storedModels$nbBlocks)
 
-    # updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
-    #   choices = list(
-    #     "Raw Matrix" = "raw",
-    #     "Reordered Matrix" = "ordered",
-    #     "Simplified Matrix" = "simple"
-    #   ),
-    #   selected = "ordered"
-    # )
-    #
-    # updateRadioButtons(session, "whichRawSbmNetwork", "Select Ploted Network:",
-    #   choices = list(
-    #     "Raw network" = "raw",
-    #     "Ordered Network" = "ordered"
-    #   ),
-    #   selected = "ordered", inline = T
-    # )
+  # updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
+  #   choices = list(
+  #     "Raw Matrix" = "raw",
+  #     "Reordered Matrix" = "ordered",
+  #     "Simplified Matrix" = "simple"
+  #   ),
+  #   selected = "ordered"
+  # )
+  #
+  # updateRadioButtons(session, "whichRawSbmNetwork", "Select Ploted Network:",
+  #   choices = list(
+  #     "Raw network" = "raw",
+  #     "Ordered Network" = "ordered"
+  #   ),
+  #   selected = "ordered", inline = T
+  # )
   # })
 
 

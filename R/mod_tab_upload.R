@@ -118,7 +118,7 @@ mod_tab_upload_ui <- function(id) {
 #' tab_upload Server Functions
 #'
 #' @noRd
-mod_tab_upload_server <- function(id,parent_session) {
+mod_tab_upload_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -183,14 +183,15 @@ mod_tab_upload_server <- function(id,parent_session) {
         selected = datasetUploaded()$type
       )
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
-                        label = "What is the density expected upon dataset ?",
-                        choices = list(
-                          "Bernoulli" = "bernoulli",
-                          "Poisson" = "poisson",
-                          "Gaussian" = "gaussian"
-                        ),
-                        selected = datasetUploaded()$law
+        label = "What is the density expected upon dataset ?",
+        choices = list(
+          "Bernoulli" = "bernoulli",
+          "Poisson" = "poisson",
+          "Gaussian" = "gaussian"
+        ),
+        selected = datasetUploaded()$law
       )
+      updateActionButton(parent_session,"tab_sbm_1-runSbm")
     })
 
     workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
@@ -199,16 +200,27 @@ mod_tab_upload_server <- function(id,parent_session) {
       data
     })
 
-    mod_importation_error_server("error_1", workingDataset)
+    observedDataset <- eventReactive(r$sbm$Dataset(), {
+      if (is.null(r$sbm$Dataset())) {
+        return(workingDataset())
+      } else {
+        return(r$sbm$Dataset())
+      }
+    })
+
+    mod_importation_error_server("error_1", observedDataset)
+
 
     output$summaryDataImport <- renderPrint({
-      print(workingDataset())
+      print(observedDataset())
     })
 
     return(list(
       labels = labels,
-      workingDataset = workingDataset,
-      networkType = reactive({input$networkType})
+      Dataset = workingDataset,
+      networkType = reactive({
+        input$networkType
+      })
     ))
   })
 }
