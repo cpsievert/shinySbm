@@ -118,7 +118,7 @@ mod_tab_upload_ui <- function(id) {
 #' tab_upload Server Functions
 #'
 #' @noRd
-mod_tab_upload_server <- function(id) {
+mod_tab_upload_server <- function(id,parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -182,15 +182,15 @@ mod_tab_upload_server <- function(id) {
         inline = T,
         selected = datasetUploaded()$type
       )
-      # updateSelectInput(session, ns("whichLaw"),
-      #                   label = "What is the density expected upon dataset ?",
-      #                   choices = list(
-      #                     "Bernoulli" = "bernoulli",
-      #                     "Poisson" = "poisson",
-      #                     "Gaussian" = "gaussian"
-      #                   ),
-      #                   selected = datasetUploaded()$law
-      # )
+      updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
+                        label = "What is the density expected upon dataset ?",
+                        choices = list(
+                          "Bernoulli" = "bernoulli",
+                          "Poisson" = "poisson",
+                          "Gaussian" = "gaussian"
+                        ),
+                        selected = datasetUploaded()$law
+      )
     })
 
     workingDataset <- eventReactive(c(datasetUploaded(), input$networkType, input$whichLaw), {
