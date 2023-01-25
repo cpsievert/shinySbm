@@ -193,10 +193,9 @@ mod_tab_upload_server <- function(id,parent_session) {
       )
     })
 
-    workingDataset <- eventReactive(c(datasetUploaded(), input$networkType, input$whichLaw), {
+    workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
       data <- datasetUploaded()
       data$type <- input$networkType
-      # data$law <- input$whichLaw
       data
     })
 

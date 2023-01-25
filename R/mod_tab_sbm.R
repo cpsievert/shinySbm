@@ -75,23 +75,30 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
       }
     })
 
+
+    Dataset <- eventReactive(c(workingDataset(),input$whichLaw),{
+      data <- workingDataset()
+      data$law <- input$whichLaw
+      data
+    })
+
     output$sbmCode <- renderText({
       switch(networkType(),
              "unipartite" = paste0(
                "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
-               workingDataset()$law, ", estimOptions = list(verbosity = 1))"
+               Dataset()$law, ", estimOptions = list(verbosity = 1))"
              ),
              "bipartite" = paste0(
                "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
-               workingDataset()$law, "', estimOptions = list(verbosity = 1))"
+               Dataset()$law, "', estimOptions = list(verbosity = 1))"
              )
       )
     })
 
-    mod_importation_error_server("error_2", workingDataset)
+    mod_importation_error_server("error_2", Dataset)
 
     my_sbm_main <- eventReactive(input$runSbm, {
-      datasetup <- workingDataset()
+      datasetup <- Dataset()
       data_res <- withProgress(message = "SBM is Running", {
         switch(networkType(),
                "unipartite" = sbm::estimateSimpleSBM(
@@ -125,7 +132,8 @@ mod_tab_sbm_server <- function(id, workingDataset, networkType) {
       })
     })
 
-    return(list(sbm = my_sbm,
+    return(list(workingDataset = Dataset,
+                sbm = my_sbm,
                 main_sbm = my_sbm_main))
   })
 }

@@ -6,7 +6,9 @@
 #' @noRd
 app_server <- function(input, output, session) {
   ## Importing the data set
-  tab_upload_res <- mod_tab_upload_server("tab_upload_1")
+  tab_upload_res <- mod_tab_upload_server("tab_upload_1",
+                                          parent_session = session)
+
   workingDataset <- tab_upload_res$workingDataset
   labels <- tab_upload_res$labels
   networkType <- tab_upload_res$networkType
@@ -15,47 +17,16 @@ app_server <- function(input, output, session) {
   mod_tab_show_server("tab_show_1", workingDataset, labels)
 
   ## SBM part
-  mod_tab_sbm_server("tab_sbm_1",workingDataset,networkType)
+  tab_sbm_res <- mod_tab_sbm_server("tab_sbm_1",workingDataset,networkType)
 
-# my_sbm_main <- eventReactive(input$runSbm, {
-#   datasetup <- workingDataset()
-#   data_res <- withProgress(message = "SBM is Running", {
-#     switch(input$networkType,
-#       "unipartite" = sbm::estimateSimpleSBM(
-#         netMat = as.matrix(datasetup),
-#         model = datasetup$law, estimOptions = list(verbosity = 3, plot = T)
-#       ),
-#       "bipartite" = sbm::estimateBipartiteSBM(
-#         netMat = as.matrix(datasetup),
-#         model = datasetup$law, estimOptions = list(verbosity = 3, plot = T)
-#       )
-#     )
-#   })
-#   return(data_res)
-# })
-  #
+  my_sbm <- tab_sbm_res$sbm
+  my_sbm_main <- tab_sbm_res$main_sbm
+
   # observeEvent(input$runSbm, {
   #   data_sbm <- my_sbm_main()$clone()
   #   value <- sum(data_sbm$nbBlocks)
   #   min <- min(data_sbm$storedModels$nbBlocks)
   #   max <- max(data_sbm$storedModels$nbBlocks)
-  #   output$sbmCode <- renderText({
-  #     switch(input$networkType,
-  #       "unipartite" = paste0(
-  #         "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
-  #         workingDataset()$law, ", estimOptions = list(verbosity = 1))"
-  #       ),
-  #       "bipartite" = paste0(
-  #         "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
-  #         workingDataset()$law, "', estimOptions = list(verbosity = 1))"
-  #       )
-  #     )
-  #   })
-    # updateNumericInput(session,
-    #   inputId = "Nbblocks",
-    #   label = "Select the total number of blocks:",
-    #   value = value, min = min, max = max, step = 1
-    # )
 
     # updateRadioButtons(session, "whichRawSbmMatrix", "Select Ploted Matrix",
     #   choices = list(
@@ -75,16 +46,7 @@ app_server <- function(input, output, session) {
     # )
   # })
 
-  # my_sbm <- eventReactive(input$Nbblocks, {
-  #   data_sbm <- my_sbm_main()$clone()
-  #   min <- min(data_sbm$storedModels$nbBlocks)
-  #   max <- max(data_sbm$storedModels$nbBlocks)
-  #   if (input$Nbblocks %in% min:max) {
-  #     data_sbm$setModel(which(data_sbm$storedModels$nbBlocks == input$Nbblocks))
-  #   }
-  #   data_sbm
-  # })
-  #
+
   # observeEvent(c(input$Nbblocks, input$runSbm), {
   #   data_sbm <- my_sbm()$clone()
   #   data_sbm_main <- my_sbm_main()$clone()
