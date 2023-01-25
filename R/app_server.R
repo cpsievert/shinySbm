@@ -17,8 +17,9 @@ app_server <- function(input, output, session) {
   mod_tab_show_server("tab_show_1", workingDataset, labels)
 
   ## SBM part
-  tab_sbm_res <- mod_tab_sbm_server("tab_sbm_1",workingDataset,networkType)
+  tab_sbm_res <- mod_tab_sbm_server("tab_sbm_1",isolate(workingDataset),networkType)
 
+  workingDataset <- tab_upload_res$workingDataset
   my_sbm <- tab_sbm_res$sbm
   my_sbm_main <- tab_sbm_res$main_sbm
 
