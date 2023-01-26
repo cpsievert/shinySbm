@@ -38,22 +38,16 @@ mod_tab_extraction_server <- function(id, r) {
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
 
-    group_of_name <- reactive({
-      getGroup(my_sbm(), r$sbm$Dataset())
+    group_of_name <- eventReactive(my_sbm(),{
+      getGroupNames(my_sbm(), r$sbm$Dataset())
     })
 
-    output$mygroup <- renderPrint({
-      print(group_of_name())
-    })
+    mod_show_group_names_server("show_group_names",group_of_name(),1)
 
 
     output$namesGroups <- renderUI({
       tagList(
-        shinydashboard::box(
-          title = "Goup n°", solidHeader = T,
-          status = "info", collapsible = T, width = 9,
-          verbatimTextOutput(ns("mygroup"))
-        )
+        mod_show_group_names_ui(ns("show_group_names"))
       )
     })
     return(list(NbBlocks = mod_select_nb_groups_res$Nbblocks))
