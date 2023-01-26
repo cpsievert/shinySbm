@@ -165,6 +165,7 @@ golem::add_module(name = "select_net_type", with_test = TRUE)
 golem::add_fct( "sbmMatrixClass" )
 golem::add_fct( "specific_css_style" )
 golem::add_fct("specific_plots")
+golem::add_fct( "getGroup" )
 
 a = sortable::rank_list(
   text = "Cliquer glisser dans l'ordre souhaité (plusieurs selection possible avec la touche CTRL)",

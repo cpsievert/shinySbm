@@ -81,7 +81,10 @@ app_ui <- function(request) {
             mod_tab_network_ui("tab_network_1")
             ),
           ### GEN GROUPS
-          shinydashboard::tabItem(tabName = "tab_extraction")
+          shinydashboard::tabItem(
+            tabName = "tab_extraction",
+            mod_tab_extraction_ui("tab_extraction_1")
+            )
         )
       )
     )

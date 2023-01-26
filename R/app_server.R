@@ -30,6 +30,7 @@ app_server <- function(input, output, session) {
   ## Network visualisation part
   r$network <- mod_tab_network_server("tab_network_1", r)
 
+  r$extraction <- mod_tab_extraction_server("tab_extraction_1", r)
 
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {
