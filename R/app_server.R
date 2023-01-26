@@ -20,7 +20,7 @@ app_server <- function(input, output, session) {
 
   ## SBM part
   r$sbm <- mod_tab_sbm_server("tab_sbm_1", r,
-                              parent_session = session
+    parent_session = session
   )
 
   ## Visualisation part

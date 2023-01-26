@@ -5,7 +5,7 @@
 #' @return no value
 #'
 #' @noRd
-ILC_plot <- function(selected_sbm,comparison_sbm = selected_sbm){
+ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm) {
   my_plot <- ggplot2::ggplot(selected_sbm$storedModels) +
     ggplot2::aes(x = nbBlocks, y = ICL, linetype = "ICL") +
     ggplot2::geom_line() +
@@ -40,7 +40,7 @@ build_node_edge <- function(sbmObject, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...){
+build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...) {
   nb_nodes <- sbmObject$nbBlocks
   id <- 1:nb_nodes
   nodes <- data.frame(
@@ -49,16 +49,22 @@ build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...){
     value = sbmObject$blockProp
   )
   connection_matrix <- sbmObject$connectParam$mean
-  if(isSymmetric(connection_matrix) & !oriented){
+  if (isSymmetric(connection_matrix) & !oriented) {
     edges <- data.frame(
-      from = sapply(id,function(i){rep(i,each = nb_nodes-i+1)}) %>% unlist,
-      to = sapply(id,function(i){i:nb_nodes}) %>% unlist
+      from = sapply(id, function(i) {
+        rep(i, each = nb_nodes - i + 1)
+      }) %>% unlist(),
+      to = sapply(id, function(i) {
+        i:nb_nodes
+      }) %>% unlist()
     ) %>%
-      dplyr::mutate(value = apply(.,1,function(i){connection_matrix[i[1],i[2]]}) %>% unlist)
-  }else{
+      dplyr::mutate(value = apply(., 1, function(i) {
+        connection_matrix[i[1], i[2]]
+      }) %>% unlist())
+  } else {
     edges <- data.frame(
-      from = rep(id,each = nb_nodes),
-      to = rep(id,nb_nodes),
+      from = rep(id, each = nb_nodes),
+      to = rep(id, nb_nodes),
       value = as.vector(connection_matrix)
     )
   }
@@ -73,27 +79,32 @@ build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...){
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-build_node_edge.BipartiteSBM_fit <- function(sbmObject, ...){
-
-  nb_nodes <- sbmObject$nbBlocks %>% as.list
-  id <- lapply(nb_nodes,function(i){1:i})
+build_node_edge.BipartiteSBM_fit <- function(sbmObject, ...) {
+  nb_nodes <- sbmObject$nbBlocks %>% as.list()
+  id <- lapply(nb_nodes, function(i) {
+    1:i
+  })
 
   nodes <- data.frame(
-    id = id %>% unlist %>% names,
-    value = sbmObject$blockProp %>% unlist,
-    group = lapply(1:2,function(i){rep(names(nb_nodes)[[i]],each = nb_nodes[[i]])}) %>% unlist
+    id = id %>% unlist() %>% names(),
+    value = sbmObject$blockProp %>% unlist(),
+    group = lapply(1:2, function(i) {
+      rep(names(nb_nodes)[[i]], each = nb_nodes[[i]])
+    }) %>% unlist()
   ) %>%
-    dplyr::mutate(label = paste("Node", id),
-           level = ifelse(group == "row", 1,2),
-           shape = ifelse(group == "row", 'triangle','square')) %>%
-    dplyr::select(id,label,level,value,group)
+    dplyr::mutate(
+      label = paste("Node", id),
+      level = ifelse(group == "row", 1, 2),
+      shape = ifelse(group == "row", "triangle", "square")
+    ) %>%
+    dplyr::select(id, label, level, value, group)
 
 
   connection_matrix <- sbmObject$connectParam$mean
 
   edges <- data.frame(
-    from = paste0('col',rep(id$col,each = nb_nodes$row)),
-    to = paste0('row',rep(id$row,nb_nodes$col)),
+    from = paste0("col", rep(id$col, each = nb_nodes$row)),
+    to = paste0("row", rep(id$row, nb_nodes$col)),
     value = as.vector(connection_matrix)
   )
 
@@ -107,15 +118,15 @@ build_node_edge.BipartiteSBM_fit <- function(sbmObject, ...){
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-netPlot <- function(nodes, edges, type = 'unipartite',
-                    arrows = 'from', arrows_color = 'lightblue',
+netPlot <- function(nodes, edges, type = "unipartite",
+                    arrows = "from", arrows_color = "lightblue",
                     row_color = "orange", row_shape = "triangle",
-                    col_color = "blue", col_shape = "square"){
-  if(type == 'unipartite'){
+                    col_color = "blue", col_shape = "square") {
+  if (type == "unipartite") {
     visNetwork::visNetwork(nodes, edges)
-  }else{
+  } else {
     visNetwork::visNetwork(nodes, edges) %>%
-      visNetwork::visEdges(arrows,color = arrows_color) %>%
+      visNetwork::visEdges(arrows, color = arrows_color) %>%
       # darkblue square with shadow for group "A"
       visNetwork::visGroups(groupname = "row", color = row_color, shape = row_shape) %>%
       # red triangle for group "B"

@@ -5,7 +5,7 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-getGroup <-  function(sbmObject, data) {
+getGroup <- function(sbmObject, data) {
   UseMethod("getGroup", object = sbmObject)
 }
 
@@ -16,9 +16,9 @@ getGroup <-  function(sbmObject, data) {
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-getGroup.SimpleSBM_fit <- function(sbmObject,data){
-  sapply(1:sbmObject$nbBlocks,function(i){
-    indices <- sbmObject$indMemberships[,i] == 1
+getGroup.SimpleSBM_fit <- function(sbmObject, data) {
+  sapply(1:sbmObject$nbBlocks, function(i) {
+    indices <- sbmObject$indMemberships[, i] == 1
     data$nodes_names$col[indices]
   })
 }
@@ -31,17 +31,17 @@ getGroup.SimpleSBM_fit <- function(sbmObject,data){
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-getGroup.BipartiteSBM_fit <- function(sbmObject,data){
-  list_group <- lapply(c('row','col'),function(margin){
-    sapply(1:as.list(sbmObject$nbBlocks)[[margin]],function(i){
-      indices <- sbmObject$indMemberships[[margin]][,i] == 1
-      if(margin == 'col'){
+getGroup.BipartiteSBM_fit <- function(sbmObject, data) {
+  list_group <- lapply(c("row", "col"), function(margin) {
+    sapply(1:as.list(sbmObject$nbBlocks)[[margin]], function(i) {
+      indices <- sbmObject$indMemberships[[margin]][, i] == 1
+      if (margin == "col") {
         return(data$nodes_names$col[indices])
-      }else{
+      } else {
         return(data$nodes_names$row[indices])
       }
     })
   })
-  names(list_group) <- c('row','col')
+  names(list_group) <- c("row", "col")
   return(list_group)
 }

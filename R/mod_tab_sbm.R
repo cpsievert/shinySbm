@@ -59,7 +59,7 @@ mod_tab_sbm_ui <- function(id) {
 #' tab_sbm Server Functions
 #'
 #' @noRd
-mod_tab_sbm_server <- function(id, r,parent_session) {
+mod_tab_sbm_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -113,9 +113,9 @@ mod_tab_sbm_server <- function(id, r,parent_session) {
       return(data_res)
     })
 
-    observeEvent(my_sbm_main(),{
+    observeEvent(my_sbm_main(), {
       updateRadioButtons(parent_session, "tab_show_1-whichMatrix",
-                         "Select Ploted Matrix",
+        "Select Ploted Matrix",
         choices = list(
           "Raw Matrix" = "raw",
           "Reordered Matrix" = "ordered",
@@ -124,12 +124,12 @@ mod_tab_sbm_server <- function(id, r,parent_session) {
         selected = "ordered"
       )
       updateRadioButtons(parent_session, "tab_network_1-whichNetwork",
-                         "Select Ploted Network",
-                         choices = list(
-                           "Raw Network" = "raw",
-                           "Grouped Network" = "grouped"
-                         ),
-                         selected = "grouped"
+        "Select Ploted Network",
+        choices = list(
+          "Raw Network" = "raw",
+          "Grouped Network" = "grouped"
+        ),
+        selected = "grouped"
       )
     })
 
@@ -157,7 +157,9 @@ mod_tab_sbm_server <- function(id, r,parent_session) {
       Dataset = Dataset,
       NbBlocks = mod_select_nb_groups_res$Nbblocks,
       main_sbm = my_sbm_main,
-      runSbm = reactive({input$runSbm})
+      runSbm = reactive({
+        input$runSbm
+      })
     ))
   })
 }

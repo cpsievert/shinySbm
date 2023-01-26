@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_tab_network_ui <- function(id){
+mod_tab_network_ui <- function(id) {
   ns <- NS(id)
   ns_tab_sbm <- function(id) {
     paste0("tab_sbm_1-", id)
@@ -17,14 +17,14 @@ mod_tab_network_ui <- function(id){
       title = "Visual settings", solidHeader = T,
       status = "info", collapsible = T,
       radioButtons(ns("whichNetwork"), "Select Ploted Network",
-                   choices = list("Raw Network" = "raw")
+        choices = list("Raw Network" = "raw")
       )
     ),
     conditionalPanel(
       condition = "input.runSbm", ns = ns_tab_sbm,
       shinydashboard::box(
         title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T,width = 3,
+        status = "info", collapsible = T, width = 3,
         mod_select_nb_groups_ui(ns("select_nb_groups_3"))
       )
     ),
@@ -39,8 +39,8 @@ mod_tab_network_ui <- function(id){
 #' tab_network Server Functions
 #'
 #' @noRd
-mod_tab_network_server <- function(id,r){
-  moduleServer( id, function(input, output, session){
+mod_tab_network_server <- function(id, r) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     mod_select_nb_groups_res <- mod_select_nb_groups_server(
@@ -49,13 +49,15 @@ mod_tab_network_server <- function(id,r){
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
 
-    node_edge <- reactive({build_node_edge(my_sbm())})
+    node_edge <- reactive({
+      build_node_edge(my_sbm())
+    })
 
     output$networkPlot <- visNetwork::renderVisNetwork({
-      if(input$whichNetwork != "raw"){
+      if (input$whichNetwork != "raw") {
         local_value <- node_edge()
-        netPlot(local_value$nodes,local_value$edges,local_value$type)
-      }else{
+        netPlot(local_value$nodes, local_value$edges, local_value$type)
+      } else {
         return(NULL)
       }
     })

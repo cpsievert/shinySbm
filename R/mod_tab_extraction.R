@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_tab_extraction_ui <- function(id){
+mod_tab_extraction_ui <- function(id) {
   ns <- NS(id)
   ns_tab_sbm <- function(id) {
     paste0("tab_sbm_1-", id)
@@ -17,7 +17,7 @@ mod_tab_extraction_ui <- function(id){
       condition = "input.runSbm", ns = ns_tab_sbm,
       shinydashboard::box(
         title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T,width = 3,
+        status = "info", collapsible = T, width = 3,
         mod_select_nb_groups_ui(ns("select_nb_groups_4"))
       )
     ),
@@ -28,8 +28,8 @@ mod_tab_extraction_ui <- function(id){
 #' tab_extraction Server Functions
 #'
 #' @noRd
-mod_tab_extraction_server <- function(id,r){
-  moduleServer( id, function(input, output, session){
+mod_tab_extraction_server <- function(id, r) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     mod_select_nb_groups_res <- mod_select_nb_groups_server(
@@ -38,7 +38,9 @@ mod_tab_extraction_server <- function(id,r){
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
 
-    group_of_name <- reactive({getGroup(my_sbm(),r$sbm$Dataset())})
+    group_of_name <- reactive({
+      getGroup(my_sbm(), r$sbm$Dataset())
+    })
 
     output$mygroup <- renderPrint({
       print(group_of_name())
@@ -49,7 +51,7 @@ mod_tab_extraction_server <- function(id,r){
       tagList(
         shinydashboard::box(
           title = "Goup n°", solidHeader = T,
-          status = "info", collapsible = T,width = 9,
+          status = "info", collapsible = T, width = 9,
           verbatimTextOutput(ns("mygroup"))
         )
       )
