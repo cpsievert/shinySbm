@@ -31,26 +31,6 @@ app_server <- function(input, output, session) {
   r$network <- mod_tab_network_server("tab_network_1", r)
 
 
-
-
-  # PlotNet <- reactive({
-  #   if (input$runSbm) {
-  #     data_sbm <- my_sbm()$clone()
-  #     return(plot(data_sbm, type = "meso"))
-  #   } else {
-  #     return(NULL)
-  #   }
-  # })
-  #
-  # output$networkPlot <- renderPlot({
-  #   if (input$runSbm) {
-  #     data_sbm <- my_sbm()$clone()
-  #     plot(data_sbm, type = "meso")
-  #   } else {
-  #     return(NULL)
-  #   }
-  # })
-
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {
     stopApp()

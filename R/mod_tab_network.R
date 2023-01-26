@@ -24,13 +24,14 @@ mod_tab_network_ui <- function(id){
       condition = "input.runSbm", ns = ns_tab_sbm,
       shinydashboard::box(
         title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T,
+        status = "info", collapsible = T,width = 3,
         mod_select_nb_groups_ui(ns("select_nb_groups_3"))
       )
     ),
     shinydashboard::box(
       title = "Network", solidHeader = T,
-      status = "info", width = 12
+      status = "info", width = 12,
+      visNetwork::visNetworkOutput(ns("networkPlot"))
     )
   )
 }
@@ -47,6 +48,17 @@ mod_tab_network_server <- function(id,r){
       r$sbm$main_sbm, r$sbm$NbBlocks
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
+
+    node_edge <- reactive({build_node_edge(my_sbm())})
+
+    output$networkPlot <- visNetwork::renderVisNetwork({
+      if(input$whichNetwork != "raw"){
+        local_value <- node_edge()
+        netPlot(local_value$nodes,local_value$edges,local_value$type)
+      }else{
+        return(NULL)
+      }
+    })
 
     return(list(
       NbBlocks = mod_select_nb_groups_res$Nbblocks

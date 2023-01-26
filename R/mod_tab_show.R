@@ -31,7 +31,7 @@ mod_tab_show_ui <- function(id) {
       condition = "input.runSbm", ns = ns_tab_sbm,
       shinydashboard::box(
         title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T,
+        status = "info", collapsible = T,width = 3,
         mod_select_nb_groups_ui(ns("select_nb_groups_1"))
       )
     ),

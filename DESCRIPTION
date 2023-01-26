@@ -19,7 +19,8 @@ Imports:
     sbm,
     shiny (>= 1.7.2),
     shinydashboard,
-    shinydashboardPlus
+    shinydashboardPlus,
+    visNetwork
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
