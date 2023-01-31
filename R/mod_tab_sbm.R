@@ -18,9 +18,9 @@ mod_tab_sbm_ui <- function(id) {
         selectInput(ns("whichLaw"),
           label = "What is the density expected upon dataset ?",
           choices = list(
-            "Bernoulli" = "Bernoulli",
-            "Poisson" = "Poisson",
-            "Gaussian" = "Gaussian"
+            "Bernoulli" = "bernoulli",
+            "Poisson" = "poisson",
+            "Gaussian" = "gaussian"
           ),
           selected = NULL
         ),
@@ -119,7 +119,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
         choices = list(
           "Raw Matrix" = "raw",
           "Reordered Matrix" = "ordered",
-          "Simplified Matrix" = "simple"
+          "Expected Matrix" = "expected"
         ),
         selected = "ordered"
       )
@@ -144,6 +144,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
     observeEvent(my_sbm(), {
       data_sbm <- my_sbm()$clone()
       output$sbmSummary <- renderPrint({
+        options(digits = 2)
         cat("Connectivity:\n")
         print(data_sbm$connectParam$mean)
         cat("\nBlock Proportions:\n")

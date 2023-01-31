@@ -20,6 +20,7 @@ Imports:
     shiny (>= 1.7.2),
     shinydashboard,
     shinydashboardPlus,
+    stringr,
     visNetwork
 Suggests: 
     spelling,

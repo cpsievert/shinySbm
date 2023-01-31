@@ -104,17 +104,17 @@ buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL) {
     if (all(apply(obj, 2, is.numeric))) {
       if (all(matObj == round(matObj))) {
         if (all(matObj %in% c(0, 1))) {
-          expected.law <- "Bernoulli"
+          expected.law <- "bernoulli"
         } else {
-          expected.law <- "Poisson"
+          expected.law <- "poisson"
         }
       } else {
-        expected.law <- "Gaussian"
+        expected.law <- "gaussian"
       }
     } else {
-      expected.law <- "Bernoulli"
+      expected.law <- "bernoulli"
     }
-    message("Default probability distribution is set to ", expected.law, "'s law.")
+    message("Default probability distribution is set to ", stringr::str_to_title(expected.law), "'s law.")
     # Section d'analyse des covariables
     cat("\n")
     if (!is.null(col_names)) {
@@ -318,20 +318,20 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
   }
 
   # check law
-  if (!my_sbm_object$law %in% c("Poisson", "Gaussian", "Bernoulli")) {
+  if (!my_sbm_object$law %in% c("poisson", "gaussian", "bernoulli")) {
     if (warnings) {
       warning("Network probability distribution can only be 'Poisson', 'Gaussian' or 'Bernoulli'")
     }
     return(F)
   } else if (warnings) {
-    if (my_sbm_object$law %in% c("Poisson", "Bernoulli") && any(my_sbm_object$matrix != round(my_sbm_object$matrix))) {
-      warning("Network probability distribution is set as '", my_sbm_object$law, "' but has non-interger values")
-    } else if (my_sbm_object$law %in% c("Poisson", "Gaussian") && all(my_sbm_object$matrix %in% c(0, 1))) {
-      warning("Network probability distribution is set as '", my_sbm_object$law, "' but has only binary values")
-    } else if (my_sbm_object$law == "Gaussian" && all(my_sbm_object$matrix == round(my_sbm_object$matrix))) {
-      warning("Network probability distribution is set as '", my_sbm_object$law, "' and has only integer values")
-    } else if (my_sbm_object$law == "Bernoulli" && !all(my_sbm_object$matrix %in% c(0, 1))) {
-      warning("Network probability distribution is set as '", my_sbm_object$law, "' and has non-binary values")
+    if (my_sbm_object$law %in% c("poisson", "bernoulli") && any(my_sbm_object$matrix != round(my_sbm_object$matrix))) {
+      warning("Network probability distribution is set as '", stringr::str_to_title(my_sbm_object$law), "' but has non-interger values")
+    } else if (my_sbm_object$law %in% c("poisson", "gaussian") && all(my_sbm_object$matrix %in% c(0, 1))) {
+      warning("Network probability distribution is set as '", stringr::str_to_title(my_sbm_object$law), "' but has only binary values")
+    } else if (my_sbm_object$law == "gaussian" && all(my_sbm_object$matrix == round(my_sbm_object$matrix))) {
+      warning("Network probability distribution is set as '", stringr::str_to_title(my_sbm_object$law), "' and has only integer values")
+    } else if (my_sbm_object$law == "bernoulli" && !all(my_sbm_object$matrix %in% c(0, 1))) {
+      warning("Network probability distribution is set as '", stringr::str_to_title(my_sbm_object$law), "' and has non-binary values")
     }
   }
 
@@ -388,7 +388,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
       network_desc2 <- 'This matrix is composed of reals.'
     }
 
-    network_desc3 <- paste0("\nThe expected distribution upon this matrix is a ", x$law, " probability distribution.")
+    network_desc3 <- paste0("\nThe expected distribution upon this matrix is a ", stringr::str_to_title(x$law), " probability distribution.")
 
     if (x$type == "unipartite") {
       network_desc4 <- paste0("\nThe network has ", dimbase[1], " nodes.\n")

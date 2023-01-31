@@ -102,7 +102,7 @@ mod_tab_show_server <- function(id, r) {
           switch(input$whichMatrix,
             "raw" = sbm::plotMyMatrix(x, dimLabels = labels_list),
             "ordered" = plot(data_sbm, type = "data", dimLabels = r$upload$labels()),
-            "simple" = plot(data_sbm, type = "expected", dimLabels = r$upload$labels())
+            "expected" = plot(data_sbm, type = "expected", dimLabels = r$upload$labels())
           )
         } else {
           sbm::plotMyMatrix(Mat = x, dimLabels = labels_list)
