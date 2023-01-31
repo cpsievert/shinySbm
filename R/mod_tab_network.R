@@ -49,8 +49,9 @@ mod_tab_network_server <- function(id, r) {
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
 
+
     node_edge <- reactive({
-      build_node_edge(my_sbm())
+      build_node_edge(my_sbm(),r$upload$labels())
     })
 
     output$networkPlot <- visNetwork::renderVisNetwork({
