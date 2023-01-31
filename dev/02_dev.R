@@ -138,6 +138,8 @@ usethis::use_package("plotly")
 usethis::use_package("shinyalert")
 usethis::use_package("flextable")
 usethis::use_package("stringr")
+usethis::use_package("dplyr")
+
 usethis::use_package("plyr")
 usethis::use_package("shinyWidgets")
 usethis::use_package("shinydashboardPlus")

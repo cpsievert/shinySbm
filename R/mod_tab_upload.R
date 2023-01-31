@@ -123,9 +123,13 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     ns <- session$ns
 
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
-      switch(input$networkType,
+      labels_sets <- switch(input$networkType,
         "bipartite" = list(row = input$rowLabel, col = input$colLabel),
         "unipartite" = list(row = input$nodLabel, col = input$nodLabel)
+      )
+      list(
+        row = ifelse(labels_sets$row == "", "row", labels_sets$row),
+        col = ifelse(labels_sets$col == "", "col", labels_sets$col)
       )
     })
 

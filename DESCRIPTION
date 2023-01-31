@@ -11,6 +11,7 @@ License: MIT + file LICENSE
 Imports: 
     blockmodeling,
     config (>= 0.3.1),
+    dplyr,
     DT,
     fresh,
     ggplot2,

@@ -40,28 +40,34 @@ build_node_edge <- function(sbmObject, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...) {
+build_node_edge.SimpleSBM_fit <- function(sbmObject, labels, oriented = F, ...) {
   nb_nodes <- sbmObject$nbBlocks
   id <- 1:nb_nodes
+  # Build nodes tables
   nodes <- data.frame(
-    id = id,
-    label = paste("Node", id),
-    value = sbmObject$blockProp
+    id = id, # one id for each group
+    label = paste0(labels$row, " group ", id), # Name of the group
+    value = sbmObject$blockProp # Group size
   )
   connection_matrix <- sbmObject$connectParam$mean
+  # I the matrix isn't symmetric or we want to force it to be treated as an oriented matrix
   if (isSymmetric(connection_matrix) & !oriented) {
+    # Edges table
     edges <- data.frame(
-      from = sapply(id, function(i) {
-        rep(i, each = nb_nodes - i + 1)
+      # edges start from
+      from = sapply(id, function(i) { # for each group nb
+        rep(i, each = nb_nodes - i + 1) # connection with the ones it is not yet connected
       }) %>% unlist(),
-      to = sapply(id, function(i) {
-        i:nb_nodes
+      # edges end to
+      to = sapply(id, function(i) { # for each group nb
+        i:nb_nodes # connection with the ones it is not yet connected
       }) %>% unlist()
     ) %>%
       dplyr::mutate(value = apply(., 1, function(i) {
-        connection_matrix[i[1], i[2]]
+        connection_matrix[i[1], i[2]] # get connection values
       }) %>% unlist())
   } else {
+    # if matrix isn't symertic or treated as asymetric
     edges <- data.frame(
       from = rep(id, each = nb_nodes),
       to = rep(id, nb_nodes),
@@ -71,6 +77,7 @@ build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...) {
   return(list(nodes = nodes, edges = edges, type = "unipartite"))
 }
 
+### I need to correct the nodes names and groups
 
 
 #' build_node_edge.BipartiteSBM_fit method
@@ -79,8 +86,11 @@ build_node_edge.SimpleSBM_fit <- function(sbmObject, oriented = F, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-build_node_edge.BipartiteSBM_fit <- function(sbmObject, ...) {
-  nb_nodes <- sbmObject$nbBlocks %>% as.list()
+build_node_edge.BipartiteSBM_fit <- function(sbmObject, labels, ...) {
+
+  nb_nodes <- sbmObject$nbBlocks %>%
+    as.list() %>%
+    `names<-`(c(labels$row, labels$col))
   id <- lapply(nb_nodes, function(i) {
     1:i
   })
@@ -89,11 +99,11 @@ build_node_edge.BipartiteSBM_fit <- function(sbmObject, ...) {
     id = id %>% unlist() %>% names(),
     value = sbmObject$blockProp %>% unlist(),
     group = lapply(1:2, function(i) {
-      rep(names(nb_nodes)[[i]], each = nb_nodes[[i]])
+      rep(names(labels)[[i]], each = nb_nodes[[i]])
     }) %>% unlist()
   ) %>%
     dplyr::mutate(
-      label = paste("Node", id),
+      label = paste("Group", id),
       level = ifelse(group == "row", 1, 2),
       shape = ifelse(group == "row", "triangle", "square")
     ) %>%
@@ -103,10 +113,13 @@ build_node_edge.BipartiteSBM_fit <- function(sbmObject, ...) {
   connection_matrix <- sbmObject$connectParam$mean
 
   edges <- data.frame(
-    from = paste0("col", rep(id$col, each = nb_nodes$row)),
-    to = paste0("row", rep(id$row, nb_nodes$col)),
+    from = paste0(labels$col, rep(id[[labels$col]], each = nb_nodes[[labels$row]])),
+    to = paste0(labels$row, rep(id[[labels$row]], nb_nodes[[labels$col]])),
     value = as.vector(connection_matrix)
   )
+
+
+
 
   return(list(nodes = nodes, edges = edges, type = "bipartite"))
 }
