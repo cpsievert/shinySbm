@@ -17,12 +17,13 @@ getGroupNames <- function(sbmObject, data) {
 #'
 #' @noRd
 getGroupNames.SimpleSBM_fit <- function(sbmObject, data) {
-  list_group <- sapply(1:sbmObject$nbBlocks, function(i) {
+  results <- list()
+  results$listed_groups <- sapply(1:sbmObject$nbBlocks, function(i) {
     indices <- sbmObject$indMemberships[, i] == 1
     data$nodes_names$col[indices]
   })
-  list_group$type <- 'unipartite'
-  return(list_group)
+  results$type <- 'unipartite'
+  return(results)
 }
 
 
@@ -34,7 +35,8 @@ getGroupNames.SimpleSBM_fit <- function(sbmObject, data) {
 #'
 #' @noRd
 getGroupNames.BipartiteSBM_fit <- function(sbmObject, data) {
-  list_group <- lapply(c("row", "col"), function(margin) {
+  results <- list()
+  results$listed_groups <- lapply(c("row", "col"), function(margin) {
     sapply(1:as.list(sbmObject$nbBlocks)[[margin]], function(i) {
       indices <- sbmObject$indMemberships[[margin]][, i] == 1
       if (margin == "col") {
@@ -44,7 +46,7 @@ getGroupNames.BipartiteSBM_fit <- function(sbmObject, data) {
       }
     })
   })
-  names(list_group) <- c("row", "col")
-  list_group$type <- 'bipartite'
-  return(list_group)
+  names(results$listed_groups) <- c("row", "col")
+  results$type <- 'bipartite'
+  return(results)
 }

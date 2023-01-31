@@ -104,17 +104,17 @@ buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL) {
     if (all(apply(obj, 2, is.numeric))) {
       if (all(matObj == round(matObj))) {
         if (all(matObj %in% c(0, 1))) {
-          expected.law <- "bernoulli"
+          expected.law <- "Bernoulli"
         } else {
-          expected.law <- "poisson"
+          expected.law <- "Poisson"
         }
       } else {
-        expected.law <- "gaussian"
+        expected.law <- "Gaussian"
       }
     } else {
-      expected.law <- "bernoulli"
+      expected.law <- "Bernoulli"
     }
-    message("Default density is set to ", expected.law, "'s law.")
+    message("Default probability distribution is set to ", expected.law, "'s law.")
     # Section d'analyse des covariables
     cat("\n")
     if (!is.null(col_names)) {
@@ -318,20 +318,20 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
   }
 
   # check law
-  if (!my_sbm_object$law %in% c("poisson", "gaussian", "bernoulli")) {
+  if (!my_sbm_object$law %in% c("Poisson", "Gaussian", "Bernoulli")) {
     if (warnings) {
-      warning("Network law density can only be 'poisson', 'gaussian' or 'bernoulli'")
+      warning("Network probability distribution can only be 'Poisson', 'Gaussian' or 'Bernoulli'")
     }
     return(F)
   } else if (warnings) {
-    if (my_sbm_object$law %in% c("poisson", "bernoulli") && any(my_sbm_object$matrix != round(my_sbm_object$matrix))) {
-      warning("Network law density is set as '", my_sbm_object$law, "' but has non-interger values")
-    } else if (my_sbm_object$law %in% c("poisson", "gaussian") && all(my_sbm_object$matrix %in% c(0, 1))) {
-      warning("Network law density is set as '", my_sbm_object$law, "' but has only binary values")
-    } else if (my_sbm_object$law == "gaussian" && all(my_sbm_object$matrix == round(my_sbm_object$matrix))) {
-      warning("Network law density is set as '", my_sbm_object$law, "' and has only integer values")
-    } else if (my_sbm_object$law == "bernoulli" && !all(my_sbm_object$matrix %in% c(0, 1))) {
-      warning("Network law density is set as '", my_sbm_object$law, "' and has non-binary values")
+    if (my_sbm_object$law %in% c("Poisson", "Bernoulli") && any(my_sbm_object$matrix != round(my_sbm_object$matrix))) {
+      warning("Network probability distribution is set as '", my_sbm_object$law, "' but has non-interger values")
+    } else if (my_sbm_object$law %in% c("Poisson", "Gaussian") && all(my_sbm_object$matrix %in% c(0, 1))) {
+      warning("Network probability distribution is set as '", my_sbm_object$law, "' but has only binary values")
+    } else if (my_sbm_object$law == "Gaussian" && all(my_sbm_object$matrix == round(my_sbm_object$matrix))) {
+      warning("Network probability distribution is set as '", my_sbm_object$law, "' and has only integer values")
+    } else if (my_sbm_object$law == "Bernoulli" && !all(my_sbm_object$matrix %in% c(0, 1))) {
+      warning("Network probability distribution is set as '", my_sbm_object$law, "' and has non-binary values")
     }
   }
 
@@ -375,13 +375,30 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
     warning("x object got the sbmMatrix class but got a wrong format.")
     print.default(x)
   } else {
-    cat("==========================\n SBM MATRIX INFORMATION :  \n==========================\n\n")
-    cat("sbmMatrix of an", x$type, "network. The expected law upon this matrix is a", x$law, "density.\n")
-    if (x$type == "unipartite") {
-      cat("The network has", dimbase[1], "nodes.")
-    } else if (x$type == "bipartite") {
-      cat("The network has", dimbase[1], "row nodes &", dimbase[2], "column nodes.")
+
+    network_desc1 <- paste0("Adjacency matrix of a",ifelse(x$type == "unipartite",'n ',' '), x$type, " network.")
+
+    if (all(x$matrix == round(x$matrix))) {
+      if (all(x$matrix %in% c(0, 1))) {
+        network_desc2 <- "This matrix is only made of 0 and 1."
+      } else {
+        network_desc2 <- 'This matrix is only made of integers.'
+      }
+    } else {
+      network_desc2 <- 'This matrix is composed of reals.'
     }
+
+    network_desc3 <- paste0("\nThe expected distribution upon this matrix is a ", x$law, " probability distribution.")
+
+    if (x$type == "unipartite") {
+      network_desc4 <- paste0("\nThe network has ", dimbase[1], " nodes.\n")
+    } else if (x$type == "bipartite") {
+      network_desc4 <- paste0("\nThe network has ", dimbase[1], " row nodes & ", dimbase[2], " column nodes.\n")
+    }
+
+    cat("==========================\n SBM MATRIX INFORMATION :  \n==========================\n\n")
+    cat(network_desc1,network_desc2, network_desc3,network_desc4)
+
     if (identical(x$nodes_names$col, character(0)) &
       identical(x$nodes_names$row, character(0))) {
       cat(" The nodes names aren't registered.\n")
@@ -391,7 +408,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
       print(x$matrix[index_row, index_col])
     }
     if (is.null(x$covar)) {
-      cat("\nThere is no covariables.\n\n")
+      # cat("\nThere is no covariables.\n\n")
     } else {
       cat("\nThere is", length(x$covar), " covariables : ")
       if (!show_covar) {

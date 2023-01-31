@@ -18,9 +18,9 @@ mod_tab_sbm_ui <- function(id) {
         selectInput(ns("whichLaw"),
           label = "What is the density expected upon dataset ?",
           choices = list(
-            "Bernoulli" = "bernoulli",
-            "Poisson" = "poisson",
-            "Gaussian" = "gaussian"
+            "Bernoulli" = "Bernoulli",
+            "Poisson" = "Poisson",
+            "Gaussian" = "Gaussian"
           ),
           selected = NULL
         ),

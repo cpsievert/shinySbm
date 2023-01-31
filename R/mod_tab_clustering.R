@@ -1,4 +1,4 @@
-#' tab_extraction UI Function
+#' tab_clustering UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_tab_extraction_ui <- function(id) {
+mod_tab_clustering_ui <- function(id) {
   ns <- NS(id)
   ns_tab_sbm <- function(id) {
     paste0("tab_sbm_1-", id)
@@ -25,12 +25,16 @@ mod_tab_extraction_ui <- function(id) {
   )
 }
 
-#' tab_extraction Server Functions
+#' tab_clustering Server Functions
 #'
 #' @noRd
-mod_tab_extraction_server <- function(id, r) {
+mod_tab_clustering_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    ns_tab_sbm <- function(id) {
+      paste0("tab_sbm_1-", id)
+    }
+
 
     mod_select_nb_groups_res <- mod_select_nb_groups_server(
       "select_nb_groups_4",
@@ -38,24 +42,40 @@ mod_tab_extraction_server <- function(id, r) {
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
 
-    group_of_name <- eventReactive(my_sbm(),{
+    group_of_name <- reactive({
       getGroupNames(my_sbm(), r$sbm$Dataset())
     })
 
-    mod_show_group_names_server("show_group_names",group_of_name(),1)
+    output$trythis <- renderPrint({
+      print(group_of_name()$liste)
+    })
 
+    # print(parent_session$input$`tab_sbm_1-runSbm`)
+
+    # observe({
+    #   mod_show_group_names_server("show_group_names",group_of_name()$listed_groups,1)
+    #   })
 
     output$namesGroups <- renderUI({
       tagList(
-        mod_show_group_names_ui(ns("show_group_names"))
+        conditionalPanel(
+          condition = "input.runSbm", ns = ns_tab_sbm,
+          shinydashboard::box(
+            title = "Groups", solidHeader = T,
+            status = "info", collapsible = T, width = 9,
+            verbatimTextOutput(ns("trythis"))
+          )
+        )
       )
     })
+
+
     return(list(NbBlocks = mod_select_nb_groups_res$Nbblocks))
   })
 }
 
 ## To be copied in the UI
-# mod_tab_extraction_ui("tab_extraction_1")
+# mod_tab_clustering_ui("tab_clustering_1")
 
 ## To be copied in the server
-# mod_tab_extraction_server("tab_extraction_1")
+# mod_tab_clustering_server("tab_clustering_1")

@@ -185,9 +185,9 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
         label = "What is the density expected upon dataset ?",
         choices = list(
-          "Bernoulli" = "bernoulli",
-          "Poisson" = "poisson",
-          "Gaussian" = "gaussian"
+          "Bernoulli" = "Bernoulli",
+          "Poisson" = "Poisson",
+          "Gaussian" = "Gaussian"
         ),
         selected = datasetUploaded()$law
       )
