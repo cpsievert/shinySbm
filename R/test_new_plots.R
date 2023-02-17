@@ -44,7 +44,7 @@ plot_sbm <- function(fit,ordered = F, transpose = NULL, labels = list(row = 'row
                col = col_pred, size = .3) +
     scale_fill_gradient(low = scales::muted("white"), high = col_value,
                         guide = "colourbar") +
-    ylab(if(transpose){labels$col}else{labels$row}) + xlab(if(transpose){labels$row}else{labels$col}) +
+    ylab(if(transpose){labels$row}else{labels$col}) + xlab(if(transpose){labels$col}else{labels$row}) +
     scale_alpha(range = c(0,1)) +
     scale_x_discrete(breaks = "")+
     scale_y_discrete(breaks = "",guide = guide_axis(angle = 0)) +
