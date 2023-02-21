@@ -1,6 +1,6 @@
 #' plotSbm
 #'
-#' @description A fct that plot a beautiful matrix from an sbm object it also
+#' @description A fct that plot a beautiful matrix from an sbm object or a network matrix it does
 #' have suitable parameters to get the plots you want this is the generic function,
 #' it does have one method Bipartite and one for Simple Sbm. The `fit` object need
 #' to be construct by one of the `estimate***SBM` function from the `sbm` package.
@@ -226,6 +226,66 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
+  plot(plt)
+}
+
+
+#' .plotSbm.matrix Method
+#'
+#' @description plotSbm method for matrix object
+#'
+#' @noRd
+.plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+
+  ###############################################
+  if(is.null(labels)){labels = list(row = "row", col = "col")}
+
+  currentOptions = list(title = NULL,
+                        colValue = "black")
+  currentOptions[names(plotOptions)] = plotOptions
+  ################################################
+
+  nb_rows <- dim(fit)[1]
+  if(nb_rows == dim(fit)[2]){
+    if(transpose){
+      mat_exp <- fit[,nb_rows:1]
+    }else{
+      mat_exp <- fit[nb_rows:1,]
+    }
+  }else{
+    mat_exp <- fit
+  }
+
+  plot_net <- reshape2::melt(mat_exp)
+
+  if (transpose) {
+    names(plot_net)[c(1, 2)] <- c("Var2", "Var1")
+  }
+
+
+  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = value))  +
+    ggplot2::geom_tile(show.legend = FALSE) +
+    ggplot2::scale_fill_gradient(
+      low = "white", high = currentOptions$colValue,
+      guide = "colourbar"
+    ) +
+    ggplot2::xlab(if (transpose) {
+      labels$row
+    } else {
+      labels$col
+    }) + ggplot2::ylab(if (transpose) {
+      labels$col
+    } else {
+      labels$row
+    }) +
+    ggplot2::scale_alpha(range = c(0, 1)) +
+    ggplot2::scale_x_discrete(breaks = "",position = 'top') +
+    ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
+    ggplot2::coord_equal(expand = FALSE) +
+    ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
+    ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
+    ggplot2::labs(caption = currentOptions$title)  +
     ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
   plot(plt)
 }

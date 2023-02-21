@@ -16,16 +16,29 @@ mod_tab_show_ui <- function(id) {
     shinydashboard::box(
       title = "Visual settings", solidHeader = T,
       status = "info", collapsible = T,
-      radioButtons(ns("whichShow"), "Type of visualisation",
-        choices = list(
-          "Print a table" = "print",
-          "Plot a matrix" = "plot"
-        ),
-        inline = T
-      ),
-      radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
-        choices = list("Raw Matrix" = "raw")
-      )
+      column(6,
+             radioButtons(ns("whichShow"), "Type of visualisation",
+                          choices = list(
+                            "Print a table" = "print",
+                            "Plot a matrix" = "plot"
+                          ),
+                          inline = T
+             ),
+             radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
+                          choices = list("Raw Matrix" = "raw")
+             )
+             ),
+      column(6,
+             conditionalPanel(
+               condition = "input.whichShow == 'plot'", ns = ns,
+               textInput(ns("setTitle"),
+                         label = "Title :",
+                         value = NULL
+               ),
+               checkboxInput(ns("transposecheck"), "Invert Columns and Rows", value = F)
+
+             ))
+
     ),
     conditionalPanel(
       condition = "input.runSbm", ns = ns_tab_sbm,
@@ -89,28 +102,22 @@ mod_tab_show_server <- function(id, r) {
       req(input$whichShow)
       if (input$whichShow == "plot") {
         x <- as.matrix(r$upload$Dataset())
-        labels_list <- list()
-        if (dim(x)[1] > dim(x)[2]) {
-          labels_list$row <- r$upload$labels()$col
-          labels_list$col <- r$upload$labels()$row
-          x <- t(x)
-        } else {
-          labels_list <- r$upload$labels()
-        }
+        labels_list <- r$upload$labels()
         if (!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
-            "raw" = plotSbm(data_sbm, ordered = FALSE, transpose = TRUE,
-                            labels = labels_list, plotOptions = list()),
+            "raw" = plotSbm(data_sbm, ordered = FALSE, transpose = input$transposecheck,
+                            labels = labels_list, plotOptions = list(title = input$setTitle)),
 
 
-            "ordered" = plotSbm(data_sbm, ordered = TRUE, transpose = TRUE,
-                                labels = labels_list, plotOptions = list()),
-            "expected" = plotSbm(data_sbm, ordered = TRUE, transpose = TRUE,
-                                 labels = labels_list, plotOptions = list(showValues = F))
+            "ordered" = plotSbm(data_sbm, ordered = TRUE, transpose = input$transposecheck,
+                                labels = labels_list, plotOptions = list(title = input$setTitle)),
+            "expected" = plotSbm(data_sbm, ordered = TRUE, transpose = input$transposecheck,
+                                 labels = labels_list, plotOptions = list(title = input$setTitle,showValues = F))
           )
         } else {
-          sbm::plotMyMatrix(Mat = x, dimLabels = labels_list)
+          plotSbm(x, transpose = input$transposecheck,
+                  labels = labels_list,title = input$setTitle)
         }
       } else {
         return(NULL)

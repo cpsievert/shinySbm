@@ -13,7 +13,7 @@ plotSbm(
 )
 }
 \description{
-A fct that plot a beautiful matrix from an sbm object it also
+A fct that plot a beautiful matrix from an sbm object or a network matrix it does
 have suitable parameters to get the plots you want this is the generic function,
 it does have one method Bipartite and one for Simple Sbm. The `fit` object need
 to be construct by one of the `estimate***SBM` function from the `sbm` package.
