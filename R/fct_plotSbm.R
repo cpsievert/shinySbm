@@ -136,7 +136,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title)  +
-    theme(plot.caption = element_text(hjust=0.5, size=rel(1.2)))
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
   plot(plt)
 }
 
@@ -226,6 +226,6 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    theme(plot.caption = element_text(hjust=0.5, size=rel(1.2)))
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
   plot(plt)
 }

@@ -100,11 +100,14 @@ mod_tab_show_server <- function(id, r) {
         if (!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
-            "raw" = plot_sbm(data_sbm, ordered = F, transpose = T, labels = labels_list,
-                             col_pred = 'deeppink3',col_value = 'darkblue'),
-            "ordered" = plot_sbm(data_sbm, ordered = T, transpose = T, labels = labels_list,
-                                 col_pred = 'red',col_value = 'black'),
-            "expected" = plot(data_sbm, type = "expected", dimLabels = r$upload$labels())
+            "raw" = plotSbm(data_sbm, ordered = FALSE, transpose = TRUE,
+                            labels = labels_list, plotOptions = list()),
+
+
+            "ordered" = plotSbm(data_sbm, ordered = TRUE, transpose = TRUE,
+                                labels = labels_list, plotOptions = list()),
+            "expected" = plotSbm(data_sbm, ordered = TRUE, transpose = TRUE,
+                                 labels = labels_list, plotOptions = list(showValues = F))
           )
         } else {
           sbm::plotMyMatrix(Mat = x, dimLabels = labels_list)
