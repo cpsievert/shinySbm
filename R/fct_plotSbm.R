@@ -120,8 +120,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
       col = currentOptions$colPred, size = .3
     ) +
     ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
-      low = "white", high = currentOptions$colValue,
-      guide = "colourbar"
+      low = "white", high = currentOptions$colValue
     ) +
     ggplot2::xlab(if (transpose) {
       labels$row
@@ -135,6 +134,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     ggplot2::scale_alpha_continuous(paste("Groups",currentOptions$interactionName),range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "",position = 'top') +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
+    ggplot2::guides(alpha = if(currentOptions$showPredictions){"legend"}else{'none'}) +
     ggplot2::coord_equal(expand = FALSE) +
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
