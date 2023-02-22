@@ -9,9 +9,6 @@
 #' @importFrom shiny NS tagList
 mod_tab_network_ui <- function(id) {
   ns <- NS(id)
-  ns_tab_sbm <- function(id) {
-    paste0("tab_sbm_1-", id)
-  }
   tagList(
     shinydashboard::box(
       title = "Visual settings", solidHeader = T,
@@ -20,14 +17,7 @@ mod_tab_network_ui <- function(id) {
         choices = list("Raw Network" = "raw")
       )
     ),
-    conditionalPanel(
-      condition = "input.runSbm", ns = ns_tab_sbm,
-      shinydashboard::box(
-        title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T, width = 3,
-        mod_select_nb_groups_ui(ns("select_nb_groups_3"))
-      )
-    ),
+    mod_select_nb_groups_ui(ns("select_nb_groups_3")),
     shinydashboard::box(
       title = "Network", solidHeader = T,
       status = "info", width = 12,

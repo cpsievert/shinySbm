@@ -9,18 +9,8 @@
 #' @importFrom shiny NS tagList
 mod_tab_clustering_ui <- function(id) {
   ns <- NS(id)
-  ns_tab_sbm <- function(id) {
-    paste0("tab_sbm_1-", id)
-  }
   tagList(
-    conditionalPanel(
-      condition = "input.runSbm", ns = ns_tab_sbm,
-      shinydashboard::box(
-        title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T, width = 3,
-        mod_select_nb_groups_ui(ns("select_nb_groups_4"))
-      )
-    ),
+    mod_select_nb_groups_ui(ns("select_nb_groups_4")),
     uiOutput(ns("namesGroups"))
   )
 }

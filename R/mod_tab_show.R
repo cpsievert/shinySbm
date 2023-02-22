@@ -9,9 +9,6 @@
 #' @importFrom shiny NS tagList
 mod_tab_show_ui <- function(id) {
   ns <- NS(id)
-  ns_tab_sbm <- function(id) {
-    paste0("tab_sbm_1-", id)
-  }
   ns_tab_upload <- function(id) {
     paste0("tab_upload_1-", id)
   }
@@ -64,19 +61,12 @@ mod_tab_show_ui <- function(id) {
           ),
           conditionalPanel(
             condition = "input.networkType == 'bipartite'", ns = ns_tab_upload,
-            checkboxInput(ns("transposecheck"), "Invert Columns and Rows", value = F)
+            checkboxInput(ns("showTransposed"), "Invert Columns and Rows", value = F)
           )
         )
       )
     ),
-    conditionalPanel(
-      condition = "input.runSbm", ns = ns_tab_sbm,
-      shinydashboard::box(
-        title = "Block settings", solidHeader = T,
-        status = "info", collapsible = T, width = 3,
-        mod_select_nb_groups_ui(ns("select_nb_groups_1"))
-      )
-    ),
+    mod_select_nb_groups_ui(ns("select_nb_groups_1")),
     shinydashboard::box(
       title = "Color settings", solidHeader = T,
       status = "info", collapsible = T, collapsed = T, width = 3,
@@ -157,24 +147,24 @@ mod_tab_show_server <- function(id, r) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
             "raw" = plotSbm(data_sbm,
-              ordered = FALSE, transpose = input$transposecheck,
+              ordered = FALSE, transpose = input$showTransposed,
               labels = labels_list,
               plotOptions = myOptions
             ),
             "ordered" = plotSbm(data_sbm,
-              ordered = TRUE, transpose = input$transposecheck,
+              ordered = TRUE, transpose = input$showTransposed,
               labels = labels_list,
               plotOptions = myOptions
             ),
             "expected" = plotSbm(data_sbm,
-              ordered = TRUE, transpose = input$transposecheck,
+              ordered = TRUE, transpose = input$showTransposed,
               labels = labels_list,
               plotOptions = c(myOptions,showValues = F)
             )
           )
         } else {
           plotSbm(x,
-            transpose = input$transposecheck,
+            transpose = input$showTransposed,
             labels = labels_list, plotOptions = myOptions
           )
         }

@@ -7,14 +7,24 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_select_nb_groups_ui <- function(id) {
+mod_select_nb_groups_ui <- function(id,wind_width = 3) {
   ns <- NS(id)
+  ns_tab_sbm <- function(id) {
+    paste0("tab_sbm_1-", id)
+  }
   tagList(
-    numericInput(ns("Nbblocks"),
-      label = "Select the total number of blocks:",
-      value = 4, min = 1, max = 6, step = 1
-    ),
-    plotOutput(ns("showILC"))
+    conditionalPanel(
+      condition = "input.runSbm", ns = ns_tab_sbm,
+      shinydashboard::box(
+        title = "Block settings", solidHeader = T,
+        status = "info", collapsible = T, width = wind_width,
+        numericInput(ns("Nbblocks"),
+                     label = "Select the total number of blocks:",
+                     value = 4, min = 1, max = 6, step = 1
+        ),
+        plotOutput(ns("showILC"))
+      )
+    )
   )
 }
 

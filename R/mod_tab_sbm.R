@@ -26,14 +26,7 @@ mod_tab_sbm_ui <- function(id) {
         ),
         uiOutput(ns("sbmButton"))
       ),
-      conditionalPanel(
-        condition = "input.runSbm", ns = ns,
-        shinydashboard::box(
-          title = "Block Selection", solidHeader = T,
-          status = "info", width = 12,
-          mod_select_nb_groups_ui(ns("select_nb_groups_2"))
-        )
-      )
+      mod_select_nb_groups_ui(ns("select_nb_groups_2"),12)
     ),
     column(
       width = 9,
