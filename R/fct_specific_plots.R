@@ -6,7 +6,11 @@
 #'
 #' @noRd
 ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm) {
-  my_plot <- ggplot2::ggplot(selected_sbm$storedModels) +
+  xmin <- min(sum(selected_sbm$nbBlocks),sum(comparison_sbm$nbBlocks)) - 1
+  xmax <- max(sum(selected_sbm$nbBlocks),sum(comparison_sbm$nbBlocks)) + 1
+  plot_table <- dplyr::filter(selected_sbm$storedModels, nbBlocks <= xmax & nbBlocks >= xmin)
+  my_plot <- ggplot2::ggplot(plot_table) +
+    ggplot2::xlim(xmin,xmax) +
     ggplot2::aes(x = nbBlocks, y = ICL, linetype = "ICL") +
     ggplot2::geom_line() +
     ggplot2::geom_point(alpha = 0.5) +
@@ -14,12 +18,8 @@ ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm) {
     ggplot2::geom_point(ggplot2::aes(x = sum(selected_sbm$nbBlocks), y = selected_sbm$ICL, colour = "Selected Block Nb"), size = 4) +
     ggplot2::geom_point(ggplot2::aes(x = sum(comparison_sbm$nbBlocks), y = comparison_sbm$ICL, colour = "Best Block Nb"), size = 4, shape = 10) +
     ggplot2::labs(linetype = "Curves", colour = "Number of Blocks") +
-    ggplot2::theme(
-      legend.position = c(.40, .05),
-      legend.justification = c("left", "bottom"),
-      legend.box.just = "left",
-      legend.margin = ggplot2::margin(6, 6, 6, 6)
-    )
+    ggplot2::theme(legend.position="bottom",
+                   legend.box = "vertical")
   plot(my_plot)
 }
 
