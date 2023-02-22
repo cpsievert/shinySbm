@@ -30,6 +30,19 @@ mod_tab_show_ui <- function(id) {
         ),
         radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
           choices = list("Raw Matrix" = "raw")
+        ),
+        conditionalPanel(
+          condition = "input.whichShow == 'plot'", ns = ns,
+          hr(),
+          textInput(ns("fileName"),
+                    label = "File Name (for saving)",
+                    value = "ShinyMatrixPlot"
+          ),
+          div(
+            style = "display:inline-block; float:right",
+            downloadButton(ns("downloadPlot"), label = " Save Plot",
+                           icon = icon("download", lib = "font-awesome"))
+          )
         )
       ),
       column(
@@ -156,7 +169,7 @@ mod_tab_show_server <- function(id, r) {
             "expected" = plotSbm(data_sbm,
               ordered = TRUE, transpose = input$transposecheck,
               labels = labels_list,
-              plotOptions = myOptions
+              plotOptions = c(myOptions,showValues = F)
             )
           )
         } else {
@@ -201,6 +214,19 @@ mod_tab_show_server <- function(id, r) {
       },
       deleteFile = TRUE
     )
+    output$downloadPlot <- downloadHandler(
+      filename = reactive({paste0(input$fileName,".png")}),
+      content = function(file) {
+        width <- session$clientData$`output_tab_show_1-matrixPlot_width`
+        height <- session$clientData$`output_tab_show_1-matrixPlot_height`
+        pixelratio <- session$clientData$pixelratio
+        png(file,
+            width = width * pixelratio, height = height * pixelratio,
+            res = 72 * pixelratio
+        )
+        print(PlotMat())
+        dev.off()
+    })
 
     return(list(
       NbBlocks = mod_select_nb_groups_res$Nbblocks
