@@ -29,7 +29,7 @@ to be construct by one of the `estimate***SBM` function from the `sbm` package.
  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
- \item{"colValue": }{Color of the real values, the small values will close to white. Default value is a muted "black"}
+ \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
  }
 
  @return a ggplot object corresponding to the plot

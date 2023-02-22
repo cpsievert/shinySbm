@@ -16,7 +16,7 @@
 #'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
-#'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is a muted "black"}
+#'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #'  }
 #'
 #'  @return a ggplot object corresponding to the plot
@@ -54,7 +54,9 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
                         showPredictions = TRUE,
                         title=NULL,
                         colPred = "red",
-                        colValue = scales::muted("black", l = 0))
+                        colValue = "black",
+                        showLegend = FALSE,
+                        interactionName = "Connection")
   currentOptions[names(plotOptions)] = plotOptions
 
   ## At least something is shown
@@ -101,11 +103,12 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
   plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = base_value, alpha = base_value))
   if (currentOptions$showPredictions) {
     plt <- plt +
-      ggplot2::geom_tile(ggplot2::aes(x = Var2, y = Var1, alpha = value), fill = currentOptions$colPred, size = 0, show.legend = FALSE)
+      ggplot2::geom_tile(ggplot2::aes(x = Var2, y = Var1, alpha = value),
+                         fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend)
   }
   if (currentOptions$showValues) {
     plt <- plt +
-      ggplot2::geom_tile(show.legend = FALSE)
+      ggplot2::geom_tile(show.legend = currentOptions$showLegend)
   }
   plt <- plt +
     ggplot2::geom_hline(
@@ -116,8 +119,8 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
       xintercept = tCol,
       col = currentOptions$colPred, size = .3
     ) +
-    ggplot2::scale_fill_gradient(
-      low = scales::muted("white"), high = currentOptions$colValue,
+    ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
+      low = "white", high = currentOptions$colValue,
       guide = "colourbar"
     ) +
     ggplot2::xlab(if (transpose) {
@@ -129,7 +132,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     } else {
       labels$row
     }) +
-    ggplot2::scale_alpha(range = c(0, 1)) +
+    ggplot2::scale_alpha_continuous(paste("Groups",currentOptions$interactionName),range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "",position = 'top') +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
     ggplot2::coord_equal(expand = FALSE) +
@@ -159,7 +162,9 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
                         showPredictions = TRUE,
                         title=NULL,
                         colPred = "red",
-                        colValue = scales::muted("black", l = 0))
+                        colValue = "black",
+                        showLegend = FALSE,
+                        interactionName = "Connection")
   currentOptions[names(plotOptions)] = plotOptions
 
   ## At least something is shown
@@ -197,12 +202,15 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
 
   if (currentOptions$showPredictions) {
     plt <- plt +
-      ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1, alpha = plot_net$value), fill = currentOptions$colPred, size = 0, show.legend = FALSE)
+      ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1, alpha = plot_net$value),
+                         fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend)
   }
 
   if (currentOptions$showValues) {
     plt <- plt +
-      ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1, fill = plot_net$base_value, alpha = plot_net$base_value),show.legend = FALSE)
+      ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1,
+                                      fill = plot_net$base_value, alpha = plot_net$base_value),
+                         show.legend = currentOptions$showLegend)
   }
 
   plt <- plt +
@@ -214,12 +222,12 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
       xintercept = uCol,
       col = currentOptions$colPred, size = .3
     ) +
-    ggplot2::scale_fill_gradient(
-      low = scales::muted("white"), high = currentOptions$colValue,
+    ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
+      low = "white", high = currentOptions$colValue,
       guide = "colourbar"
     ) +
     ggplot2::ylab(labels$row) + ggplot2::xlab(labels$col) +
-    ggplot2::scale_alpha_continuous(range = c(0, 1)) +
+    ggplot2::scale_alpha_continuous(paste("Groups",currentOptions$interactionName),range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "",position = 'top') +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
     ggplot2::coord_equal(expand = FALSE) +
@@ -242,7 +250,9 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
   if(is.null(labels)){labels = list(row = "row", col = "col")}
 
   currentOptions = list(title = NULL,
-                        colValue = "black")
+                        colValue = "black",
+                        showLegend = FALSE,
+                        interactionName = "Connection")
   currentOptions[names(plotOptions)] = plotOptions
   ################################################
 
@@ -265,8 +275,8 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
 
 
   plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = value))  +
-    ggplot2::geom_tile(show.legend = FALSE) +
-    ggplot2::scale_fill_gradient(
+    ggplot2::geom_tile(show.legend = currentOptions$showLegend) +
+    ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
       low = "white", high = currentOptions$colValue,
       guide = "colourbar"
     ) +

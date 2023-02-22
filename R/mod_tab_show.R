@@ -41,7 +41,14 @@ mod_tab_show_ui <- function(id) {
             value = NULL
           ),
           checkboxInput(ns("showPred"), "Show Predicted Values", value = T),
-          checkboxInput(ns("showlegend"), "Print legend", value = T),
+          checkboxInput(ns("showLegend"), "Print legend", value = T),
+          conditionalPanel(
+            condition = "input.showLegend", ns = ns,
+            textInput(ns("interactionName"),
+                      label = "Name of observed interraction",
+                      value = "Connection"
+            )
+          ),
           conditionalPanel(
             condition = "input.networkType == 'bipartite'", ns = ns_tab_upload,
             checkboxInput(ns("transposecheck"), "Invert Columns and Rows", value = F)
@@ -126,42 +133,36 @@ mod_tab_show_server <- function(id, r) {
       if (input$whichShow == "plot") {
         x <- as.matrix(r$upload$Dataset())
         labels_list <- r$upload$labels()
+        myTitle <- if(input$setTitle == ""){NULL}else{input$setTitle}
+        myOptions <- list(title = myTitle,
+                        showLegend = input$showLegend,
+                        showPredictions = input$showPred,
+                        colPred = input$colorPred,
+                        colValue = input$colorValues,
+                        interactionName = input$interactionName)
         if (!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
             "raw" = plotSbm(data_sbm,
               ordered = FALSE, transpose = input$transposecheck,
               labels = labels_list,
-              plotOptions = list(title = input$setTitle,
-                                 showPredictions = input$showPred,
-                                 colPred = input$colorPred,
-                                 colValue = input$colorValues)
+              plotOptions = myOptions
             ),
             "ordered" = plotSbm(data_sbm,
               ordered = TRUE, transpose = input$transposecheck,
               labels = labels_list,
-              plotOptions = list(title = input$setTitle,
-                                 showPredictions = input$showPred,
-                                 colPred = input$colorPred,
-                                 colValue = input$colorValues)
+              plotOptions = myOptions
             ),
             "expected" = plotSbm(data_sbm,
               ordered = TRUE, transpose = input$transposecheck,
               labels = labels_list,
-              plotOptions = list(title = input$setTitle,
-                                 showPredictions = input$showPred,
-                                 colPred = input$colorPred,
-                                 colValue = input$colorValues,
-                                 showValues = F)
+              plotOptions = myOptions
             )
           )
         } else {
           plotSbm(x,
             transpose = input$transposecheck,
-            labels = labels_list, plotOptions = list(title = input$setTitle,
-                                                     showPredictions = input$showPred,
-                                                     colPred = input$colorPred,
-                                                     colValue = input$colorValues)
+            labels = labels_list, plotOptions = myOptions
           )
         }
       } else {
