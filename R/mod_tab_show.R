@@ -12,33 +12,42 @@ mod_tab_show_ui <- function(id) {
   ns_tab_sbm <- function(id) {
     paste0("tab_sbm_1-", id)
   }
+  ns_tab_upload <- function(id) {
+    paste0("tab_upload_1-", id)
+  }
   tagList(
     shinydashboard::box(
       title = "Visual settings", solidHeader = T,
       status = "info", collapsible = T,
-      column(6,
-             radioButtons(ns("whichShow"), "Type of visualisation",
-                          choices = list(
-                            "Print a table" = "print",
-                            "Plot a matrix" = "plot"
-                          ),
-                          inline = T
-             ),
-             radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
-                          choices = list("Raw Matrix" = "raw")
-             )
-             ),
-      column(6,
-             conditionalPanel(
-               condition = "input.whichShow == 'plot'", ns = ns,
-               textInput(ns("setTitle"),
-                         label = "Title :",
-                         value = NULL
-               ),
-               checkboxInput(ns("transposecheck"), "Invert Columns and Rows", value = F)
-
-             ))
-
+      column(
+        6,
+        radioButtons(ns("whichShow"), "Type of visualisation",
+          choices = list(
+            "Print a table" = "print",
+            "Plot a matrix" = "plot"
+          ),
+          inline = T
+        ),
+        radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
+          choices = list("Raw Matrix" = "raw")
+        )
+      ),
+      column(
+        6,
+        conditionalPanel(
+          condition = "input.whichShow == 'plot'", ns = ns,
+          textInput(ns("setTitle"),
+            label = "Title :",
+            value = NULL
+          ),
+          checkboxInput(ns("showPred"), "Show Predicted Values", value = T),
+          checkboxInput(ns("showlegend"), "Print legend", value = T),
+          conditionalPanel(
+            condition = "input.networkType == 'bipartite'", ns = ns_tab_upload,
+            checkboxInput(ns("transposecheck"), "Invert Columns and Rows", value = F)
+          )
+        )
+      )
     ),
     conditionalPanel(
       condition = "input.runSbm", ns = ns_tab_sbm,
@@ -46,6 +55,20 @@ mod_tab_show_ui <- function(id) {
         title = "Block settings", solidHeader = T,
         status = "info", collapsible = T, width = 3,
         mod_select_nb_groups_ui(ns("select_nb_groups_1"))
+      )
+    ),
+    shinydashboard::box(
+      title = "Color settings", solidHeader = T,
+      status = "info", collapsible = T, collapsed = T, width = 3,
+      colourpicker::colourInput(
+        ns("colorValues"),
+        label = "Select colour for initial values",
+        value = "black"
+      ),
+      colourpicker::colourInput(
+        ns("colorPred"),
+        label = "Select colour for Predicted values",
+        value = "red"
       )
     ),
     shinydashboard::box(
@@ -106,18 +129,40 @@ mod_tab_show_server <- function(id, r) {
         if (!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
-            "raw" = plotSbm(data_sbm, ordered = FALSE, transpose = input$transposecheck,
-                            labels = labels_list, plotOptions = list(title = input$setTitle)),
-
-
-            "ordered" = plotSbm(data_sbm, ordered = TRUE, transpose = input$transposecheck,
-                                labels = labels_list, plotOptions = list(title = input$setTitle)),
-            "expected" = plotSbm(data_sbm, ordered = TRUE, transpose = input$transposecheck,
-                                 labels = labels_list, plotOptions = list(title = input$setTitle,showValues = F))
+            "raw" = plotSbm(data_sbm,
+              ordered = FALSE, transpose = input$transposecheck,
+              labels = labels_list,
+              plotOptions = list(title = input$setTitle,
+                                 showPredictions = input$showPred,
+                                 colPred = input$colorPred,
+                                 colValue = input$colorValues)
+            ),
+            "ordered" = plotSbm(data_sbm,
+              ordered = TRUE, transpose = input$transposecheck,
+              labels = labels_list,
+              plotOptions = list(title = input$setTitle,
+                                 showPredictions = input$showPred,
+                                 colPred = input$colorPred,
+                                 colValue = input$colorValues)
+            ),
+            "expected" = plotSbm(data_sbm,
+              ordered = TRUE, transpose = input$transposecheck,
+              labels = labels_list,
+              plotOptions = list(title = input$setTitle,
+                                 showPredictions = input$showPred,
+                                 colPred = input$colorPred,
+                                 colValue = input$colorValues,
+                                 showValues = F)
+            )
           )
         } else {
-          plotSbm(x, transpose = input$transposecheck,
-                  labels = labels_list,title = input$setTitle)
+          plotSbm(x,
+            transpose = input$transposecheck,
+            labels = labels_list, plotOptions = list(title = input$setTitle,
+                                                     showPredictions = input$showPred,
+                                                     colPred = input$colorPred,
+                                                     colValue = input$colorValues)
+          )
         }
       } else {
         return(NULL)
