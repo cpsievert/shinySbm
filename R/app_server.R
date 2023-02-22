@@ -5,6 +5,9 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
+  # session$userData$vars <- reactiveValues(NbBlocks = 4,
+  #                                         show_block = F)
+
   r <- reactiveValues(
     upload = reactiveValues(),
     show = reactiveValues(),
