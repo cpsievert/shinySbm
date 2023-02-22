@@ -103,8 +103,18 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
           )
         )
       })
+      shinyalert::shinyalert(
+        title = "SBM",
+        text = "Calculation Done !",
+        size = "xs",
+        closeOnClickOutside = TRUE,
+        type = "success",
+        confirmButtonText = "OK"
+      )
       return(data_res)
     })
+
+
 
     observeEvent(my_sbm_main(), {
       updateRadioButtons(parent_session, "tab_show_1-whichMatrix",

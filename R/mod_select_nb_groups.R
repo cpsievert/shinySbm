@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_select_nb_groups_ui <- function(id,wind_width = 3) {
+mod_select_nb_groups_ui <- function(id, wind_width = 3) {
   ns <- NS(id)
   ns_tab_sbm <- function(id) {
     paste0("tab_sbm_1-", id)
@@ -16,18 +16,21 @@ mod_select_nb_groups_ui <- function(id,wind_width = 3) {
     conditionalPanel(
       condition = "input.runSbm", ns = ns_tab_sbm,
       shinydashboard::box(
-        title = actionLink(inputId = ns("showGraph"),
-                           label = "Block settings",
-                           icon = icon("magnifying-glass-minus")),
+        title = actionLink(
+          inputId = ns("showGraph"),
+          label = "Block settings",
+          icon = icon("magnifying-glass-minus")
+        ),
         solidHeader = T,
         status = "info", collapsible = F, width = wind_width,
         numericInput(ns("Nbblocks"),
-                     label = "Select the total number of blocks:",
-                     value = 4, min = 1, max = 6, step = 1
+          label = "Select the total number of blocks:",
+          value = 4, min = 1, max = 6, step = 1
         ),
         conditionalPanel(
           condition = "input.showGraph % 2 == 0", ns = ns,
-          plotOutput(ns("showILC")))
+          plotOutput(ns("showILC"))
+        )
       )
     )
   )
@@ -40,16 +43,18 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, Nbblocks) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    observeEvent(input$showGraph,{
-      if(input$showGraph %% 2 == 0){
+    observeEvent(input$showGraph, {
+      if (input$showGraph %% 2 == 0) {
         updateActionLink(session,
-                         inputId = "showGraph",
-                         icon = icon("magnifying-glass-minus"))
-      }else{
+          inputId = "showGraph",
+          icon = icon("magnifying-glass-minus")
+        )
+      } else {
         updateActionLink(session,
-                         inputId = "showGraph",
-                         icon = icon("magnifying-glass-plus"))
-        }
+          inputId = "showGraph",
+          icon = icon("magnifying-glass-plus")
+        )
+      }
     })
 
     observeEvent(Nbblocks(), {
