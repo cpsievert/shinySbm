@@ -33,12 +33,10 @@ mod_tab_network_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    mod_select_nb_groups_res <- mod_select_nb_groups_server(
+    my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_3",
       r$sbm$main_sbm
     )
-    my_sbm <- mod_select_nb_groups_res$my_sbm
-
 
     node_edge <- reactive({
       build_node_edge(my_sbm(),r$upload$labels())
@@ -52,10 +50,6 @@ mod_tab_network_server <- function(id, r) {
         return(NULL)
       }
     })
-
-    return(list(
-      NbBlocks = mod_select_nb_groups_res$Nbblocks
-    ))
   })
 }
 

@@ -104,11 +104,10 @@ mod_tab_show_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    mod_select_nb_groups_res <- mod_select_nb_groups_server(
+    my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_1",
       r$sbm$main_sbm
     )
-    my_sbm <- mod_select_nb_groups_res$my_sbm
 
     output$matrixPrint <- DT::renderDataTable({
       # probleme : taille et position, wrapping des titres, fixer la colonnne de rownames
@@ -217,10 +216,6 @@ mod_tab_show_server <- function(id, r) {
         print(PlotMat())
         dev.off()
     })
-
-    return(list(
-      NbBlocks = mod_select_nb_groups_res$Nbblocks
-    ))
   })
 }
 

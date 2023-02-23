@@ -105,13 +105,7 @@ mod_select_nb_groups_server <- function(id, my_sbm_main) {
       })
     })
 
-
-    return(list(
-      Nbblocks = reactive({
-        input$Nbblocks
-      }),
-      my_sbm = my_sbm
-    ))
+    return(my_sbm)
   })
 }
 

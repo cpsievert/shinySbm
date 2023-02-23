@@ -137,12 +137,11 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
     })
 
 
-    mod_select_nb_groups_res <- mod_select_nb_groups_server(
+    my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_2",
       my_sbm_main
     )
 
-    my_sbm <- mod_select_nb_groups_res$my_sbm
 
     observeEvent(my_sbm(), {
       data_sbm <- my_sbm()$clone()
@@ -161,7 +160,6 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     return(list(
       Dataset = Dataset,
-      NbBlocks = mod_select_nb_groups_res$Nbblocks,
       main_sbm = my_sbm_main,
       runSbm = reactive({
         input$runSbm
