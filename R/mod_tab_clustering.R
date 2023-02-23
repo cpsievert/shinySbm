@@ -24,6 +24,9 @@ mod_tab_clustering_server <- function(id, r) {
     ns_tab_sbm <- function(id) {
       paste0("tab_sbm_1-", id)
     }
+    ns_tab_upload <- function(id) {
+      paste0("tab_upload_1-", id)
+    }
 
 
     my_sbm <- mod_select_nb_groups_server(
@@ -48,9 +51,7 @@ mod_tab_clustering_server <- function(id, r) {
     output$namesGroups <- renderUI({
       tagList(
         conditionalPanel(
-          condition = "input.runSbm",
-          # condition = 'session["userData"]["vars"]["sbm"]["runSbm"] != 0',
-          ns = ns,
+          condition = "output.sbmRan == 'YES'", ns = ns_tab_upload,
           shinydashboard::box(
             title = "Groups", solidHeader = T,
             status = "info", collapsible = T, width = 9,

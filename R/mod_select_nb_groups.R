@@ -12,9 +12,13 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
   ns_tab_sbm <- function(id) {
     paste0("tab_sbm_1-", id)
   }
+  ns_tab_upload <- function(id) {
+    paste0("tab_upload_1-", id)
+  }
   tagList(
     conditionalPanel(
-      condition = "input.runSbm", ns = ns_tab_sbm,
+      condition = "output.sbmRan == 'YES'",
+      ns = ns_tab_upload,
       shinydashboard::box(
         title = actionLink(
           inputId = ns("showGraph"),
@@ -42,6 +46,7 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
 mod_select_nb_groups_server <- function(id, my_sbm_main) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+
 
     observeEvent(session$userData$vars$tab(),{
       if(session$userData$vars$sbm$NbBlocks != input$Nbblocks){

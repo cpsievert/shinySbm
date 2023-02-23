@@ -122,6 +122,10 @@ mod_tab_upload_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    output$sbmRan = renderText({
+      if (session$userData$vars$sbm$runSbm != 0){"YES"}else{"NO"}
+    })
+    outputOptions(output, 'sbmRan', suspendWhenHidden = FALSE)
 
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
       labels_sets <- switch(input$networkType,
