@@ -28,7 +28,7 @@ mod_tab_clustering_server <- function(id, r) {
 
     mod_select_nb_groups_res <- mod_select_nb_groups_server(
       "select_nb_groups_4",
-      r$sbm$main_sbm, r$sbm$NbBlocks
+      r$sbm$main_sbm
     )
     my_sbm <- mod_select_nb_groups_res$my_sbm
 

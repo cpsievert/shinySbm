@@ -122,6 +122,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
       labels_sets <- switch(input$networkType,
         "bipartite" = list(row = input$rowLabel, col = input$colLabel),

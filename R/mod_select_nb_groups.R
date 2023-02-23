@@ -39,9 +39,19 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
 #' select_nb_groups Server Functions
 #'
 #' @noRd
-mod_select_nb_groups_server <- function(id, my_sbm_main, Nbblocks) {
+mod_select_nb_groups_server <- function(id, my_sbm_main) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+
+    observeEvent(session$userData$vars$tab(),{
+      if(session$userData$vars$sbm$NbBlocks != input$Nbblocks){
+        updateNumericInput(session,
+                           inputId = "Nbblocks",
+                           label = "Select the total number of blocks:",
+                           value = session$userData$vars$sbm$NbBlocks
+        )
+      }
+    })
 
     observeEvent(input$showGraph, {
       if (input$showGraph %% 2 == 0) {
@@ -57,40 +67,35 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, Nbblocks) {
       }
     })
 
-    observeEvent(Nbblocks(), {
-      req(Nbblocks())
-      if (Nbblocks() != input$Nbblocks) {
-        updateNumericInput(session,
-          inputId = "Nbblocks",
-          label = "Select the total number of blocks:",
-          value = Nbblocks()
-        )
-      }
-    })
-
-
     observeEvent(my_sbm_main(), {
       data_sbm <- my_sbm_main()$clone()
       value <- sum(data_sbm$nbBlocks)
       min <- min(data_sbm$storedModels$nbBlocks)
       max <- max(data_sbm$storedModels$nbBlocks)
       updateNumericInput(session,
-        inputId = "Nbblocks",
-        label = "Select the total number of blocks:",
-        value = value, min = min, max = max, step = 1
+                         inputId = "Nbblocks",
+                         label = "Select the total number of blocks:",
+                         value = value, min = min, max = max, step = 1
       )
+      session$userData$vars$sbm$NbBlocks <- value
     })
 
-    my_sbm <- eventReactive(input$Nbblocks, {
+    my_sbm <- eventReactive(session$userData$vars$sbm$NbBlocks, {
+      n <- session$userData$vars$sbm$NbBlocks
       data_sbm <- my_sbm_main()$clone()
       min <- min(data_sbm$storedModels$nbBlocks)
       max <- max(data_sbm$storedModels$nbBlocks)
 
-      if (input$Nbblocks %in% min:max) {
-        data_sbm$setModel(which(data_sbm$storedModels$nbBlocks == input$Nbblocks))
+      if (n %in% min:max) {
+        data_sbm$setModel(which(data_sbm$storedModels$nbBlocks == n))
       }
       data_sbm
     })
+
+    observeEvent(input$Nbblocks,{
+      session$userData$vars$sbm$NbBlocks <- input$Nbblocks
+    })
+
 
     observeEvent(c(input$Nbblocks, my_sbm_main()), {
       data_sbm <- my_sbm()$clone()
@@ -99,6 +104,8 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, Nbblocks) {
         ILC_plot(data_sbm, data_sbm_main)
       })
     })
+
+
     return(list(
       Nbblocks = reactive({
         input$Nbblocks

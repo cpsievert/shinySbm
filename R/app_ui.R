@@ -38,7 +38,7 @@ app_ui <- function(request) {
                                                       height = "50", width = "50"),
                                                   "Shiny SBM")),
       shinydashboard::dashboardSidebar(
-        shinydashboard::sidebarMenu(
+        shinydashboard::sidebarMenu(id = 'tab',
           shinydashboard::menuItem("Data Loading", tabName = "tab_upload",
                                    icon = icon("th")),
           shinydashboard::menuItem("SBM application", tabName = "tab_sbm",

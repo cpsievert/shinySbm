@@ -139,7 +139,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     mod_select_nb_groups_res <- mod_select_nb_groups_server(
       "select_nb_groups_2",
-      my_sbm_main, r$sbm$NbBlocks
+      my_sbm_main
     )
 
     my_sbm <- mod_select_nb_groups_res$my_sbm
