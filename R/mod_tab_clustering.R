@@ -48,7 +48,9 @@ mod_tab_clustering_server <- function(id, r) {
     output$namesGroups <- renderUI({
       tagList(
         conditionalPanel(
-          condition = "input.runSbm", ns = ns_tab_sbm,
+          condition = "input.runSbm",
+          # condition = 'session["userData"]["vars"]["sbm"]["runSbm"] != 0',
+          ns = ns,
           shinydashboard::box(
             title = "Groups", solidHeader = T,
             status = "info", collapsible = T, width = 9,

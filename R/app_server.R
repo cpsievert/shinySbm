@@ -7,7 +7,8 @@
 app_server <- function(input, output, session) {
   session$userData$vars <- reactiveValues(
     tab = reactive({input$tab}),
-    sbm = list(NbBlocks = 4)
+    sbm = list(NbBlocks = 4,
+               runSbm = 0)
   )
 
   r <- reactiveValues(

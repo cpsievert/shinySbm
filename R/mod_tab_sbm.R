@@ -91,6 +91,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
     mod_importation_error_server("error_2", Dataset)
 
     my_sbm_main <- eventReactive(input$runSbm, {
+      session$userData$vars$sbm$runSbm <- input$runSbm
       data_res <- withProgress(message = "SBM is Running", {
         switch(r$upload$networkType(),
           "unipartite" = sbm::estimateSimpleSBM(

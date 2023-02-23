@@ -205,6 +205,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         choices = list("Raw Network" = "raw")
       )
       updateActionButton(parent_session, "tab_sbm_1-runSbm")
+      session$userData$vars$sbm$runSbm <- 0
     })
 
     workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {

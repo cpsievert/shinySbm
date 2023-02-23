@@ -142,7 +142,7 @@ mod_tab_show_server <- function(id, r) {
                         colPred = input$colorPred,
                         colValue = input$colorValues,
                         interactionName = input$interactionName)
-        if (!is.null(r$sbm$runSbm()) && r$sbm$runSbm() != 0) {
+        if (session$userData$vars$sbm$runSbm != 0) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
             "raw" = plotSbm(data_sbm,
