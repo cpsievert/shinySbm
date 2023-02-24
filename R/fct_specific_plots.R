@@ -5,10 +5,17 @@
 #' @return no value
 #'
 #' @noRd
-ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm) {
-  xmin <- min(sum(selected_sbm$nbBlocks),sum(comparison_sbm$nbBlocks)) - 1
-  xmax <- max(sum(selected_sbm$nbBlocks),sum(comparison_sbm$nbBlocks)) + 1
-  plot_table <- dplyr::filter(selected_sbm$storedModels, nbBlocks <= xmax & nbBlocks >= xmin)
+ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T) {
+  if(zoom){
+    xmin <- min(sum(selected_sbm$nbBlocks),sum(comparison_sbm$nbBlocks)) - 1
+    xmax <- max(sum(selected_sbm$nbBlocks),sum(comparison_sbm$nbBlocks)) + 1
+    plot_table <- dplyr::filter(selected_sbm$storedModels, nbBlocks <= xmax & nbBlocks >= xmin)
+  }else{
+    xmin <- min(selected_sbm$storedModels$nbBlocks)
+    xmax <- max(selected_sbm$storedModels$nbBlocks)
+    plot_table <- selected_sbm$storedModels
+  }
+
   my_plot <- ggplot2::ggplot(plot_table) +
     ggplot2::xlim(xmin,xmax) +
     ggplot2::aes(x = nbBlocks, y = ICL, linetype = "ICL") +
