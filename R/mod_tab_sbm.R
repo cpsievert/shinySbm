@@ -26,7 +26,7 @@ mod_tab_sbm_ui <- function(id) {
         ),
         uiOutput(ns("sbmButton"))
       ),
-      mod_select_nb_groups_ui(ns("select_nb_groups_2"),12)
+      mod_select_nb_groups_ui(ns("select_nb_groups_2"), 12)
     ),
     column(
       width = 9,
@@ -140,7 +140,8 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_2",
-      my_sbm_main
+      my_sbm_main,
+      session
     )
 
 

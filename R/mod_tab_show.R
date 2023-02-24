@@ -31,28 +31,34 @@ mod_tab_show_ui <- function(id) {
         conditionalPanel(
           condition = "input.whichShow == 'plot'", ns = ns,
           hr(),
-          fluidRow(column(width = 8,
-                          textInput(ns("fileName"),
-                                    label = "Save: File Name",
-                                    value = "ShinyMatrixPlot"
-                                    )
-                          ),
-                   column(width = 4,
-                          selectInput(ns('fileExtention'),
-                                      "Extension",
-                                      choices = list(
-                                        ".png" = ".png",
-                                        ".jpeg" = ".jpeg",
-                                        ".svg"= ".svg"),
-                                      selected = '.png',
-                                      width = '600px'
-                                      )
-                          )
-                   ),
+          fluidRow(
+            column(
+              width = 8,
+              textInput(ns("fileName"),
+                label = "Save: File Name",
+                value = "ShinyMatrixPlot"
+              )
+            ),
+            column(
+              width = 4,
+              selectInput(ns("fileExtention"),
+                "Extension",
+                choices = list(
+                  ".png" = ".png",
+                  ".jpeg" = ".jpeg",
+                  ".svg" = ".svg"
+                ),
+                selected = ".png",
+                width = "600px"
+              )
+            )
+          ),
           div(
             style = "display:inline-block; float:right",
-            downloadButton(ns("downloadPlot"), label = " Save Plot",
-                           icon = icon("download", lib = "font-awesome"))
+            downloadButton(ns("downloadPlot"),
+              label = " Save Plot",
+              icon = icon("download", lib = "font-awesome")
+            )
           )
         )
       ),
@@ -69,8 +75,8 @@ mod_tab_show_ui <- function(id) {
           conditionalPanel(
             condition = "input.showLegend", ns = ns,
             textInput(ns("interactionName"),
-                      label = "Name of observed interraction",
-                      value = "Connection"
+              label = "Name of observed interraction",
+              value = "Connection"
             )
           ),
           conditionalPanel(
@@ -120,7 +126,8 @@ mod_tab_show_server <- function(id, r) {
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_1",
-      r$sbm$main_sbm
+      r$sbm$main_sbm,
+      session
     )
 
     output$matrixPrint <- DT::renderDataTable({
@@ -149,13 +156,19 @@ mod_tab_show_server <- function(id, r) {
       if (input$whichShow == "plot") {
         x <- as.matrix(r$upload$Dataset())
         labels_list <- r$upload$labels()
-        myTitle <- if(input$setTitle == ""){NULL}else{input$setTitle}
-        myOptions <- list(title = myTitle,
-                        showLegend = input$showLegend,
-                        showPredictions = input$showPred,
-                        colPred = input$colorPred,
-                        colValue = input$colorValues,
-                        interactionName = input$interactionName)
+        myTitle <- if (input$setTitle == "") {
+          NULL
+        } else {
+          input$setTitle
+        }
+        myOptions <- list(
+          title = myTitle,
+          showLegend = input$showLegend,
+          showPredictions = input$showPred,
+          colPred = input$colorPred,
+          colValue = input$colorValues,
+          interactionName = input$interactionName
+        )
         if (session$userData$vars$sbm$runSbm != 0) {
           data_sbm <- my_sbm()$clone()
           switch(input$whichMatrix,
@@ -172,7 +185,7 @@ mod_tab_show_server <- function(id, r) {
             "expected" = plotSbm(data_sbm,
               ordered = TRUE, transpose = input$showTransposed,
               labels = labels_list,
-              plotOptions = c(myOptions,showValues = F)
+              plotOptions = c(myOptions, showValues = F)
             )
           )
         } else {
@@ -218,22 +231,28 @@ mod_tab_show_server <- function(id, r) {
       deleteFile = TRUE
     )
     output$downloadPlot <- downloadHandler(
-      filename = reactive({paste0(input$fileName,input$fileExtention)}),
+      filename = reactive({
+        paste0(input$fileName, input$fileExtention)
+      }),
       content = function(file) {
         width <- session$clientData$`output_tab_show_1-matrixPlot_width`
         height <- session$clientData$`output_tab_show_1-matrixPlot_height`
         pixelratio <- session$clientData$pixelratio
         switch(input$fileExtention,
-               ".svg" = svg(file),
-               ".jpeg" =  jpeg(file,
-                               width = width * pixelratio, height = height * pixelratio,
-                               res = 72 * pixelratio,quality = 100),
-               ".png" = png(file,
-                            width = width * pixelratio, height = height * pixelratio,
-                            res = 72 * pixelratio))
+          ".svg" = svg(file),
+          ".jpeg" = jpeg(file,
+            width = width * pixelratio, height = height * pixelratio,
+            res = 72 * pixelratio, quality = 100
+          ),
+          ".png" = png(file,
+            width = width * pixelratio, height = height * pixelratio,
+            res = 72 * pixelratio
+          )
+        )
         print(PlotMat())
         dev.off()
-      })
+      }
+    )
   })
 }
 

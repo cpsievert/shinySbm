@@ -23,7 +23,7 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
         title = actionLink(
           inputId = ns("showGraph"),
           label = "Block settings",
-          icon = icon("magnifying-glass-minus")
+          icon = icon("caret-square-down", lib = "font-awesome")
         ),
         solidHeader = T,
         status = "info", collapsible = F, width = wind_width,
@@ -33,7 +33,10 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
         ),
         conditionalPanel(
           condition = "input.showGraph % 2 == 0", ns = ns,
-          plotOutput(ns("showILC"))
+          plotOutput(ns("showILC"),
+            click = ns("plotClick"),
+            dblclick = ns("plotDblclick")
+          )
         )
       )
     )
@@ -43,17 +46,17 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
 #' select_nb_groups Server Functions
 #'
 #' @noRd
-mod_select_nb_groups_server <- function(id, my_sbm_main) {
+mod_select_nb_groups_server <- function(id, my_sbm_main, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    plot_info <- reactiveValues(is_zoomed = T)
 
-
-    observeEvent(session$userData$vars$tab(),{
-      if(session$userData$vars$sbm$NbBlocks != input$Nbblocks){
+    observeEvent(session$userData$vars$tab(), {
+      if (session$userData$vars$sbm$NbBlocks != input$Nbblocks) {
         updateNumericInput(session,
-                           inputId = "Nbblocks",
-                           label = "Select the total number of blocks:",
-                           value = session$userData$vars$sbm$NbBlocks
+          inputId = "Nbblocks",
+          label = "Select the total number of blocks:",
+          value = session$userData$vars$sbm$NbBlocks
         )
       }
     })
@@ -62,12 +65,12 @@ mod_select_nb_groups_server <- function(id, my_sbm_main) {
       if (input$showGraph %% 2 == 0) {
         updateActionLink(session,
           inputId = "showGraph",
-          icon = icon("magnifying-glass-minus")
+          icon = icon("caret-square-down", lib = "font-awesome")
         )
       } else {
         updateActionLink(session,
           inputId = "showGraph",
-          icon = icon("magnifying-glass-plus")
+          icon = icon("caret-square-up", lib = "font-awesome")
         )
       }
     })
@@ -78,9 +81,9 @@ mod_select_nb_groups_server <- function(id, my_sbm_main) {
       min <- min(data_sbm$storedModels$nbBlocks)
       max <- max(data_sbm$storedModels$nbBlocks)
       updateNumericInput(session,
-                         inputId = "Nbblocks",
-                         label = "Select the total number of blocks:",
-                         value = value, min = min, max = max, step = 1
+        inputId = "Nbblocks",
+        label = "Select the total number of blocks:",
+        value = value, min = min, max = max, step = 1
       )
       session$userData$vars$sbm$NbBlocks <- value
     })
@@ -97,18 +100,45 @@ mod_select_nb_groups_server <- function(id, my_sbm_main) {
       data_sbm
     })
 
-    observeEvent(input$Nbblocks,{
+    observeEvent(input$plotClick, {
+      data_sbm_main <- my_sbm_main()$clone()
+      data_sbm <- my_sbm()$clone()
+      # not a realplot
+      edges <- ILC_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed, get_edges = T)
+      plot_shape <- function(x) {
+        1.25 * x - 0.2
+      }
+      if (session$userData$vars$sbm$NbBlocks != input$plotClick$x) {
+        updateNumericInput(session,
+          inputId = "Nbblocks",
+          label = "Select the total number of blocks:",
+          value = round(plot_shape(input$plotClick$x) * (edges$max - edges$min)) + edges$min
+        )
+      }
+    })
+
+    observeEvent(input$Nbblocks, {
       session$userData$vars$sbm$NbBlocks <- input$Nbblocks
     })
 
 
-    observeEvent(c(input$Nbblocks, my_sbm_main()), {
+
+    observeEvent(input$plotDblclick, {
+      plot_info$is_zoomed <- plot_info$is_zoomed == F
+    })
+
+
+    plotILC <- eventReactive(c(input$Nbblocks, my_sbm_main(), input$plotDblclick), {
       data_sbm <- my_sbm()$clone()
       data_sbm_main <- my_sbm_main()$clone()
-      output$showILC <- renderPlot({
-        ILC_plot(data_sbm, data_sbm_main)
-      })
+      ILC_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed)
     })
+
+    output$showILC <- renderPlot({
+      print(plotILC())
+    })
+
+
 
     return(my_sbm)
   })
