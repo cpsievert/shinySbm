@@ -49,7 +49,7 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
 mod_select_nb_groups_server <- function(id, my_sbm_main, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    plot_info <- reactiveValues(is_zoomed = T)
+    plot_info <- reactiveValues(is_zoomed = F)
 
     observeEvent(session$userData$vars$tab(), {
       if (session$userData$vars$sbm$NbBlocks != input$Nbblocks) {
