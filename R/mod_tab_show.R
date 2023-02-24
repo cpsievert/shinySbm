@@ -35,7 +35,7 @@ mod_tab_show_ui <- function(id) {
             column(
               width = 8,
               textInput(ns("fileName"),
-                label = "Save: File Name",
+                label = "File Name",
                 value = "ShinyMatrixPlot"
               )
             ),
