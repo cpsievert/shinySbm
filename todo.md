@@ -45,6 +45,8 @@ Lignes de code de l'ACP de PCAShiny
 
 ideas from factoshiny : see on package files
 
-Get Home Language : `strsplit(Sys.getlocale("LC_COLLATE"),"_")[[1]][1]`
+Get Home Language : `strsplit(Sys.getlocale("LC_COLLATE"),"_")[[1]][1]` 
+
 Traduction : `gettext("Which graphs to use?",domain="R-Factoshiny")` 
+
 Rapport automatique : `FactoInvestigate::Investigate` 
