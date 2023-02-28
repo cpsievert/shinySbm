@@ -1,18 +1,16 @@
 #### Tests
 
 - Rajouter des tests bipartite ou simple en fonction du jeu de données en entrée (validate)
-
-- Rajouter des tests pour choix distribution en fonction des données
+ 
 
   #### Données en entrée
 
-- Améliorer la partie chargement de ses propres données, spécifier le format etc.
+- Améliorer la partie chargement de ses propres données, spécifier le format etc. (a faire)
 
-- Permettre la simulation d'un jeu de données d'entrées
+- Permettre la simulation d'un jeu de données d'entrées ()
 
 - Permettre de rentrer les données soit sous forme de matrice soit sous forme de liste d'arêtes et noeuds
-
-- Affichage des données brutes (aperçu)
+ 
 
   #### Figures
 
@@ -26,7 +24,7 @@
 
   #### Divers
 
-  - Ajouter des références
+  - Ajouter des références (important)
 
 - Permettre de récupérer le code du sbm (shinymeta::outputCodeButton associée à shinymeta::metaRender2)
 
@@ -41,4 +39,12 @@
 - Avec une partie exploration des sorties, notamment une liste des noeuds avec les clusters + d'éventuelles métadonnées au choix
 - Base ce code + code addins
 - Paramètres nombre de blocs
-- Regarder si on ne peut pas faire du 2 en 1. C'est-à-dire un package appli Shiny avec une fonction Addin utilisant le code de l'appli
+- Regarder si on ne peut pas faire du 2 en 1. C'est-à-dire un package appli Shiny avec une fonction Addin utilisant le code de l'appli 
+Lignes de code de l'ACP de PCAShiny
+
+
+ideas from factoshiny
+
+strsplit(Sys.getlocale("LC_COLLATE"),"_")[[1]][1]
+gettext("Which graphs to use?",domain="R-Factoshiny") 
+FactoInvestigate::Investigate
