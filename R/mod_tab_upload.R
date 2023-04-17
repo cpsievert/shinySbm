@@ -14,12 +14,23 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Data Selector", solidHeader = T,
         status = "info", width = 4,
+
         radioButtons(ns("whichData"), "Which data do you want to use ?",
           choices = list(
             "My own data" = "importData",
             "SBM exemple" = "sbmData"
           ),
           inline = T, selected = "importData"
+        ),
+        conditionalPanel(
+          condition = "input.whichData == 'importData'", ns = ns,
+          radioButtons(ns("dataType"), "Select the nature of your Data",
+                       choices = list(
+                         "Adjacency or Incidence Matrix" = "matrix",
+                         "List of pair of nodes" = "list"
+                       ),
+                       inline = T, selected = "matrix"
+          )
         ),
         conditionalPanel(
           condition = "input.whichData == 'sbmData'", ns = ns,
@@ -32,16 +43,47 @@ mod_tab_upload_ui <- function(id) {
           )
         ),
         conditionalPanel(
-          condition = "input.whichData == 'importData'", ns = ns,
+          condition = "input.whichData == 'importData' & input.dataType == 'matrix'", ns = ns,
           fileInput(ns("mainDataFile"),
-            label = "Choose the file containing your adjency matrix",
+            label = "Choose the file containing your adjacency matrix",
             buttonLabel = "Browse...",
             placeholder = "No file selected",
             multiple = F,
             accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
+          ),
+          tags$div(
+            tags$strong("Information :") , tags$br(),
+            " - It should be a ", tags$strong("adjacency or incidence")," matrix", tags$br(),
+            " - ", tags$strong("Bipartite network :")," nodes in rows and columns can be differents", tags$br(),
+            " - ", tags$strong("Unipartite network :")," nodes in rows and columns are the same (order and names)", tags$br(),
+            " - The connection is the value between one node in row and one in column", tags$br(),
+            " - Values can be : 0/1, integers or decimals",
           )
         ),
-        h6("* should be a adjadency matrix"),
+        conditionalPanel(
+          condition = "input.whichData == 'importData' & input.dataType == 'list'", ns = ns,
+          radioButtons(ns("orientation"), "Are connections oriented ?",
+                       choices = list(
+                         "Yes" = TRUE,
+                         "No" = FALSE
+                       ),
+                       inline = TRUE,
+                       selected = FALSE
+          ),
+          fileInput(ns("mainDataFileList"),
+                    label = "Choose the file containing your list",
+                    buttonLabel = "Browse...",
+                    placeholder = "No file selected",
+                    multiple = F,
+                    accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
+          ),
+          tags$div(
+            tags$strong("Information :") , tags$br(),
+            " - It should be a table of ", tags$strong("two columns")," each row specify two nodes that are connected", tags$br(),
+            " - If connections are quantified a ", tags$strong("third column (numerical)")," can be associated", tags$br(),
+            " - For oriented network ", tags$strong("FROM")," column should be the first and the ", tags$strong("TO")," the second one"
+            )
+        ),
         hr(),
         div(
           style = "display:inline-block; float:right",
