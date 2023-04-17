@@ -12,15 +12,7 @@
 - Permettre de rentrer les données soit sous forme de matrice soit sous forme de liste d'arêtes et noeuds
  
 
-  #### Figures
 
-- Rajouter des titres pour les figures
-
-- Modifier les labels des dernières plots
-
-- Permettre d'enlever la légende
-
-- Eventuellement jouer sur les couleurs
 
   #### Divers
 
