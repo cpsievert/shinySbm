@@ -1,3 +1,37 @@
+
+#' show_table
+#'
+#' @description print table correctly even with long names
+#'
+#' @param data,str_len=10,-=25,tbl_wid=8
+#' `data` table
+#' `str_len` max names length
+#' `str_len` max table length
+#' `tbl_wid` max table width
+#'
+#' @return fit better in the verbatim plot
+#'
+#' @noRd
+show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8){
+  table <- data
+  cols <- colnames(data)
+  rows <- rownames(data)
+  colnames(table) <- ifelse(stringr::str_length(cols) > str_len,
+                            paste0(substr(cols, 1, str_len-3),'...'),
+                            cols)
+  rownames(table) <- ifelse(stringr::str_length(rows) > str_len,
+                            paste0(substr(rows, 1, str_len-3),'...'),
+                            rows)
+  if(dim(data)[1] > tbl_len){
+    table <- table[1:tbl_len,]
+  }
+  if(dim(data)[2]>tbl_wid){
+    table <- table[,1:tbl_wid]
+  }
+  cat("Data dimension :",dim(data)[1],'rows x',dim(data)[2],'columns\n\n')
+  print(table)
+}
+
 #' print_messages
 #'
 #' @description print stored messages, warnings and errors

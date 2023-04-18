@@ -14,7 +14,6 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Data Selector", solidHeader = T,
         status = "info", width = 4,
-
         radioButtons(ns("whichData"), "Which data do you want to use ?",
           choices = list(
             "My own data" = "importData",
@@ -25,11 +24,11 @@ mod_tab_upload_ui <- function(id) {
         conditionalPanel(
           condition = "input.whichData == 'importData'", ns = ns,
           radioButtons(ns("dataType"), "Select the nature of your Data",
-                       choices = list(
-                         "Adjacency or Incidence Matrix" = "matrix",
-                         "List of pair of nodes" = "list"
-                       ),
-                       inline = T, selected = "matrix"
+            choices = list(
+              "Adjacency or Incidence Matrix" = "matrix",
+              "List of pair of nodes" = "list"
+            ),
+            inline = T, selected = "matrix"
           )
         ),
         conditionalPanel(
@@ -43,64 +42,49 @@ mod_tab_upload_ui <- function(id) {
           )
         ),
         conditionalPanel(
-          condition = "input.whichData == 'importData' & input.dataType == 'matrix'", ns = ns,
-          fileInput(ns("mainDataFileMatrix"),
-            label = "Choose the file containing your adjacency matrix",
+          condition = "input.whichData == 'importData'", ns = ns,
+          fileInput(ns("mainDataFile"),
+            label = "Choose the file containing your data",
             buttonLabel = "Browse...",
             placeholder = "No file selected",
             multiple = F,
             accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
           ),
-          tags$div(
-            tags$strong("Information :") , tags$br(),
-            " - It should be a ", tags$strong("adjacency or incidence")," matrix", tags$br(),
-            " - ", tags$strong("Bipartite network :")," nodes in rows and columns can be differents", tags$br(),
-            " - ", tags$strong("Unipartite network :")," nodes in rows and columns are the same (order and names)", tags$br(),
-            " - The connection is the value between one node in row and one in column", tags$br(),
-            " - Values can be : 0/1, integers or decimals",
-          )
-        ),
-        conditionalPanel(
-          condition = "input.whichData == 'importData' & input.dataType == 'list'", ns = ns,
-          radioButtons(ns("orientation"), "Are connections oriented ?",
-                       choices = list(
-                         "Yes" = T,
-                         "No" = F
-                       ),
-                       inline = TRUE,
-                       selected = F
-          ),
-          fileInput(ns("mainDataFileList"),
-                    label = "Choose the file containing your list",
-                    buttonLabel = "Browse...",
-                    placeholder = "No file selected",
-                    multiple = F,
-                    accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
-          ),
-          tags$div(
-            tags$strong("Information :") , tags$br(),
-            " - It should be a table of ", tags$strong("two columns")," each row specify two nodes that are connected", tags$br(),
-            " - If connections are quantified a ", tags$strong("third column (numerical)")," can be associated", tags$br(),
-            " - For oriented network ", tags$strong("FROM")," column should be the first and the ", tags$strong("TO")," the second one"
+          conditionalPanel(
+            condition = "input.dataType == 'matrix'", ns = ns,
+            tags$div(
+              tags$strong("Information :"), tags$br(),
+              " - It should be a ", tags$strong("adjacency or incidence"), " matrix", tags$br(),
+              " - ", tags$strong("Bipartite network :"), " nodes in rows and columns can be differents", tags$br(),
+              " - ", tags$strong("Unipartite network :"), " nodes in rows and columns are the same (order and names)", tags$br(),
+              " - The connection is the value between one node in row and one in column", tags$br(),
+              " - Values can be : 0/1, integers or decimals",
             )
-        ),
-        hr(),
-        conditionalPanel(
-          condition = "input.whichData == 'importData' & input.dataType == 'list'", ns = ns,
-          actionButton(ns("listUploader"), label = strong("Load Data")),
-          div(
-            style = "display:inline-block; float:right",
-            conditionalPanel(
-              condition = "input.listUploader", ns = ns,
+          ),
+          conditionalPanel(
+            condition = "input.dataType == 'list'", ns = ns,
+            radioButtons(ns("orientation"), "Are connections oriented ?",
+              choices = list(
+                "Yes" = T,
+                "No" = F
+              ),
+              inline = TRUE,
+              selected = F
+            ),
+            tags$div(
+              tags$strong("Information :"), tags$br(),
+              " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
+              " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
+              " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
+            )
+          ),
+          hr(),
+          conditionalPanel(
+            condition = "input.mainDataFile != NULL", ns = ns,
+            div(
+              style = "display:inline-block; float:right",
               actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
             )
-          )
-        ),
-        conditionalPanel(
-          condition = "input.whichData != 'importData' | input.dataType != 'list'", ns = ns,
-          div(
-            style = "display:inline-block; float:right",
-            actionButton(ns("mainDataUploader"), label = strong("Matrix Uploader"))
           )
         )
       ),
@@ -181,10 +165,14 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     ## will be used in other modules inside conditionnal panels that should only be shown when the sbm has been run
     # reset when loading a new matrix
-    output$sbmRan = renderText({
-      if (session$userData$vars$sbm$runSbm != 0){"YES"}else{"NO"}
+    output$sbmRan <- renderText({
+      if (session$userData$vars$sbm$runSbm != 0) {
+        "YES"
+      } else {
+        "NO"
+      }
     })
-    outputOptions(output, 'sbmRan', suspendWhenHidden = FALSE)
+    outputOptions(output, "sbmRan", suspendWhenHidden = FALSE)
 
     ## Settings reactive labels for plots (nature of stuff in cols and rows)
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
@@ -199,23 +187,10 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     observeEvent(input$dataType, {
-      if(input$dataType == 'matrix'){
-        updateCheckboxInput(session,"headerrow", value = T)
-      }else{
-        updateCheckboxInput(session,"headerrow", value = F)
-      }
-    })
-
-    ## Selected data path or name of exemples one
-    datasetSelected <- eventReactive(c(input$whichData, input$dataBase, input$mainDataFileMatrix$datapath,input$mainDataFileList), {
-      if (input$whichData == "importData") {
-        if(input$dataType == 'matrix'){
-          input$mainDataFileMatrix$datapath
-        }else{
-          input$mainDataFileList$datapath
-        }
+      if (input$dataType == "matrix") {
+        updateCheckboxInput(session, "headerrow", value = T)
       } else {
-        input$dataBase
+        updateCheckboxInput(session, "headerrow", value = F)
       }
     })
 
@@ -232,6 +207,49 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+
+    ## Selected data path or name of exemples one
+    datasetSelected <- eventReactive(c(
+      input$whichData, input$dataBase,
+      input$mainDataFile$datapath,
+      sep(), input$headerrow,
+      input$headercol
+    ), {
+      if (input$whichData == "importData") {
+        validate(
+          need(input$mainDataFile$datapath, "Please select a data set")
+        )
+        if (input$headerrow) {
+          data <- read.table(
+            file = input$mainDataFile$datapath, sep = sep(),
+            row.names = 1, header = input$headercol
+          )
+        } else {
+          data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol)
+        }
+      } else {
+        validate(
+          need(input$dataBase, "Please select a data set")
+        )
+        data <- switch(input$dataBase,
+          "fungus_tree" = {
+            mat <- sbm::fungusTreeNetwork$fungus_tree
+            colnames(mat) <- sbm::fungusTreeNetwork$tree_names
+            rownames(mat) <- sbm::fungusTreeNetwork$fungus_names
+            mat
+          },
+          "tree_tree" = {
+            mat <- sbm::fungusTreeNetwork$tree_tree
+            colnames(mat) <- sbm::fungusTreeNetwork$tree_names
+            rownames(mat) <- sbm::fungusTreeNetwork$tree_names
+            mat
+          }
+        )
+      }
+      return(data)
+    })
+
+
     listUploaded <- eventReactive(input$listUploader, {
       validate(
         need(datasetSelected(), "Please select a data set")
@@ -245,22 +263,23 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # reactive network adjacency matrix ("sbmMatrix" Class)
-    datasetUploaded <- eventReactive(c(input$mainDataUploader,input$matrixBuilder,input$networkType), {
+    datasetUploaded <- eventReactive(c(input$mainDataUploader, input$matrixBuilder, input$networkType), {
       validate(
         need(datasetSelected(), "Please select a data set")
       )
       if (input$whichData == "importData") {
-        if(input$dataType == 'matrix'){
+        if (input$dataType == "matrix") {
           if (input$headerrow) {
             x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
           } else {
             x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
           }
           dataset <- buildSbmMatrix(x)
-        }else{
+        } else {
           dataset <- buildSbmMatrix(edges_to_adjacency(listUploaded(),
-                                        type = input$networkType,
-                                        oriented = as.logical(input$orientation)))
+            type = input$networkType,
+            oriented = as.logical(input$orientation)
+          ))
         }
       } else {
         dataset <- switch(datasetSelected(),
@@ -325,11 +344,16 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     mod_importation_error_server("error_1", observedDataset)
 
+    output$ok <- renderPrint({
+      show_table(datasetSelected())
+    })
+
+
     # show simportation summary
     output$summaryDataImport <- renderPrint({
-      if(input$dataType == 'matrix'){
+      if (input$dataType == "matrix") {
         print(observedDataset())
-      }else{
+      } else {
         print(listUploaded())
       }
     })
