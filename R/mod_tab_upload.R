@@ -85,9 +85,23 @@ mod_tab_upload_ui <- function(id) {
             )
         ),
         hr(),
-        div(
-          style = "display:inline-block; float:right",
-          actionButton(ns("mainDataUploader"), label = strong("Matrix Uploader"))
+        conditionalPanel(
+          condition = "input.whichData == 'importData' & input.dataType == 'list'", ns = ns,
+          actionButton(ns("listUploader"), label = strong("Load Data")),
+          div(
+            style = "display:inline-block; float:right",
+            conditionalPanel(
+              condition = "input.listUploader", ns = ns,
+              actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
+            )
+          )
+        ),
+        conditionalPanel(
+          condition = "input.whichData != 'importData' | input.dataType != 'list'", ns = ns,
+          div(
+            style = "display:inline-block; float:right",
+            actionButton(ns("mainDataUploader"), label = strong("Matrix Uploader"))
+          )
         )
       ),
       conditionalPanel(
