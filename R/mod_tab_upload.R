@@ -211,12 +211,24 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         need(datasetSelected(), "Please select a data set")
       )
       if (input$whichData == "importData") {
-        if (input$headerrow) {
-          x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
-        } else {
-          x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
+        if(input$dataType == "matrix"){
+          if (input$headerrow) {
+            x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
+          } else {
+            x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
+          }
+          dataset <- buildSbmMatrix(x)
+        }else if(input$dataType == "list"){
+          if (input$headerrow) {
+            x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
+          } else {
+            x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
+          }
+          adjacency_matrix <- edges_to_adjacency(x, type = input$networkType , oriented = input$orientation)
+          dataset <- buildSbmMatrix(adjacency_matrix)
+        }else{
+          stop("input$dataType has the wrong type only 'matrix' and 'list' have been set yet")
         }
-        dataset <- buildSbmMatrix(x)
       } else {
         dataset <- switch(datasetSelected(),
           "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree,
