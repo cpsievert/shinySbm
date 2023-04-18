@@ -281,7 +281,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       data
     })
 
-    # Needed to show warnings and errors messages avoiding program to stop
+    # Get the changes from Sbm page (allow the warnings to transmit when user change the law upon values)
     observedDataset <- eventReactive(r$sbm$Dataset(), {
       if (is.null(r$sbm$Dataset())) {
         return(workingDataset())
