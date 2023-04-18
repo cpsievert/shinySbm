@@ -44,7 +44,7 @@ mod_tab_upload_ui <- function(id) {
         ),
         conditionalPanel(
           condition = "input.whichData == 'importData' & input.dataType == 'matrix'", ns = ns,
-          fileInput(ns("mainDataFile"),
+          fileInput(ns("mainDataFileMatrix"),
             label = "Choose the file containing your adjacency matrix",
             buttonLabel = "Browse...",
             placeholder = "No file selected",
@@ -64,11 +64,11 @@ mod_tab_upload_ui <- function(id) {
           condition = "input.whichData == 'importData' & input.dataType == 'list'", ns = ns,
           radioButtons(ns("orientation"), "Are connections oriented ?",
                        choices = list(
-                         "Yes" = TRUE,
-                         "No" = FALSE
+                         "Yes" = T,
+                         "No" = F
                        ),
                        inline = TRUE,
-                       selected = FALSE
+                       selected = F
           ),
           fileInput(ns("mainDataFileList"),
                     label = "Choose the file containing your list",
@@ -163,6 +163,7 @@ mod_tab_upload_ui <- function(id) {
         title = "Importation Details", solidHeader = T,
         status = "info", width = 12,
         mod_importation_error_ui(ns("error_1")),
+        verbatimTextOutput(ns("ok")),
         verbatimTextOutput(ns("summaryDataImport"))
       )
     )
@@ -197,11 +198,19 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
     })
 
+    observeEvent(input$dataType, {
+      if(input$dataType == 'matrix'){
+        updateCheckboxInput(session,"headerrow", value = T)
+      }else{
+        updateCheckboxInput(session,"headerrow", value = F)
+      }
+    })
+
     ## Selected data path or name of exemples one
-    datasetSelected <- eventReactive(c(input$whichData, input$dataBase, input$mainDataFile$datapath,input$mainDataFileList), {
+    datasetSelected <- eventReactive(c(input$whichData, input$dataBase, input$mainDataFileMatrix$datapath,input$mainDataFileList), {
       if (input$whichData == "importData") {
         if(input$dataType == 'matrix'){
-          input$mainDataFile$datapath
+          input$mainDataFileMatrix$datapath
         }else{
           input$mainDataFileList$datapath
         }
@@ -236,7 +245,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # reactive network adjacency matrix ("sbmMatrix" Class)
-    datasetUploaded <- eventReactive(c(input$mainDataUploader,input$matrixBuilder), {
+    datasetUploaded <- eventReactive(c(input$mainDataUploader,input$matrixBuilder,input$networkType), {
       validate(
         need(datasetSelected(), "Please select a data set")
       )
@@ -249,7 +258,9 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           }
           dataset <- buildSbmMatrix(x)
         }else{
-          dataset <- buildSbmMatrix(edges_to_adjacency(listUploaded(), type = input$networkType, oriented = input$orientation))
+          dataset <- buildSbmMatrix(edges_to_adjacency(listUploaded(),
+                                        type = input$networkType,
+                                        oriented = as.logical(input$orientation)))
         }
       } else {
         dataset <- switch(datasetSelected(),
@@ -297,16 +308,16 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # Set new network type on the current dataset but it remain the old uploaded one
-    workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
-      data <- datasetUploaded()
-      data$type <- input$networkType
-      data
-    })
+    # workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
+    #   data <- datasetUploaded()
+    #   data$type <- input$networkType
+    #   data
+    # })
 
     # Get the changes from Sbm page (allow the warnings to transmit when user change the law upon values)
     observedDataset <- eventReactive(r$sbm$Dataset(), {
       if (is.null(r$sbm$Dataset())) {
-        return(workingDataset())
+        return(datasetUploaded())
       } else {
         return(r$sbm$Dataset())
       }
@@ -316,7 +327,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     # show simportation summary
     output$summaryDataImport <- renderPrint({
-      # print(observedDataset())
       if(input$dataType == 'matrix'){
         print(observedDataset())
       }else{
@@ -326,7 +336,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     return(list(
       labels = labels,
-      Dataset = workingDataset,
+      Dataset = datasetUploaded,
       networkType = reactive({
         input$networkType
       })
