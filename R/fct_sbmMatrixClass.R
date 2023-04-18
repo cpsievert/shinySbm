@@ -464,7 +464,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
       print(x$matrix[index_row, index_col])
     }
     if (is.null(x$covar)) {
-      # cat("\nThere is no covariables.\n\n")
+      cat("\nThere is no covariables.\n\n")
     } else {
       cat("\nThere is", length(x$covar), " covariables : ")
       if (!show_covar) {
