@@ -236,17 +236,21 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # reactive network adjacency matrix ("sbmMatrix" Class)
-    datasetUploaded <- eventReactive(input$mainDataUploader, {
+    datasetUploaded <- eventReactive(c(input$mainDataUploader,input$matrixBuilder), {
       validate(
         need(datasetSelected(), "Please select a data set")
       )
       if (input$whichData == "importData") {
-        if (input$headerrow) {
-          x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
-        } else {
-          x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
+        if(input$dataType == 'matrix'){
+          if (input$headerrow) {
+            x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
+          } else {
+            x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
+          }
+          dataset <- buildSbmMatrix(x)
+        }else{
+          dataset <- buildSbmMatrix(edges_to_adjacency(listUploaded(), type = input$networkType, oriented = input$orientation))
         }
-        dataset <- buildSbmMatrix(x)
       } else {
         dataset <- switch(datasetSelected(),
           "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree,
@@ -312,6 +316,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     # show simportation summary
     output$summaryDataImport <- renderPrint({
+      # print(observedDataset())
       if(input$dataType == 'matrix'){
         print(observedDataset())
       }else{
