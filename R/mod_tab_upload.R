@@ -164,11 +164,14 @@ mod_tab_upload_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    ## will be used in other modules inside conditionnal panels that should only be shown when the sbm has been run
+    # reset when loading a new matrix
     output$sbmRan = renderText({
       if (session$userData$vars$sbm$runSbm != 0){"YES"}else{"NO"}
     })
     outputOptions(output, 'sbmRan', suspendWhenHidden = FALSE)
 
+    ## Settings reactive labels for plots (nature of stuff in cols and rows)
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
       labels_sets <- switch(input$networkType,
         "bipartite" = list(row = input$rowLabel, col = input$colLabel),
@@ -180,6 +183,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
     })
 
+    ## Selected data path or name of exemples one
     datasetSelected <- eventReactive(c(input$whichData, input$dataBase, input$mainDataFile$datapath), {
       if (input$whichData == "importData") {
         input$mainDataFile$datapath
@@ -188,6 +192,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+    # reactive separator for reading
     sep <- reactive({
       if (input$whichSep == "others") {
         if (input$whichSep_other == "") {
@@ -200,6 +205,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+    # reactive network adjacency matrix ("sbmMatrix" Class)
     datasetUploaded <- eventReactive(input$mainDataUploader, {
       validate(
         need(datasetSelected(), "Please select a data set")
@@ -226,6 +232,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       dataset
     })
 
+    #  update buttons when upload a new sbmMatrix
     observeEvent(datasetUploaded(), {
       updateRadioButtons(session, "networkType",
         "What kind of network it is ?",
@@ -251,15 +258,18 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         choices = list("Raw Network" = "raw")
       )
       updateActionButton(parent_session, "tab_sbm_1-runSbm")
+      # global variable reset the runsbm variable to 0
       session$userData$vars$sbm$runSbm <- 0
     })
 
+    # Set new network type on the current dataset but it remain the old uploaded one
     workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
       data <- datasetUploaded()
       data$type <- input$networkType
       data
     })
 
+    # Needed to show warnings and errors messages avoiding program to stop
     observedDataset <- eventReactive(r$sbm$Dataset(), {
       if (is.null(r$sbm$Dataset())) {
         return(workingDataset())
@@ -270,7 +280,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     mod_importation_error_server("error_1", observedDataset)
 
-
+    # show simportation summary
     output$summaryDataImport <- renderPrint({
       print(observedDataset())
     })
