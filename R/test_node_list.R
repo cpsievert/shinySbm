@@ -1,9 +1,9 @@
 # library(tidyverse)
-# my_list <- read.table(file = "../../../test nodes list/UNAMED_numerical_oriented_unipartite.csv",header = F,sep =",")
-# my_list2 <- read.table(file = "../../../test nodes list/numerical_oriented_unipartite.csv",header = T,sep =",")
-# my_list3 <- read.table(file = "../../../test nodes list/oriented_unipartite.csv",header = T,sep =",")
+my_list <- read.table(file = "../../../test nodes list/UNAMED_numerical_oriented_unipartite.csv",header = F,sep =",")
+my_list2 <- read.table(file = "../../../test nodes list/numerical_oriented_unipartite.csv",header = T,sep =",")
+my_list3 <- read.table(file = "../../../test nodes list/oriented_unipartite.csv",header = T,sep =",")
 
-matrix_builder <- function(my_list, type = c('unipartite',"bipartite"), oriented = T){
+edges_to_adjacency <- function(my_list, type = c('unipartite',"bipartite"), oriented = T){
   ## Rename columns of the pair of node list by 'from', 'to' and 'value' (if needed)
   if(dim(my_list)[2] == 2){
     names(my_list) <- c('from',"to")
@@ -45,8 +45,10 @@ matrix_builder <- function(my_list, type = c('unipartite',"bipartite"), oriented
   return(as.data.frame(mat))
 }
 
-
-# matrix_builder(my_list2,type = "unipartite",oriented = F)
+test <- my_list3
+edges_to_adjacency(test,type = "unipartite",oriented = F)
+edges_to_adjacency(test,type = "unipartite",oriented = T)
+edges_to_adjacency(test,type = "bipartite")
 
 
 # Good for bipartite network
