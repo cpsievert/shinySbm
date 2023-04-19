@@ -148,11 +148,14 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Importation Details", solidHeader = T,
         status = "info", width = 12,
-        column(6,
+        column(7,
+               strong("Summary:"),
                mod_importation_error_ui(ns("error_1")),
                verbatimTextOutput(ns("summaryDataImport"))
                ),
-        column(6,verbatimTextOutput(ns("sbmCode")))
+        column(5,
+               strong("Importation Code:"),
+               verbatimTextOutput(ns("uploadCode")))
       )
     )
   )
@@ -303,12 +306,40 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       last_updated_data$v <- 2
     })
     output$summaryDataImport <- renderPrint({
+      validate(
+        need(datasetSelected(), "Please select a Data Set")
+      )
       if(!is.null(last_updated_data$v)){
         if(last_updated_data$v == 1){
-          show_table(datasetSelected(),str_len=13,tbl_wid = 8)
+          show_table(datasetSelected(),str_len=10,tbl_wid = 9)
         }else{
           print(datasetUploaded())
         }
+      }
+    })
+
+    output$uploadCode <- renderPrint({
+      if (input$whichData == "importData") {
+        validate(
+          need(input$mainDataFile$name, "")
+        )
+        if (input$headerrow) {
+          headerrow <- ', row.names = 1'
+        } else {
+          headerrow <- ''
+        }
+        cat("myNetworkMatrix <- read.table(file = '",
+            input$mainDataFile$name,
+            "', sep = '",sep(), "', header = ",input$headercol,headerrow,")",sep = '')
+      } else {
+        validate(
+          need(input$dataBase, "")
+        )
+        data_path <- switch(input$dataBase,
+                       "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
+                       "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
+        )
+        cat("myNetworkMatrix <- ",data_path,sep = '')
       }
     })
 
