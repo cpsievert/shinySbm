@@ -13,7 +13,7 @@
 #'
 #' @noRd
 show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8){
-  table <- data
+  table <- as.matrix(data)
   cols <- colnames(data)
   rows <- rownames(data)
   colnames(table) <- ifelse(stringr::str_length(cols) > str_len,
@@ -112,6 +112,7 @@ edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), ori
     names(my_list) <- c("from", "to", "value")
   } else {
     message("my_list should be a data.frame of 2 or 3 columns")
+    return()
   }
 
   ## According to the type of network while define differently the nodes names

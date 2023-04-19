@@ -28,15 +28,15 @@ mod_tab_upload_ui <- function(id) {
               "Adjacency or Incidence Matrix" = "matrix",
               "List of pair of nodes" = "list"
             ),
-            inline = T, selected = "matrix"
+            inline = T, selected = character(0)
           )
         ),
         conditionalPanel(
           condition = "input.whichData == 'sbmData'", ns = ns,
           radioButtons(ns("dataBase"), "Which network ?",
             choices = list(
-              "Fungus & Trees" = "fungus_tree",
-              "Trees & Trees" = "tree_tree"
+              "Bipartite : Fungus & Trees" = "fungus_tree",
+              "Unipartite : Trees & Trees" = "tree_tree"
             ),
             selected = character(0)
           )
@@ -72,35 +72,29 @@ mod_tab_upload_ui <- function(id) {
             multiple = F,
             accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
           ),
-          hr()
-        ),
-        radioButtons(ns("networkType"),
+          hr(),
+          radioButtons(ns("networkType"),
                        "What kind of network it is ?",
                        choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
                        inline = T,
                        selected = 'bipartite'
-                     ),
-        conditionalPanel(
-          condition = "input.whichData == 'importData'", ns = ns,
+          ),
           conditionalPanel(
-            condition = "input.dataType == 'list'", ns = ns,
+            condition = "input.dataType == 'list' & input.networkType == 'unipartite'", ns = ns,
             radioButtons(ns("orientation"), "Are connections oriented ?",
-              choices = list(
-                "Yes" = T,
-                "No" = F
-              ),
-              inline = TRUE,
-              selected = F
+                         choices = list(
+                           "Yes" = T,
+                           "No" = F
+                         ),
+                         inline = TRUE,
+                         selected = F
             )
           )
         ),
         hr(),
-        conditionalPanel(
-          condition = "input.mainDataFile != NULL", ns = ns,
-          div(
-            style = "display:inline-block; float:right",
-            actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
-          )
+        div(
+          style = "display:inline-block; float:right",
+          actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
         )
       ),
       conditionalPanel(
@@ -135,13 +129,10 @@ mod_tab_upload_ui <- function(id) {
           textInput(ns("rowLabel"),
             label = "Specify what are the nodes in row",
             value = NULL
-          )
-        ),
-        conditionalPanel(
-          condition = "input.networkType == 'bipartite'", ns = ns,
+          ),
           textInput(ns("colLabel"),
-            label = "Specify what are for nodes in col",
-            value = NULL
+                    label = "Specify what are for nodes in col",
+                    value = NULL
           )
         ),
         conditionalPanel(
@@ -261,26 +252,30 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       validate(
         need(datasetSelected(), "Please select a data set")
       )
-      if (input$dataType == "matrix") {
+      if(input$whichData == 'sbmData'){
         sbmMat <- buildSbmMatrix(datasetSelected())
-      } else {
-        Mat <- edges_to_adjacency(datasetSelected(),
-                                  type = input$networkType,
-                                  oriented = as.logical(input$orientation)
-                                  )
-        sbmMat <- buildSbmMatrix(Mat)
+      }else{
+        if (input$dataType == "matrix") {
+          sbmMat <- buildSbmMatrix(datasetSelected())
+        } else {
+          Mat <- edges_to_adjacency(datasetSelected(),
+                                    type = input$networkType,
+                                    oriented = as.logical(input$orientation)
+          )
+          sbmMat <- buildSbmMatrix(Mat)
+        }
+        sbmMat
       }
-      sbmMat
     })
 
     #  update buttons when upload a new sbmMatrix
     observeEvent(datasetUploaded(), {
-      updateRadioButtons(session, "networkType",
-        "What kind of network it is ?",
-        choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
-        inline = T,
-        selected = datasetUploaded()$type
-      )
+      # updateRadioButtons(session, "networkType",
+      #   "What kind of network it is ?",
+      #   choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
+      #   inline = T,
+      #   selected = datasetUploaded()$type
+      # )
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
         label = "What is the density expected upon dataset ?",
         choices = list(
@@ -304,11 +299,11 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # Set new network type on the current dataset but it remain the old uploaded one
-    workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
-      data <- datasetUploaded()
-      data$type <- input$networkType
-      data
-    })
+    # workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
+    #   data <- datasetUploaded()
+    #   data$type <- input$networkType
+    #   data
+    # })
 
     # Get the changes from Sbm page (allow the warnings to transmit when user change the law upon values)
     # observedDataset <- eventReactive(r$sbm$Dataset(), {
@@ -319,7 +314,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     #   }
     # })
 
-    mod_importation_error_server("error_1", workingDataset())
+    mod_importation_error_server("error_1", datasetUploaded)
 
     output$ok <- renderPrint({
       show_table(datasetSelected())
@@ -328,12 +323,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     # show simportation summary
     output$summaryDataImport <- renderPrint({
-        print(workingDataset())
+        print(datasetUploaded())
     })
 
     return(list(
       labels = labels,
-      Dataset = workingDataset,
+      Dataset = datasetUploaded,
       networkType = reactive({
         input$networkType
       })
