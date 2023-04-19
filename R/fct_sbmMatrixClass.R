@@ -3,16 +3,17 @@
 #'
 #' @description print table correctly even with long names
 #'
-#' @param data,str_len=10,-=25,tbl_wid=8
+#' @param data,str_len=10,tbl_len=25,tbl_wid=8,show_dim=T
 #' `data` table
 #' `str_len` max names length
-#' `str_len` max table length
+#' `tbl_len` max table length
 #' `tbl_wid` max table width
+#' `show_dim` whether or not to show the dimention of table
 #'
 #' @return fit better in the verbatim plot
 #'
 #' @noRd
-show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8){
+show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8, show_dim = T){
   table <- as.matrix(data)
   cols <- colnames(data)
   rows <- rownames(data)
@@ -28,7 +29,9 @@ show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8){
   if(dim(data)[2]>tbl_wid){
     table <- table[,1:tbl_wid]
   }
-  cat("Data dimension :",dim(data)[1],'rows x',dim(data)[2],'columns\n\n')
+  if(show_dim){
+    cat("Data dimension :",dim(data)[1],'rows x',dim(data)[2],'columns\n\n')
+  }
   print(table)
 }
 
@@ -448,21 +451,6 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
 #' @noRd
 print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F, ...) {
   dimbase <- dim(x)
-  if (resume_table) {
-    if (dimbase[1] > 10) {
-      index_row <- 1:10
-    } else {
-      index_row <- 1:dimbase[1]
-    }
-    if (dimbase[2] > 5) {
-      index_col <- 1:5
-    } else {
-      index_col <- 1:dimbase[2]
-    }
-  } else {
-    index_row <- 1:dimbase[1]
-    index_col <- 1:dimbase[2]
-  }
   if (!is.sbmMatrix(x)) {
     warning("x object got the sbmMatrix class but got a wrong format.")
     print.default(x)
@@ -496,7 +484,11 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
     }
     if (show_matrix) {
       cat("\n")
-      print(x$matrix[index_row, index_col])
+      if(resume_table){
+        show_table(x$matrix, show_dim = F)
+      }else{
+        print(x$matrix)
+      }
     }
     if (is.null(x$covar)) {
       cat("\nThere is no covariables.\n\n")
@@ -508,7 +500,11 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
         cat("\n\n")
         for (i in 1:length(x$covar)) {
           print(names(x$covar)[i])
-          print(x$covar[[i]][index_row, index_col])
+          if(resume_table){
+            show_table(x$covar[[i]], show_dim = F)
+          }else{
+            print(x$covar[[i]])
+          }
           cat("\n")
         }
       }

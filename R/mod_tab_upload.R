@@ -117,8 +117,8 @@ mod_tab_upload_ui <- function(id) {
               value = NULL
             )
           ),
-          checkboxInput(ns("headercol"), "1st row is Columns names", value = T),
-          checkboxInput(ns("headerrow"), "1st column is Rows names", value = T)
+          checkboxInput(ns("headercol"), "1st row is Column names", value = T),
+          checkboxInput(ns("headerrow"), "1st column is Row names", value = F)
         )
       ),
       shinydashboard::box(
@@ -149,7 +149,6 @@ mod_tab_upload_ui <- function(id) {
         title = "Importation Details", solidHeader = T,
         status = "info", width = 12,
         mod_importation_error_ui(ns("error_1")),
-        verbatimTextOutput(ns("ok")),
         verbatimTextOutput(ns("summaryDataImport"))
       )
     )
@@ -188,14 +187,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
     })
 
-    observeEvent(input$dataType, {
-      if (input$dataType == "matrix") {
-        updateCheckboxInput(session, "headerrow", value = T)
-      } else {
-        updateCheckboxInput(session, "headerrow", value = F)
-      }
-    })
-
     # reactive separator for reading
     sep <- reactive({
       if (input$whichSep == "others") {
@@ -221,7 +212,8 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         validate(
           need(input$mainDataFile$datapath, "Please select a data set")
         )
-        if (input$headerrow) {
+        try_data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol)
+        if (!any(duplicated(try_data[[1]])) & input$headerrow) {
           data <- read.table(
             file = input$mainDataFile$datapath, sep = sep(),
             row.names = 1, header = input$headercol
@@ -270,12 +262,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     #  update buttons when upload a new sbmMatrix
     observeEvent(datasetUploaded(), {
-      # updateRadioButtons(session, "networkType",
-      #   "What kind of network it is ?",
-      #   choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
-      #   inline = T,
-      #   selected = datasetUploaded()$type
-      # )
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
         label = "What is the density expected upon dataset ?",
         choices = list(
@@ -298,32 +284,29 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       session$userData$vars$sbm$runSbm <- 0
     })
 
-    # Set new network type on the current dataset but it remain the old uploaded one
-    # workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
-    #   data <- datasetUploaded()
-    #   data$type <- input$networkType
-    #   data
-    # })
-
-    # Get the changes from Sbm page (allow the warnings to transmit when user change the law upon values)
-    # observedDataset <- eventReactive(r$sbm$Dataset(), {
-    #   if (is.null(r$sbm$Dataset())) {
-    #     return(workingDataset())
-    #   } else {
-    #     return(r$sbm$Dataset())
-    #   }
-    # })
 
     mod_importation_error_server("error_1", datasetUploaded)
 
-    output$ok <- renderPrint({
-      show_table(datasetSelected())
-    })
 
 
     # show simportation summary
+    last_updated_data <- reactiveValues( v = NULL)
+    observe ({
+      datasetSelected()
+      last_updated_data$v <- 1
+    })
+    observe ({
+      datasetUploaded()
+      last_updated_data$v <- 2
+    })
     output$summaryDataImport <- renderPrint({
-        print(datasetUploaded())
+      if(!is.null(last_updated_data$v)){
+        if(last_updated_data$v == 1){
+          show_table(datasetSelected(),str_len=13,tbl_wid = 8)
+        }else{
+          print(datasetUploaded())
+        }
+      }
     })
 
     return(list(
