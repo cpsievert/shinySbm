@@ -17,7 +17,7 @@ mod_tab_upload_ui <- function(id) {
         radioButtons(ns("whichData"), "Which data do you want to use ?",
           choices = list(
             "My own data" = "importData",
-            "SBM exemple" = "sbmData"
+            "SBM exemples" = "sbmData"
           ),
           inline = T, selected = "importData"
         ),
@@ -77,14 +77,14 @@ mod_tab_upload_ui <- function(id) {
               " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
               " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
             )
-          ),
-          hr(),
-          conditionalPanel(
-            condition = "input.mainDataFile != NULL", ns = ns,
-            div(
-              style = "display:inline-block; float:right",
-              actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
-            )
+          )
+        ),
+        hr(),
+        conditionalPanel(
+          condition = "input.mainDataFile != NULL", ns = ns,
+          div(
+            style = "display:inline-block; float:right",
+            actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
           )
         )
       ),
@@ -232,68 +232,34 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           need(input$dataBase, "Please select a data set")
         )
         data <- switch(input$dataBase,
-          "fungus_tree" = {
-            mat <- sbm::fungusTreeNetwork$fungus_tree
-            colnames(mat) <- sbm::fungusTreeNetwork$tree_names
-            rownames(mat) <- sbm::fungusTreeNetwork$fungus_names
-            mat
-          },
-          "tree_tree" = {
-            mat <- sbm::fungusTreeNetwork$tree_tree
-            colnames(mat) <- sbm::fungusTreeNetwork$tree_names
-            rownames(mat) <- sbm::fungusTreeNetwork$tree_names
-            mat
-          }
-        )
+          "fungus_tree" = sbm::fungusTreeNetwork$fungus_tree %>%
+            `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
+            `rownames<-`(sbm::fungusTreeNetwork$fungus_names),
+          "tree_tree" = sbm::fungusTreeNetwork$tree_tree %>%
+            `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
+            `rownames<-`(sbm::fungusTreeNetwork$tree_names)
+        ) %>% as.data.frame
       }
       return(data)
     })
 
 
-    listUploaded <- eventReactive(input$listUploader, {
-      validate(
-        need(datasetSelected(), "Please select a data set")
-      )
-      if (input$headerrow) {
-        x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
-      } else {
-        x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
-      }
-      x
-    })
 
     # reactive network adjacency matrix ("sbmMatrix" Class)
-    datasetUploaded <- eventReactive(c(input$mainDataUploader, input$matrixBuilder, input$networkType), {
+    datasetUploaded <- eventReactive(input$matrixBuilder, {
       validate(
         need(datasetSelected(), "Please select a data set")
       )
-      if (input$whichData == "importData") {
-        if (input$dataType == "matrix") {
-          if (input$headerrow) {
-            x <- read.table(file = datasetSelected(), sep = sep(), row.names = 1, header = input$headercol)
-          } else {
-            x <- read.table(file = datasetSelected(), sep = sep(), header = input$headercol)
-          }
-          dataset <- buildSbmMatrix(x)
-        } else {
-          dataset <- buildSbmMatrix(edges_to_adjacency(listUploaded(),
-            type = input$networkType,
-            oriented = as.logical(input$orientation)
-          ))
-        }
+      if (input$dataType == "matrix") {
+        sbmMat <- buildSbmMatrix(datasetSelected())
       } else {
-        dataset <- switch(datasetSelected(),
-          "fungus_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$fungus_tree,
-            col_names = sbm::fungusTreeNetwork$tree_names,
-            row_names = sbm::fungusTreeNetwork$fungus_names
-          ),
-          "tree_tree" = buildSbmMatrix(sbm::fungusTreeNetwork$tree_tree,
-            col_names = sbm::fungusTreeNetwork$tree_names,
-            row_names = sbm::fungusTreeNetwork$tree_names
-          )
-        )
+        Mat <- edges_to_adjacency(datasetSelected(),
+                                  type = input$networkType,
+                                  oriented = as.logical(input$orientation)
+                                  )
+        sbmMat <- buildSbmMatrix(Mat)
       }
-      dataset
+      sbmMat
     })
 
     #  update buttons when upload a new sbmMatrix
@@ -327,16 +293,16 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # Set new network type on the current dataset but it remain the old uploaded one
-    # workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
-    #   data <- datasetUploaded()
-    #   data$type <- input$networkType
-    #   data
-    # })
+    workingDataset <- eventReactive(c(datasetUploaded(), input$networkType), {
+      data <- datasetUploaded()
+      data$type <- input$networkType
+      data
+    })
 
     # Get the changes from Sbm page (allow the warnings to transmit when user change the law upon values)
     observedDataset <- eventReactive(r$sbm$Dataset(), {
       if (is.null(r$sbm$Dataset())) {
-        return(datasetUploaded())
+        return(workingDataset())
       } else {
         return(r$sbm$Dataset())
       }
@@ -345,22 +311,19 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     mod_importation_error_server("error_1", observedDataset)
 
     output$ok <- renderPrint({
-      show_table(datasetSelected())
+      print(datasetSelected())
+      # show_table(datasetSelected())
     })
 
 
     # show simportation summary
     output$summaryDataImport <- renderPrint({
-      if (input$dataType == "matrix") {
         print(observedDataset())
-      } else {
-        print(listUploaded())
-      }
     })
 
     return(list(
       labels = labels,
-      Dataset = datasetUploaded,
+      Dataset = workingDataset,
       networkType = reactive({
         input$networkType
       })
