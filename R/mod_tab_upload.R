@@ -148,8 +148,11 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Importation Details", solidHeader = T,
         status = "info", width = 12,
-        mod_importation_error_ui(ns("error_1")),
-        verbatimTextOutput(ns("summaryDataImport"))
+        column(6,
+               mod_importation_error_ui(ns("error_1")),
+               verbatimTextOutput(ns("summaryDataImport"))
+               ),
+        column(6,verbatimTextOutput(ns("sbmCode")))
       )
     )
   )
