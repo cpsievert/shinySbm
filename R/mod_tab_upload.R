@@ -28,7 +28,7 @@ mod_tab_upload_ui <- function(id) {
               "Adjacency or Incidence Matrix" = "matrix",
               "List of pair of nodes" = "list"
             ),
-            inline = T, selected = character(0)
+            inline = T, selected = "matrix"
           )
         ),
         conditionalPanel(
@@ -217,7 +217,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     ), {
       if (input$whichData == "importData") {
         validate(
-          need(input$mainDataFile$datapath, "Please select a data set")
+          need(input$mainDataFile$datapath, "")
         )
         try_data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol)
         if (!any(duplicated(try_data[[1]])) & input$headerrow) {
@@ -230,7 +230,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         }
       } else {
         validate(
-          need(input$dataBase, "Please select a data set")
+          need(input$dataBase, "")
         )
         data <- switch(input$dataBase,
           "fungus_tree" = sbm::fungusTreeNetwork$fungus_tree %>%

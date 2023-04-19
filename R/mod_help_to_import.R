@@ -19,10 +19,46 @@ mod_help_to_import_ui <- function(id){
 #' help_to_import Server Functions
 #'
 #' @noRd
-mod_help_to_import_server <- function(id, rawData = NULL, input_upload = NULL){
+mod_help_to_import_server <- function(id, rawData, input_upload){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    my_check <- function(dta = NULL, inputs = NULL){
+      if(dim(dta)[2]<=1){
+        warning("Low numbers of columns : Try to change separator")
+      }
+    }
+
+
+
+
+    warn_list <- reactiveValues(messages = list(),
+                           warnings = list())
+
+    observe({
+      warns <- list()
+      mess <- list()
+      withCallingHandlers(my_check(dta = rawData(), inputs = input_upload),
+                          warning = function(w) {
+                            warns <<- c(warns, list(w))
+                          },
+                          message = function(m) {
+                            mess <<- c(mess, list(m))
+                          }
+      )
+      warn_list$messages <- sapply(mess, function(mess) mess$message)
+      warn_list$warnings <- sapply(warns, function(warn) warn$message)
+    })
+
+
+
+
+    output$messageDataImport <- renderPrint({
+      print_messages(messages = warn_list$messages)
+    })
+    output$warningDataImport <- renderPrint({
+      print_messages(warnings = warn_list$warnings)
+    })
   })
 }
 
