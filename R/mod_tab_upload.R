@@ -43,13 +43,7 @@ mod_tab_upload_ui <- function(id) {
         ),
         conditionalPanel(
           condition = "input.whichData == 'importData'", ns = ns,
-          fileInput(ns("mainDataFile"),
-            label = "Choose the file containing your data",
-            buttonLabel = "Browse...",
-            placeholder = "No file selected",
-            multiple = F,
-            accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
-          ),
+          hr(),
           conditionalPanel(
             condition = "input.dataType == 'matrix'", ns = ns,
             tags$div(
@@ -63,6 +57,33 @@ mod_tab_upload_ui <- function(id) {
           ),
           conditionalPanel(
             condition = "input.dataType == 'list'", ns = ns,
+            tags$div(
+              tags$strong("Information :"), tags$br(),
+              " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
+              " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
+              " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
+            )
+          ),
+          br(),
+          fileInput(ns("mainDataFile"),
+            label = "Choose the file containing your data",
+            buttonLabel = "Browse...",
+            placeholder = "No file selected",
+            multiple = F,
+            accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
+          ),
+          hr()
+        ),
+        radioButtons(ns("networkType"),
+                       "What kind of network it is ?",
+                       choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
+                       inline = T,
+                       selected = 'bipartite'
+                     ),
+        conditionalPanel(
+          condition = "input.whichData == 'importData'", ns = ns,
+          conditionalPanel(
+            condition = "input.dataType == 'list'", ns = ns,
             radioButtons(ns("orientation"), "Are connections oriented ?",
               choices = list(
                 "Yes" = T,
@@ -70,12 +91,6 @@ mod_tab_upload_ui <- function(id) {
               ),
               inline = TRUE,
               selected = F
-            ),
-            tags$div(
-              tags$strong("Information :"), tags$br(),
-              " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
-              " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
-              " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
             )
           )
         ),
@@ -115,10 +130,6 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Network Setup", solidHeader = T,
         status = "info", width = 5,
-        radioButtons(ns("networkType"), "What kind of network it is ?",
-          choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
-          inline = T
-        ),
         conditionalPanel(
           condition = "input.networkType == 'bipartite'", ns = ns,
           textInput(ns("rowLabel"),
@@ -300,25 +311,24 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # Get the changes from Sbm page (allow the warnings to transmit when user change the law upon values)
-    observedDataset <- eventReactive(r$sbm$Dataset(), {
-      if (is.null(r$sbm$Dataset())) {
-        return(workingDataset())
-      } else {
-        return(r$sbm$Dataset())
-      }
-    })
+    # observedDataset <- eventReactive(r$sbm$Dataset(), {
+    #   if (is.null(r$sbm$Dataset())) {
+    #     return(workingDataset())
+    #   } else {
+    #     return(r$sbm$Dataset())
+    #   }
+    # })
 
-    mod_importation_error_server("error_1", observedDataset)
+    mod_importation_error_server("error_1", workingDataset())
 
     output$ok <- renderPrint({
-      print(datasetSelected())
-      # show_table(datasetSelected())
+      show_table(datasetSelected())
     })
 
 
     # show simportation summary
     output$summaryDataImport <- renderPrint({
-        print(observedDataset())
+        print(workingDataset())
     })
 
     return(list(
