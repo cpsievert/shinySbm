@@ -150,6 +150,7 @@ mod_tab_upload_ui <- function(id) {
         status = "info", width = 12,
         column(7,
                strong("Summary:"),
+               mod_help_to_import_ui(ns("help_to_import_1")),
                mod_importation_error_ui(ns("error_1")),
                verbatimTextOutput(ns("summaryDataImport"))
                ),
@@ -290,8 +291,27 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       session$userData$vars$sbm$runSbm <- 0
     })
 
+    ## For mod importation error to get parameters
+    inputs <- reactiveValues(
+      dataType = NULL,
+      headerrow = NULL,
+      orientation = NULL,
+      networkType = NULL
+    )
+    observe({
+      inputs$dataType <- input$dataType
+      inputs$headerrow <- input$headerrow
+      inputs$orientation <- input$orientation
+      inputs$networkType <- input$networkType
+    })
 
-    mod_importation_error_server("error_1", datasetUploaded)
+
+    mod_help_to_import_server("help_to_import_1",
+                              rawData = datasetSelected,
+                              input_upload = inputs)
+
+
+    mod_importation_error_server("error_1",datasetUploaded)
 
 
 
@@ -311,7 +331,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
       if(!is.null(last_updated_data$v)){
         if(last_updated_data$v == 1){
-          show_table(datasetSelected(),str_len=10,tbl_wid = 9)
+          show_table(datasetSelected(),str_len=10,tbl_wid = 9,drop = input$dataType == "matrix")
         }else{
           print(datasetUploaded())
         }

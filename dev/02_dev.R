@@ -165,6 +165,7 @@ golem::add_module(name = "importation_error", with_test = TRUE)
 golem::add_module(name = "select_nb_groups", with_test = TRUE)
 golem::add_module(name = "select_net_type", with_test = TRUE)
 golem::add_module(name = "show_group_names", with_test = TRUE)
+golem::add_module(name = "help_to_import", with_test = TRUE)
 
 ## USED functions
 golem::add_fct( "sbmMatrixClass" )

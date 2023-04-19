@@ -3,18 +3,23 @@
 #'
 #' @description print table correctly even with long names
 #'
-#' @param data,str_len=10,tbl_len=25,tbl_wid=8,show_dim=T
+#' @param data,str_len=10,tbl_len=25,tbl_wid=8,show_dim=T,drop=T
 #' `data` table
 #' `str_len` max names length
 #' `tbl_len` max table length
 #' `tbl_wid` max table width
-#' `show_dim` whether or not to show the dimention of table
+#' `show_dim` whether or not to show the dimension of table
+#' `drop` print the data as a matrix or a data frame can avoid names problems
 #'
 #' @return fit better in the verbatim plot
 #'
 #' @noRd
-show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8, show_dim = T){
-  table <- as.matrix(data)
+show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8, show_dim = T,drop = T){
+  if(drop){
+    table <- as.matrix(data)
+  }else{
+    table <- data
+  }
   cols <- colnames(data)
   rows <- rownames(data)
   colnames(table) <- ifelse(stringr::str_length(cols) > str_len,
