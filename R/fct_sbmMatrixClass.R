@@ -370,7 +370,9 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
   dimbase <- dim(x)
   if (!is.sbmMatrix(x)) {
     warning("x object got the sbmMatrix class but got a wrong format.")
-    print.default(x)
+
+    cat("==========================\n SBM MATRIX ISN'T BUILT :  \n==========================\n\n")
+    cat("Try to change the input matrix, it seems that the format is not correct")
   } else {
     network_desc1 <- paste0("Adjacency matrix of a", ifelse(x$type == "unipartite", "n ", " "), x$type, " network.")
 
@@ -392,7 +394,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
       network_desc4 <- paste0("\nThe network has ", dimbase[1], " row nodes & ", dimbase[2], " column nodes.\n")
     }
 
-    cat("==========================\n SBM MATRIX INFORMATION :  \n==========================\n\n")
+    cat("=============================\n SBM MATRIX HAS BEEN BUILT :  \n=============================\n\n")
     cat(network_desc1, network_desc2, network_desc3, network_desc4)
 
     if (identical(x$nodes_names$col, character(0)) &
