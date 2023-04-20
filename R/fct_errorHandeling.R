@@ -1,5 +1,5 @@
 
-#' my_check
+#' check_data_inputs
 #'
 #' @description Check the raw data.frame according to inputs
 #'
@@ -17,7 +17,7 @@
 #' and warnings with indication to get a better results
 #'
 #' @noRd
-my_check <- function(dta = NULL, inputs = NULL){
+check_data_inputs <- function(dta = NULL, inputs = NULL){
   ## Check for all cases
   if(dim(dta)[2]<=1){
     warning("Low number of columns : Try to change separator")
