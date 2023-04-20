@@ -61,6 +61,27 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
 }
 
 
+#' check_sbm_inputs
+#'
+#' @description Check the raw data.frame according to inputs
+#'
+#' @param sbmData=NULL,inputs=NULL
+#' `sbmData` data.frame
+#' `inputs` list of inputs from upload table :
+#' - `input$whichData`
+#' - `input$dataType`
+#' - `input$headerrow`
+#' - `input$headercol`
+#' - `input$orientation`
+#' - `input$networkType`
+#'
+#' @return Based on those inputs and the data.frame, it give proper messages
+#' and warnings with indication to get a better results
+#'
+#' @noRd
+check_sbm_inputs <- function(sbmData = NULL, inputs = NULL) {
+  is.sbmMatrix(sbmData, warnings = T)
+}
 
 
 
