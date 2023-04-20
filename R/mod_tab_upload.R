@@ -357,7 +357,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
       if (!is.null(last_updated_data$v)) {
         if (last_updated_data$v == 1) {
-          show_table(datasetSelected(), str_len = 10, tbl_wid = 9)
+          show_table(datasetSelected())
         } else {
           print(datasetUploaded())
         }

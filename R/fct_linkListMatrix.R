@@ -18,8 +18,8 @@ edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), ori
   } else if (dim(my_list)[2] == 3) {
     names(my_list) <- c("from", "to", "value")
   } else {
-    message("my_list should be a data.frame of 2 or 3 columns")
-    return()
+    warning("my_list should be a data.frame of 2 or 3 columns")
+    return(my_list)
   }
 
   ## According to the type of network while define differently the nodes names
