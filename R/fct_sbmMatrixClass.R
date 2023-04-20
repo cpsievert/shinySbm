@@ -9,25 +9,28 @@
 #' `tbl_len` max table length
 #' `tbl_wid` max table width
 #' `show_dim` whether or not to show the dimension of table
-#' `drop` print the data as a matrix or a data frame can avoid names problems
 #'
 #' @return fit better in the verbatim plot
 #'
 #' @noRd
-show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8, show_dim = T,drop = T){
-  if(drop){
+show_table <- function(data, str_len = 10, tbl_len = 25, tbl_wid = 8, show_dim = T){
+  cols <- colnames(data)
+  rows <- rownames(data)
+  short_cols <- ifelse(stringr::str_length(cols) > str_len,
+                       paste0(substr(cols, 1, str_len-3),'...'),
+                       cols)
+  short_rows <- ifelse(stringr::str_length(rows) > str_len,
+                       paste0(substr(rows, 1, str_len-3),'...'),
+                       rows)
+  if(any(duplicated(short_rows))){
     table <- as.matrix(data)
   }else{
     table <- data
   }
-  cols <- colnames(data)
-  rows <- rownames(data)
-  colnames(table) <- ifelse(stringr::str_length(cols) > str_len,
-                            paste0(substr(cols, 1, str_len-3),'...'),
-                            cols)
-  rownames(table) <- ifelse(stringr::str_length(rows) > str_len,
-                            paste0(substr(rows, 1, str_len-3),'...'),
-                            rows)
+
+  colnames(table) <- short_cols
+  rownames(table) <- short_rows
+
   if(dim(data)[1] > tbl_len){
     table <- table[1:tbl_len,]
   }

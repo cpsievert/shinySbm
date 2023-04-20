@@ -18,17 +18,19 @@ mod_importation_error_ui <- function(id) {
 #' importation_error Server Functions
 #'
 #' @noRd
-mod_importation_error_server <- function(id, dataset) {
+mod_importation_error_server <- function(id, dataset = NULL) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     output$warningDataImport <- renderPrint({
       warns <- list()
-      withCallingHandlers(is.sbmMatrix(dataset(), warnings = T),
-        warning = function(w) {
-          warns <<- c(warns, list(w))
-        }
-      )
+      if(!is.null(dataset)){
+        withCallingHandlers(is.sbmMatrix(dataset(), warnings = T),
+                            warning = function(w) {
+                              warns <<- c(warns, list(w))
+                            }
+        )
+      }
       warning_messages <- sapply(warns, function(warn) warn$message)
       print_messages(warnings = warning_messages)
     })

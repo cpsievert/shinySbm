@@ -26,7 +26,7 @@ mod_tab_upload_ui <- function(id) {
           radioButtons(ns("dataType"), "Select the nature of your Data",
             choices = list(
               "Adjacency or Incidence Matrix" = "matrix",
-              "List of pair of nodes" = "list"
+              "List of node pairs" = "list"
             ),
             inline = T, selected = "matrix"
           )
@@ -293,13 +293,17 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     ## For mod importation error to get parameters
     inputs <- reactiveValues(
+      whichData = NULL,
       dataType = NULL,
       headerrow = NULL,
+      headercol = NULL,
       orientation = NULL,
       networkType = NULL
     )
     observe({
+      inputs$whichData <- input$whichData
       inputs$dataType <- input$dataType
+      inputs$headercol <- input$headercol
       inputs$headerrow <- input$headerrow
       inputs$orientation <- input$orientation
       inputs$networkType <- input$networkType
@@ -311,18 +315,16 @@ mod_tab_upload_server <- function(id, r, parent_session) {
                               input_upload = inputs)
 
 
-    mod_importation_error_server("error_1",datasetUploaded)
-
-
-
     # show simportation summary
     last_updated_data <- reactiveValues( v = NULL)
     observe ({
       datasetSelected()
+      mod_importation_error_server("error_1")
       last_updated_data$v <- 1
     })
     observe ({
       datasetUploaded()
+      mod_importation_error_server("error_1",datasetUploaded)
       last_updated_data$v <- 2
     })
     output$summaryDataImport <- renderPrint({
@@ -331,7 +333,8 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
       if(!is.null(last_updated_data$v)){
         if(last_updated_data$v == 1){
-          show_table(datasetSelected(),str_len=10,tbl_wid = 9,drop = input$dataType == "matrix")
+          # do_drop <- input$dataType == "matrix" | input$whichData == "sbmData"
+          show_table(datasetSelected(),str_len=10,tbl_wid = 9)
         }else{
           print(datasetUploaded())
         }
