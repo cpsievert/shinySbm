@@ -35,7 +35,7 @@ mod_tab_sbm_ui <- function(id) {
         status = "info", width = 12,
         strong("SBM code:"),
         verbatimTextOutput(ns("sbmCode")),
-        mod_importation_error_ui(ns("error_2")),
+        mod_help_to_import_ui(ns("error_2")),
         hr(),
         strong("SBM summary:"),
         verbatimTextOutput(ns("sbmSummarySelect")),
@@ -88,7 +88,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       )
     })
 
-    mod_importation_error_server("error_2", Dataset)
+    mod_help_to_import_server("error_2", sbmData = Dataset)
 
     my_sbm_main <- eventReactive(input$runSbm, {
       session$userData$vars$sbm$runSbm <- input$runSbm

@@ -11,135 +11,150 @@ mod_tab_upload_ui <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
-      shinydashboard::box(
-        title = "Data Selector", solidHeader = T,
-        status = "info", width = 4,
-        radioButtons(ns("whichData"), "Which data do you want to use ?",
-          choices = list(
-            "My own data" = "importData",
-            "SBM exemples" = "sbmData"
-          ),
-          inline = T, selected = "importData"
-        ),
-        conditionalPanel(
-          condition = "input.whichData == 'importData'", ns = ns,
-          radioButtons(ns("dataType"), "Select the nature of your Data",
-            choices = list(
-              "Adjacency or Incidence Matrix" = "matrix",
-              "List of node pairs" = "list"
-            ),
-            inline = T, selected = "matrix"
-          )
-        ),
-        conditionalPanel(
-          condition = "input.whichData == 'sbmData'", ns = ns,
-          radioButtons(ns("dataBase"), "Which network ?",
-            choices = list(
-              "Bipartite : Fungus & Trees" = "fungus_tree",
-              "Unipartite : Trees & Trees" = "tree_tree"
-            ),
-            selected = character(0)
-          )
-        ),
-        conditionalPanel(
-          condition = "input.whichData == 'importData'", ns = ns,
-          hr(),
-          conditionalPanel(
-            condition = "input.dataType == 'matrix'", ns = ns,
-            tags$div(
-              tags$strong("Information :"), tags$br(),
-              " - It should be a ", tags$strong("adjacency or incidence"), " matrix", tags$br(),
-              " - ", tags$strong("Bipartite network :"), " nodes in rows and columns can be differents", tags$br(),
-              " - ", tags$strong("Unipartite network :"), " nodes in rows and columns are the same (order and names)", tags$br(),
-              " - The connection is the value between one node in row and one in column", tags$br(),
-              " - Values can be : 0/1, integers or decimals",
-            )
-          ),
-          conditionalPanel(
-            condition = "input.dataType == 'list'", ns = ns,
-            tags$div(
-              tags$strong("Information :"), tags$br(),
-              " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
-              " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
-              " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
-            )
-          ),
-          br(),
-          fileInput(ns("mainDataFile"),
-            label = "Choose the file containing your data",
-            buttonLabel = "Browse...",
-            placeholder = "No file selected",
-            multiple = F,
-            accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
-          ),
-          hr(),
-          radioButtons(ns("networkType"),
-            "What kind of network it is ?",
-            choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
-            inline = T,
-            selected = "bipartite"
-          ),
-          conditionalPanel(
-            condition = "input.dataType == 'list' & input.networkType == 'unipartite'", ns = ns,
-            radioButtons(ns("orientation"), "Are connections oriented ?",
-              choices = list(
-                "Yes" = T,
-                "No" = F
-              ),
-              inline = TRUE,
-              selected = F
-            )
-          )
-        ),
-        hr(),
-        div(
-          style = "display:inline-block; float:right",
-          actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
-        )
-      ),
-      conditionalPanel(
-        condition = "input.whichData == 'importData'", ns = ns,
+      column(
+        4,
         shinydashboard::box(
-          title = "Reading Parameters", solidHeader = T,
-          status = "info", width = 3,
-          radioButtons(ns("whichSep"), "What kind of separator should I use ?",
+          title = "Data Selector", solidHeader = T,
+          status = "info", width = 12,
+          radioButtons(ns("whichData"), "Which data do you want to use ?",
             choices = list(
-              "semicolon" = ";",
-              "tabulation" = "|",
-              "comma" = ",",
-              "others" = "others"
+              "My own data" = "importData",
+              "SBM exemples" = "sbmData"
+            ),
+            inline = T, selected = "importData"
+          ),
+          conditionalPanel(
+            condition = "input.whichData == 'importData'", ns = ns,
+            radioButtons(ns("dataType"), "Select the nature of your Data",
+              choices = list(
+                "Adjacency or Incidence Matrix" = "matrix",
+                "List of node pairs" = "list"
+              ),
+              inline = T, selected = "matrix"
             )
           ),
           conditionalPanel(
-            condition = "input.whichSep == 'others'", ns = ns,
-            textInput(ns("whichSep_other"),
-              label = "Write your sep character :",
-              value = NULL
+            condition = "input.whichData == 'sbmData'", ns = ns,
+            radioButtons(ns("dataBase"), "Which network ?",
+              choices = list(
+                "Bipartite : Fungus & Trees" = "fungus_tree",
+                "Unipartite : Trees & Trees" = "tree_tree"
+              ),
+              selected = character(0)
             )
           ),
-          checkboxInput(ns("headercol"), "1st row is Column names", value = T),
-          checkboxInput(ns("headerrow"), "1st column is Row names", value = F)
+          conditionalPanel(
+            condition = "input.whichData == 'importData'", ns = ns,
+            hr(),
+            conditionalPanel(
+              condition = "input.dataType == 'matrix'", ns = ns,
+              tags$div(
+                tags$strong("Information :"), tags$br(),
+                " - It should be a ", tags$strong("adjacency or incidence"), " matrix", tags$br(),
+                " - ", tags$strong("Bipartite network :"), " nodes in rows and columns can be differents", tags$br(),
+                " - ", tags$strong("Unipartite network :"), " nodes in rows and columns are the same (order and names)", tags$br(),
+                " - The connection is the value between one node in row and one in column", tags$br(),
+                " - Values can be : 0/1, integers or decimals",
+              )
+            ),
+            conditionalPanel(
+              condition = "input.dataType == 'list'", ns = ns,
+              tags$div(
+                tags$strong("Information :"), tags$br(),
+                " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
+                " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
+                " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
+              )
+            ),
+            br(),
+            fileInput(ns("mainDataFile"),
+              label = "Choose the file containing your data",
+              buttonLabel = "Browse...",
+              placeholder = "No file selected",
+              multiple = F,
+              accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
+            ),
+            hr(),
+            radioButtons(ns("networkType"),
+              "What kind of network it is ?",
+              choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
+              inline = T,
+              selected = "bipartite"
+            ),
+            conditionalPanel(
+              condition = "input.dataType == 'list' & input.networkType == 'unipartite'", ns = ns,
+              radioButtons(ns("orientation"), "Are connections oriented ?",
+                choices = list(
+                  "Yes" = T,
+                  "No" = F
+                ),
+                inline = TRUE,
+                selected = F
+              )
+            )
+          ),
+          hr(),
+          div(
+            style = "display:inline-block; float:right",
+            actionButton(ns("matrixBuilder"), label = strong("Matrix Builder"))
+          )
         )
       ),
-      shinydashboard::box(
-        title = "Network Setup", solidHeader = T,
-        status = "info", width = 5,
-        conditionalPanel(
-          condition = "input.networkType == 'bipartite'", ns = ns,
-          textInput(ns("rowLabel"),
-            label = "Specify what are the nodes in row",
-            value = NULL
+      column(
+        8,
+        fluidRow(
+          conditionalPanel(
+            condition = "input.whichData == 'importData'", ns = ns,
+            shinydashboard::box(
+              title = "Reading Parameters", solidHeader = T,
+              status = "info", width = 4,
+              radioButtons(ns("whichSep"), "What kind of separator should I use ?",
+                choices = list(
+                  "semicolon" = ";",
+                  "tabulation" = "|",
+                  "comma" = ",",
+                  "others" = "others"
+                )
+              ),
+              conditionalPanel(
+                condition = "input.whichSep == 'others'", ns = ns,
+                textInput(ns("whichSep_other"),
+                  label = "Write your sep character :",
+                  value = NULL
+                )
+              ),
+              checkboxInput(ns("headercol"), "1st row is Column names", value = T),
+              checkboxInput(ns("headerrow"), "1st column is Row names", value = F)
+            )
           ),
-          textInput(ns("colLabel"),
-            label = "Specify what are for nodes in col",
-            value = NULL
+          shinydashboard::box(
+            title = "Network Setup", solidHeader = T,
+            status = "info", width = 8,
+            conditionalPanel(
+              condition = "input.networkType == 'bipartite'", ns = ns,
+              textInput(ns("rowLabel"),
+                label = "Specify what are the nodes in row",
+                value = NULL
+              ),
+              textInput(ns("colLabel"),
+                label = "Specify what are for nodes in col",
+                value = NULL
+              )
+            ),
+            conditionalPanel(
+              condition = "input.networkType == 'unipartite'", ns = ns,
+              textInput(ns("nodLabel"),
+                label = "Specify what are the nodes",
+                value = NULL
+              )
+            )
           )
         ),
-        conditionalPanel(
-          condition = "input.networkType == 'unipartite'", ns = ns,
-          textInput(ns("nodLabel"),
-            label = "Specify what are the nodes",
-            value = NULL
+        fluidRow(
+          shinydashboard::box(
+            title = "Importation Guide", solidHeader = T,
+            status = "info", width = 12,
+            mod_help_to_import_ui(ns("help_to_import_1"))
           )
         )
       )
@@ -151,8 +166,6 @@ mod_tab_upload_ui <- function(id) {
         column(
           7,
           strong("Summary:"),
-          mod_help_to_import_ui(ns("help_to_import_1")),
-          mod_importation_error_ui(ns("error_1")),
           verbatimTextOutput(ns("summaryDataImport"))
         ),
         column(
@@ -256,15 +269,18 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
       if (input$whichData == "sbmData") {
         sbmMat <- buildSbmMatrix(datasetSelected())
+        sbmMat$type <- input$networkType
       } else {
         if (input$dataType == "matrix") {
           sbmMat <- buildSbmMatrix(datasetSelected())
+          sbmMat$type <- input$networkType
         } else {
           Mat <- edges_to_adjacency(datasetSelected(),
             type = input$networkType,
             oriented = as.logical(input$orientation)
           )
           sbmMat <- buildSbmMatrix(Mat)
+          sbmMat$type <- input$networkType
         }
         sbmMat
       }
@@ -315,6 +331,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     mod_help_to_import_server("help_to_import_1",
       rawData = datasetSelected,
+      sbmData = datasetUploaded,
       input_upload = inputs
     )
 
@@ -323,12 +340,10 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     last_updated_data <- reactiveValues(v = NULL)
     observe({
       datasetSelected()
-      mod_importation_error_server("error_1")
       last_updated_data$v <- 1
     })
     observe({
       datasetUploaded()
-      mod_importation_error_server("error_1", datasetUploaded)
       last_updated_data$v <- 2
     })
     output$summaryDataImport <- renderPrint({
@@ -337,7 +352,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
       if (!is.null(last_updated_data$v)) {
         if (last_updated_data$v == 1) {
-          # do_drop <- input$dataType == "matrix" | input$whichData == "sbmData"
           show_table(datasetSelected(), str_len = 10, tbl_wid = 9)
         } else {
           print(datasetUploaded())
