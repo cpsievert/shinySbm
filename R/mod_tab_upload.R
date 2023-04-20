@@ -154,7 +154,10 @@ mod_tab_upload_ui <- function(id) {
           shinydashboard::box(
             title = "Importation Guide", solidHeader = T,
             status = "info", width = 12,
-            mod_help_to_import_ui(ns("help_to_import_1"))
+            # strong("Help:"),
+            mod_help_to_import_ui(ns("help_to_import_1")),
+            strong("Importation Code:"),
+            verbatimTextOutput(ns("uploadCode"))
           )
         )
       )
@@ -163,16 +166,8 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Importation Details", solidHeader = T,
         status = "info", width = 12,
-        column(
-          7,
-          strong("Summary:"),
-          verbatimTextOutput(ns("summaryDataImport"))
-        ),
-        column(
-          5,
-          strong("Importation Code:"),
-          verbatimTextOutput(ns("uploadCode"))
-        )
+        strong("Summary:"),
+        verbatimTextOutput(ns("summaryDataImport"))
       )
     )
   )
@@ -269,7 +264,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
       if (input$whichData == "sbmData") {
         sbmMat <- buildSbmMatrix(datasetSelected())
-        sbmMat$type <- input$networkType
       } else {
         if (input$dataType == "matrix") {
           sbmMat <- buildSbmMatrix(datasetSelected())
@@ -283,6 +277,17 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           sbmMat$type <- input$networkType
         }
         sbmMat
+      }
+    })
+
+    observeEvent(input$dataBase,{
+      if(input$dataBase == "fungus_tree"){
+        updateRadioButtons(session,"networkType", selected = "bipartite" )
+        updateTextInput(session,"rowLabel",value = "Fungus")
+        updateTextInput(session,"colLabel",value = "Trees")
+      }else{
+        updateRadioButtons(session,"networkType", selected = "unipartite" )
+        updateTextInput(session,"nodLabel",value = "Trees")
       }
     })
 
@@ -359,6 +364,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+    # importation code
     output$uploadCode <- renderPrint({
       if (input$whichData == "importData") {
         validate(
@@ -374,6 +380,9 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           "', sep = '", sep(), "', header = ", input$headercol, headerrow, ")",
           sep = ""
         )
+        if(input$dataType == 'list'){
+          cat("\nmyNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix)")
+        }
       } else {
         validate(
           need(input$dataBase, "")
@@ -382,7 +391,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
           "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
         )
-        cat("myNetworkMatrix <- ", data_path, sep = "")
+        cat("myNetworkMatrix <- ", data_path ,sep = "")
       }
     })
 

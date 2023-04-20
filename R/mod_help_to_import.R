@@ -10,6 +10,7 @@
 mod_help_to_import_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    uiOutput(ns("help")),
     verbatimTextOutput(ns("messageDataImport")),
     verbatimTextOutput(ns("warningDataImport")),
     tags$head(tags$style(paste0("#", ns("warningDataImport"), "{color: red}")))
@@ -82,7 +83,13 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
       }
     })
 
-
+    observe({
+      if(!identical(warn_list$messages,list()) | !identical(warn_list$warnings,list())){
+        output$help <- renderUI({strong('Help:')})
+      }else{
+        output$help <- renderUI({})
+      }
+    })
 
     output$messageDataImport <- renderPrint({
       print_messages(messages = warn_list$messages)
