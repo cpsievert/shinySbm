@@ -5,11 +5,9 @@
 #' @param dta=NULL,inputs=NULL
 #' `dta` data.frame
 #' `inputs` list of inputs from upload table :
-#' - `input$whichData`
 #' - `input$dataType`
 #' - `input$headerrow`
 #' - `input$headercol`
-#' - `input$orientation`
 #' - `input$networkType`
 #'
 #' @return Based on those inputs and the data.frame, it give proper messages
@@ -87,6 +85,7 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
 #' - `input$headercol`
 #' - `input$orientation`
 #' - `input$networkType`
+#'
 #'
 #' @return Based on those inputs and the data.frame, it give proper messages
 #' and warnings with indication to get a better results

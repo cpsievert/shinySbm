@@ -317,7 +317,9 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     ## For mod importation error to get parameters
     inputs <- reactiveValues(
+      matrixBuilder = NULL,
       whichData = NULL,
+      dataBase = NULL,
       dataType = NULL,
       headerrow = NULL,
       headercol = NULL,
@@ -325,7 +327,9 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       networkType = NULL
     )
     observe({
+      inputs$matrixBuilder <- input$matrixBuilder
       inputs$whichData <- input$whichData
+      inputs$dataBase <- input$dataBase
       inputs$dataType <- input$dataType
       inputs$headercol <- input$headercol
       inputs$headerrow <- input$headerrow
@@ -344,6 +348,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     # show simportation summary
     last_updated_data <- reactiveValues(v = NULL)
     observe({
+      input$networkType
       datasetSelected()
       last_updated_data$v <- 1
     })

@@ -29,6 +29,30 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
       warnings = list()
     )
 
+    # Check if changes have been loaded
+    unloaded_changes <- reactiveValues(v = F)
+    observe({
+      input_upload$matrixBuilder
+      unloaded_changes$v <- F
+    })
+    observe({
+      input_upload$whichData
+      input_upload$dataBase
+      input_upload$dataType
+      input_upload$headercol
+      input_upload$headerrow
+      input_upload$orientation
+      input_upload$networkType
+      if(identical(warn_list$warnings,list())){
+        if(!is.null(rawData) && "data.frame" %in% class(rawData())){
+          unloaded_changes$v <- T
+        }
+      }else{
+        unloaded_changes$v <- F
+      }
+    })
+
+
     observe({
       if(!is.null(rawData) & !is.null(input_upload) && input_upload$whichData == "importData"){
         warns <- list()
@@ -92,6 +116,9 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
     })
 
     output$messageDataImport <- renderPrint({
+      if(unloaded_changes$v){
+        cat("For Importation press : Matrix Builder\n")
+      }
       print_messages(messages = warn_list$messages)
     })
     output$warningDataImport <- renderPrint({
