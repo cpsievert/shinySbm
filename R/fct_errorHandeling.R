@@ -32,6 +32,10 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
     if (inputs$dataType == "matrix") {
       # check for any characters columns
       if (any(sapply(dta, is.character))) {
+        if((dim(dta)[2] == 2 && all(sapply(dta, is.character))) |
+           (dim(dta)[2] == 3 && all(sapply(dta[,1:2], is.character)) && is.numeric(dta[[3]]))){
+          warning("Matrix Format : Are you sure your data is a adjacency matrix, it seems to be a list of node pairs")
+        }
         # if first row and/or column are not taken as names it will change columns in character
         if (!inputs$headercol | !inputs$headerrow) {
           warning("Some characters in matrix : Try with 1st column and/or row as names")
@@ -45,6 +49,15 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
         # List can only be thick or 2 or 3 columns
         warning("Data set is wider than 2 or 3 columns : Are you sure it's a list of node pairs and not a matrix ?")
       } else {
+        # avoid the case of numerical names for nodes
+        # because they can be the same names even in bipartite network
+        if(any(!sapply(dta[,1:2],is.numeric))){
+          if(any(dta[[1]] %in% dta[[2]]) & inputs$networkType == "bipartite"){
+            message("Some nodes names are the same in first and second columns : Are you sure this is a bipartite network ?")
+          }else if(!any(dta[[1]] %in% dta[[2]]) & !any(dta[[2]] %in% dta[[1]]) & inputs$networkType == "unipartite"){
+            message("There isn't any nodes names in common between first and second columns : Are you sure this is a unipartite network ?")
+          }
+        }
         # The third columns can only be numeric
         if (dim(dta)[2] == 3 & !is.numeric(dta[[3]])) {
           if (!inputs$headercol) {
