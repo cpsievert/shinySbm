@@ -40,18 +40,18 @@ edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), ori
   colnames(mat) <- name_col
   # Changing from and to colums with positions into the matrix
   my_list <- as.matrix(dplyr::mutate(my_list,
-                                     from = match(from, name_row),
-                                     to = match(to, name_col)
+    from = match(from, name_row),
+    to = match(to, name_col)
   ))
   # Set values in right positions
   mat[my_list[, 1:2]] <- ifelse(rep(dim(my_list)[2] == 2, dim(my_list)[1]),
-                                1, my_list[, 3]
+    1, my_list[, 3]
   )
   # Specific case of unipartite network with symmetrical connections,
   # just doing the same but reversing to and from columns
   if (type[1] == "unipartite" & !oriented) {
     mat[my_list[, 2:1]] <- ifelse(rep(dim(my_list)[2] == 2, dim(my_list)[1]),
-                                  1, my_list[, 3]
+      1, my_list[, 3]
     )
   }
   return(as.data.frame(mat))

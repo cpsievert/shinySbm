@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_help_to_import_ui <- function(id){
+mod_help_to_import_ui <- function(id) {
   ns <- NS(id)
   tagList(
     verbatimTextOutput(ns("messageDataImport")),
@@ -19,28 +19,30 @@ mod_help_to_import_ui <- function(id){
 #' help_to_import Server Functions
 #'
 #' @noRd
-mod_help_to_import_server <- function(id, rawData, input_upload){
-  moduleServer( id, function(input, output, session){
+mod_help_to_import_server <- function(id, rawData, input_upload) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    warn_list <- reactiveValues(messages = list(),
-                                warnings = list())
+    warn_list <- reactiveValues(
+      messages = list(),
+      warnings = list()
+    )
 
     observe({
-      if(input_upload$whichData == 'importData'){
+      if (input_upload$whichData == "importData") {
         warns <- list()
         mess <- list()
         withCallingHandlers(check_data_inputs(dta = rawData(), inputs = input_upload),
-                            warning = function(w) {
-                              warns <<- c(warns, list(w))
-                            },
-                            message = function(m) {
-                              mess <<- c(mess, list(m))
-                            }
+          warning = function(w) {
+            warns <<- c(warns, list(w))
+          },
+          message = function(m) {
+            mess <<- c(mess, list(m))
+          }
         )
         warn_list$messages <- sapply(mess, function(mess) mess$message)
         warn_list$warnings <- sapply(warns, function(warn) warn$message)
-      }else{
+      } else {
         warn_list$messages <- list()
         warn_list$warnings <- list()
       }

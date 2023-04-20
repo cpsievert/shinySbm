@@ -24,11 +24,11 @@ mod_importation_error_server <- function(id, dataset = NULL) {
 
     output$warningDataImport <- renderPrint({
       warns <- list()
-      if(!is.null(dataset)){
+      if (!is.null(dataset)) {
         withCallingHandlers(is.sbmMatrix(dataset(), warnings = T),
-                            warning = function(w) {
-                              warns <<- c(warns, list(w))
-                            }
+          warning = function(w) {
+            warns <<- c(warns, list(w))
+          }
         )
       }
       warning_messages <- sapply(warns, function(warn) warn$message)

@@ -355,9 +355,9 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
     }
     if (show_matrix) {
       cat("\n")
-      if(resume_table){
+      if (resume_table) {
         show_table(x$matrix, show_dim = F)
-      }else{
+      } else {
         print(x$matrix)
       }
     }
@@ -371,9 +371,9 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
         cat("\n\n")
         for (i in 1:length(x$covar)) {
           print(names(x$covar)[i])
-          if(resume_table){
+          if (resume_table) {
             show_table(x$covar[[i]], show_dim = F)
-          }else{
+          } else {
             print(x$covar[[i]])
           }
           cat("\n")

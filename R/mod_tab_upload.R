@@ -74,20 +74,20 @@ mod_tab_upload_ui <- function(id) {
           ),
           hr(),
           radioButtons(ns("networkType"),
-                       "What kind of network it is ?",
-                       choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
-                       inline = T,
-                       selected = 'bipartite'
+            "What kind of network it is ?",
+            choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
+            inline = T,
+            selected = "bipartite"
           ),
           conditionalPanel(
             condition = "input.dataType == 'list' & input.networkType == 'unipartite'", ns = ns,
             radioButtons(ns("orientation"), "Are connections oriented ?",
-                         choices = list(
-                           "Yes" = T,
-                           "No" = F
-                         ),
-                         inline = TRUE,
-                         selected = F
+              choices = list(
+                "Yes" = T,
+                "No" = F
+              ),
+              inline = TRUE,
+              selected = F
             )
           )
         ),
@@ -131,8 +131,8 @@ mod_tab_upload_ui <- function(id) {
             value = NULL
           ),
           textInput(ns("colLabel"),
-                    label = "Specify what are for nodes in col",
-                    value = NULL
+            label = "Specify what are for nodes in col",
+            value = NULL
           )
         ),
         conditionalPanel(
@@ -148,15 +148,18 @@ mod_tab_upload_ui <- function(id) {
       shinydashboard::box(
         title = "Importation Details", solidHeader = T,
         status = "info", width = 12,
-        column(7,
-               strong("Summary:"),
-               mod_help_to_import_ui(ns("help_to_import_1")),
-               mod_importation_error_ui(ns("error_1")),
-               verbatimTextOutput(ns("summaryDataImport"))
-               ),
-        column(5,
-               strong("Importation Code:"),
-               verbatimTextOutput(ns("uploadCode")))
+        column(
+          7,
+          strong("Summary:"),
+          mod_help_to_import_ui(ns("help_to_import_1")),
+          mod_importation_error_ui(ns("error_1")),
+          verbatimTextOutput(ns("summaryDataImport"))
+        ),
+        column(
+          5,
+          strong("Importation Code:"),
+          verbatimTextOutput(ns("uploadCode"))
+        )
       )
     )
   )
@@ -239,7 +242,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           "tree_tree" = sbm::fungusTreeNetwork$tree_tree %>%
             `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
             `rownames<-`(sbm::fungusTreeNetwork$tree_names)
-        ) %>% as.data.frame
+        ) %>% as.data.frame()
       }
       return(data)
     })
@@ -251,15 +254,15 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       validate(
         need(datasetSelected(), "Please select a data set")
       )
-      if(input$whichData == 'sbmData'){
+      if (input$whichData == "sbmData") {
         sbmMat <- buildSbmMatrix(datasetSelected())
-      }else{
+      } else {
         if (input$dataType == "matrix") {
           sbmMat <- buildSbmMatrix(datasetSelected())
         } else {
           Mat <- edges_to_adjacency(datasetSelected(),
-                                    type = input$networkType,
-                                    oriented = as.logical(input$orientation)
+            type = input$networkType,
+            oriented = as.logical(input$orientation)
           )
           sbmMat <- buildSbmMatrix(Mat)
         }
@@ -311,31 +314,32 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
 
     mod_help_to_import_server("help_to_import_1",
-                              rawData = datasetSelected,
-                              input_upload = inputs)
+      rawData = datasetSelected,
+      input_upload = inputs
+    )
 
 
     # show simportation summary
-    last_updated_data <- reactiveValues( v = NULL)
-    observe ({
+    last_updated_data <- reactiveValues(v = NULL)
+    observe({
       datasetSelected()
       mod_importation_error_server("error_1")
       last_updated_data$v <- 1
     })
-    observe ({
+    observe({
       datasetUploaded()
-      mod_importation_error_server("error_1",datasetUploaded)
+      mod_importation_error_server("error_1", datasetUploaded)
       last_updated_data$v <- 2
     })
     output$summaryDataImport <- renderPrint({
       validate(
         need(datasetSelected(), "Please select a Data Set")
       )
-      if(!is.null(last_updated_data$v)){
-        if(last_updated_data$v == 1){
+      if (!is.null(last_updated_data$v)) {
+        if (last_updated_data$v == 1) {
           # do_drop <- input$dataType == "matrix" | input$whichData == "sbmData"
-          show_table(datasetSelected(),str_len=10,tbl_wid = 9)
-        }else{
+          show_table(datasetSelected(), str_len = 10, tbl_wid = 9)
+        } else {
           print(datasetUploaded())
         }
       }
@@ -347,22 +351,24 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           need(input$mainDataFile$name, "")
         )
         if (input$headerrow) {
-          headerrow <- ', row.names = 1'
+          headerrow <- ", row.names = 1"
         } else {
-          headerrow <- ''
+          headerrow <- ""
         }
         cat("myNetworkMatrix <- read.table(file = '",
-            input$mainDataFile$name,
-            "', sep = '",sep(), "', header = ",input$headercol,headerrow,")",sep = '')
+          input$mainDataFile$name,
+          "', sep = '", sep(), "', header = ", input$headercol, headerrow, ")",
+          sep = ""
+        )
       } else {
         validate(
           need(input$dataBase, "")
         )
         data_path <- switch(input$dataBase,
-                       "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
-                       "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
+          "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
+          "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
         )
-        cat("myNetworkMatrix <- ",data_path,sep = '')
+        cat("myNetworkMatrix <- ", data_path, sep = "")
       }
     })
 

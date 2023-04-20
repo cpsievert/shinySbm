@@ -1,4 +1,3 @@
-
 #' check_data_inputs
 #'
 #' @description Check the raw data.frame according to inputs
@@ -17,34 +16,44 @@
 #' and warnings with indication to get a better results
 #'
 #' @noRd
-check_data_inputs <- function(dta = NULL, inputs = NULL){
+check_data_inputs <- function(dta = NULL, inputs = NULL) {
   ## Check for all cases
-  if(dim(dta)[2]<=1){
+  # Table are too thin could be a separator problem
+  if (dim(dta)[2] <= 1) {
     warning("Low number of columns : Try to change separator")
-  }else{
-    if(inputs$headerrow & any(duplicated(dta[[1]])) & is.character(dta[[1]])){
+  } else { # if table are thicker
+    # Prevent miss-comprehension : if set rows as name and the first column has
+    # repetition it would give an error and stop the app. The real correction is
+    # in "mod_tab_upload.R" but here is a message that tell what's happening to the user
+    if (inputs$headerrow & any(duplicated(dta[[1]])) & is.character(dta[[1]])) {
       message("Repeated values in the 1st column : cannot be set as row names")
     }
     ## Check in case of a adjacency matrix
-    if(inputs$dataType == 'matrix'){
-      if(any(sapply(dta,is.character))){
-        if(!inputs$headercol | !inputs$headerrow){
+    if (inputs$dataType == "matrix") {
+      # check for any characters columns
+      if (any(sapply(dta, is.character))) {
+        # if first row and/or column are not taken as names it will change columns in character
+        if (!inputs$headercol | !inputs$headerrow) {
           warning("Some characters in matrix : Try with 1st column and/or row as names")
-        }else{
+        } else {
+          # if first row and/or column are names already the problem must come from values of the matrix
           warning("Some characters in matrix : Check if your data is correctly encoded")
         }
       }
-    }else{ ## Check in case of a list or node pairs
-      if(dim(dta)[2]>3){
+    } else { ## Check in case of a list or node pairs
+      if (dim(dta)[2] > 3) {
+        # List can only be thick or 2 or 3 columns
         warning("Data set is wider than 2 or 3 columns : Are you sure it's a list of node pairs and not a matrix ?")
-      }else{
-        if(dim(dta)[2] == 3 & !is.numeric(dta[[3]])){
-          if(!inputs$headercol){
+      } else {
+        # The third columns can only be numeric
+        if (dim(dta)[2] == 3 & !is.numeric(dta[[3]])) {
+          if (!inputs$headercol) {
+            # Maybe it's only a name problem so first check the header
             warning("3rd column of a node pairs list can only be numeric : Try with 1st column as names")
-          }else{
+          } else {
+            # if not must come from matrix values
             warning("3rd column of a node pairs list can only be numeric : Check if your data is correctly encoded")
           }
-
         }
       }
     }
