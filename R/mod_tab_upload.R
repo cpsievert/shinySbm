@@ -355,6 +355,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     last_updated_data <- reactiveValues(v = NULL)
     observe({
       input$networkType
+      input$orientation
       datasetSelected()
       last_updated_data$v <- 1
     })
