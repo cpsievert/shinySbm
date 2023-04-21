@@ -5,12 +5,10 @@
 
   #### Données en entrée
 
-- Améliorer la partie chargement de ses propres données, spécifier le format etc. (a faire)
+- information sur les modèles
 
 - Permettre la simulation d'un jeu de données d'entrées ()
 
-- Permettre de rentrer les données soit sous forme de matrice soit sous forme de liste d'arêtes et noeuds
- 
 
 
 
