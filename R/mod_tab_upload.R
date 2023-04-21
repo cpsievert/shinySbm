@@ -63,7 +63,7 @@ mod_tab_upload_ui <- function(id) {
                 tags$strong("Information :"), tags$br(),
                 " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
                 " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
-                " - For directed network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
+                " - For a directed network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
               )
             ),
             br(),
