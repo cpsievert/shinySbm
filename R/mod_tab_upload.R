@@ -63,7 +63,7 @@ mod_tab_upload_ui <- function(id) {
                 tags$strong("Information :"), tags$br(),
                 " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
                 " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
-                " - For oriented network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
+                " - For directed network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
               )
             ),
             br(),
@@ -83,7 +83,7 @@ mod_tab_upload_ui <- function(id) {
             ),
             conditionalPanel(
               condition = "input.dataType == 'list' & input.networkType == 'unipartite'", ns = ns,
-              radioButtons(ns("orientation"), "Are connections oriented ?",
+              radioButtons(ns("orientation"), "Are connections directed ?",
                 choices = list(
                   "Yes" = T,
                   "No" = F
@@ -271,7 +271,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         } else {
           Mat <- edges_to_adjacency(datasetSelected(),
             type = input$networkType,
-            oriented = as.logical(input$orientation)
+            directed = as.logical(input$orientation)
           )
           sbmMat <- buildSbmMatrix(Mat)
           sbmMat$type <- input$networkType
@@ -396,7 +396,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           cat("\nmyNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix, type = '",
               input$networkType,"'",
               ifelse(input$networkType == 'bipartite',"",
-                     paste0(", oriented = ",input$orientation)),
+                     paste0(", directed = ",input$orientation)),
               ")",sep = "")
         }
         cat("\nmyNetworkMatrix <- as.matrix(myNetworkMatrix)")

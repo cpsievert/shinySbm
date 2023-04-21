@@ -2,16 +2,16 @@
 #'
 #' @description A fct that build an adjacency matrix from a list of pair of nodes
 #'
-#' @param my_list,type=c('unipartite',"bipartite"),oriented=T
+#' @param my_list,type=c('unipartite',"bipartite"),directed=T
 #' `my_list` a data.frame which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' `type` network type can be `'bipartite'` or `'unipartite'`
-#' `oriented` boolean : whether or not connections are oriented (`T`) or symetrical (`F`)
+#' `directed` boolean : whether or not connections are directed (`T`) or symetrical (`F`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
 #'
 #' @noRd
-edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), oriented = T) {
+edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), directed = T) {
   ## Rename columns of the pair of node list by 'from', 'to' and 'value' (if needed)
   if (dim(my_list)[2] == 2) {
     names(my_list) <- c("from", "to")
@@ -49,7 +49,7 @@ edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), ori
   )
   # Specific case of unipartite network with symmetrical connections,
   # just doing the same but reversing to and from columns
-  if (type[1] == "unipartite" & !oriented) {
+  if (type[1] == "unipartite" & !directed) {
     mat[my_list[, 2:1]] <- ifelse(rep(dim(my_list)[2] == 2, dim(my_list)[1]),
       1, my_list[, 3]
     )
