@@ -308,17 +308,16 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
 #'
 #' @description print table correctly even with long names
 #'
-#' @param data,str_len=10,tbl_len=25,tbl_wid=8,show_dim=T,drop=T
+#' @param data,str_len=10,tbl_wid=8,show_dim=T,drop=T
 #' `data` table
 #' `str_len` max names length
-#' `tbl_len` max table length
 #' `tbl_wid` max table width
 #' `show_dim` whether or not to show the dimension of table
 #'
 #' @return fit better in the verbatim plot
 #'
 #' @noRd
-show_table <- function(data, str_len = 9, tbl_len = 25, tbl_wid = 8, show_dim = T) {
+show_table <- function(data, str_len = 9,str_max = 80, show_dim = T) {
   cols <- colnames(data)
   rows <- rownames(data)
   short_cols <- ifelse(stringr::str_length(cols) > str_len,
@@ -329,25 +328,18 @@ show_table <- function(data, str_len = 9, tbl_len = 25, tbl_wid = 8, show_dim = 
                        paste0(substr(rows, 1, str_len - 3), "..."),
                        rows
   )
-  if (any(duplicated(short_rows))) {
-    table <- as.matrix(data)
-  } else {
-    table <- data
-  }
-
+  table <- as.matrix(data)
   colnames(table) <- short_cols
   rownames(table) <- short_rows
+  table <- table[,(max(stringr::str_length(short_rows)) +
+                     cumsum(stringr::str_length(short_cols))) <= str_max]
 
-  if (dim(data)[1] > tbl_len) {
-    table <- table[1:tbl_len, ]
-  }
-  if (dim(data)[2] > tbl_wid) {
-    table <- table[, 1:tbl_wid]
-  }
+
   if (show_dim) {
     cat("Data dimension :", dim(data)[1], "rows x", dim(data)[2], "columns\n\n")
   }
-  print(table)
+  print(data.table::as.data.table(table,keep.rownames=TRUE),
+        row.names = F,topn=10)
 }
 
 

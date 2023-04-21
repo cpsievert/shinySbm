@@ -162,13 +162,7 @@ mod_tab_upload_ui <- function(id) {
         )
       )
     ),
-    fluidRow(
-      shinydashboard::box(
-        title = "Importation Details", solidHeader = T,
-        status = "info", width = 12,
-        strong("Summary:"),
-        verbatimTextOutput(ns("summaryDataImport"))
-      )
+    fluidRow(uiOutput(ns("printDetails"))
     )
   )
 }
@@ -359,17 +353,42 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       datasetUploaded()
       last_updated_data$v <- 2
     })
-    output$summaryDataImport <- renderPrint({
-      validate(
-        need(datasetSelected(), "Please select a Data Set")
-      )
-      if (!is.null(last_updated_data$v)) {
+
+
+    output$printDetails <- renderUI({
+      if(is.null(last_updated_data$v)){
+        ttle <- "Raw data"
+        content <- tagList(strong("Please Select a data set"))
+      }else{
         if (last_updated_data$v == 1) {
-          show_table(datasetSelected())
+          ttle <- "Raw data"
+          content <- tagList(verbatimTextOutput(ns("summaryDataRaw")))
         } else {
-          print(datasetUploaded())
+          ttle <- "Importation details"
+          content <- tagList(verbatimTextOutput(ns("summaryDataImport")))
         }
       }
+      tagList(
+        shinydashboard::box(
+          title = ttle, solidHeader = T,
+          status = "info", width = 12,
+          content
+        ))
+    })
+
+    output$summaryDataRaw <- renderPrint({
+      validate(
+        need(datasetSelected(), "Please Select a dataset")
+      )
+      show_table(datasetSelected())
+    })
+
+
+    output$summaryDataImport <- renderPrint({
+      validate(
+        need(datasetUploaded(), "Please Select a dataset")
+      )
+      print(datasetUploaded())
     })
 
     # importation code
