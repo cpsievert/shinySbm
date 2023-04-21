@@ -291,6 +291,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+    observeEvent(input$whichData,{
+        updateTextInput(session,"rowLabel",value = "")
+        updateTextInput(session,"colLabel",value = "")
+        updateTextInput(session,"nodLabel",value = "")
+      })
+
     #  update buttons when upload a new sbmMatrix
     observeEvent(datasetUploaded(), {
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
@@ -386,8 +392,13 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           sep = ""
         )
         if(input$dataType == 'list'){
-          cat("\nmyNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix)")
+          cat("\nmyNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix, type = '",
+              input$networkType,"'",
+              ifelse(input$networkType == 'bipartite',"",
+                     paste0(", oriented = ",input$orientation)),
+              ")",sep = "")
         }
+        cat("\nmyNetworkMatrix <- as.matrix(myNetworkMatrix)")
       } else {
         validate(
           need(input$dataBase, "")

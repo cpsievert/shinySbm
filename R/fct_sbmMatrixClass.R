@@ -318,7 +318,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
 #' @return fit better in the verbatim plot
 #'
 #' @noRd
-show_table <- function(data, str_len = 11, tbl_len = 25, tbl_wid = 9, show_dim = T) {
+show_table <- function(data, str_len = 9, tbl_len = 25, tbl_wid = 8, show_dim = T) {
   cols <- colnames(data)
   rows <- rownames(data)
   short_cols <- ifelse(stringr::str_length(cols) > str_len,

@@ -51,9 +51,9 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
         # because they can be the same names even in bipartite network
         if(any(!sapply(dta[,1:2],is.numeric))){
           if(any(dta[[1]] %in% dta[[2]]) & inputs$networkType == "bipartite"){
-            message("Some nodes names are the same in first and second columns : Are you sure this is a bipartite network ?")
+            message("Some nodes have same names between first and second columns : Are you sure this is a bipartite network ?")
           }else if(!any(dta[[1]] %in% dta[[2]]) & !any(dta[[2]] %in% dta[[1]]) & inputs$networkType == "unipartite"){
-            message("There isn't any nodes names in common between first and second columns : Are you sure this is a unipartite network ?")
+            message("There isn't any node names in common between first and second columns : Are you sure this is a unipartite network ?")
           }
         }
         # The third columns can only be numeric

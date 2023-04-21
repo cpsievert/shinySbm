@@ -26,14 +26,16 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
 
     warn_list <- reactiveValues(
       messages = list(),
-      warnings = list()
+      warnings = list(),
+      unloaded_changes = F,
+      id_notif = NULL
     )
 
     # Check if changes have been loaded
-    unloaded_changes <- reactiveValues(v = F)
+    # unloaded_changes <- reactiveValues(v = F)
     observe({
       input_upload$matrixBuilder
-      unloaded_changes$v <- F
+      warn_list$unloaded_changes <- F
     })
     observe({
       input_upload$whichData
@@ -45,10 +47,10 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
       input_upload$networkType
       if(identical(warn_list$warnings,list())){
         if(!is.null(rawData) && "data.frame" %in% class(rawData())){
-          unloaded_changes$v <- T
+          warn_list$unloaded_changes <- T
         }
       }else{
-        unloaded_changes$v <- F
+        warn_list$unloaded_changes <- F
       }
     })
 
@@ -107,6 +109,22 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
       }
     })
 
+
+
+    observe({
+      if(warn_list$unloaded_changes){
+        warn_list$id_notif <- showNotification(
+          ui = "press : Matrix Builder",
+          type = "error",
+          duration = NULL)
+      }else{
+        if(!is.null(warn_list$id_notif)){
+          removeNotification(warn_list$id_notif)
+          warn_list$id_notif <- NULL
+        }
+      }
+    })
+
     observe({
       if(!identical(warn_list$messages,list()) | !identical(warn_list$warnings,list())){
         output$help <- renderUI({strong('Help:')})
@@ -116,9 +134,6 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
     })
 
     output$messageDataImport <- renderPrint({
-      if(unloaded_changes$v){
-        cat("For Importation press : Matrix Builder\n")
-      }
       print_messages(messages = warn_list$messages)
     })
     output$warningDataImport <- renderPrint({
