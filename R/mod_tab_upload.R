@@ -333,14 +333,10 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       networkType = NULL
     )
     observe({
-      inputs$matrixBuilder <- input$matrixBuilder
-      inputs$whichData <- input$whichData
-      inputs$dataBase <- input$dataBase
-      inputs$dataType <- input$dataType
-      inputs$headercol <- input$headercol
-      inputs$headerrow <- input$headerrow
-      inputs$orientation <- input$orientation
-      inputs$networkType <- input$networkType
+      inputs
+      for (nm in names(inputs)){
+        inputs[[nm]] <- input[[nm]]
+      }
     })
 
 
