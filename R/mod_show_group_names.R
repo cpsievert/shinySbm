@@ -23,7 +23,7 @@ mod_show_group_names_server <- function(id, names, group_id){
     output$my_group <- renderUI({
       tagList(
         shinydashboard::box(
-          title = paste0("Goup n°",group_id), solidHeader = T,
+          title = paste0("Goup n ",group_id), solidHeader = T,
           status = "info", collapsible = T, width = 9,
           verbatimTextOutput(ns("group_nb"))
           )
