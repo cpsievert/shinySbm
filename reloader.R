@@ -8,18 +8,18 @@ local_version <- packages[packages[, 1] == package_name, "Version"]
 shared_version <- gsub(
   "Version: ", "",
   grep("Version:",
-       readLines(paste0(package_name,"/DESCRIPTION")),
+       readLines("DESCRIPTION"),
        value = T
   )
 )
 fn <- character()
 
 if (length(local_version) == 0 || local_version != shared_version) {
-  fn <- paste0(package_name,"_", c(local_version, shared_version), ".tar.gz")
-  roxygen2::roxygenise(paste0(package_name,"/"))
-  devtools::document(paste0(package_name,"/"))
-  devtools::check(paste0(package_name,"/"), document = FALSE)
-  devtools::build(paste0(package_name,"/"))
+  fn <- paste0('../',package_name,"_", c(local_version, shared_version), ".tar.gz")
+  roxygen2::roxygenise()
+  devtools::document()
+  devtools::check(document = FALSE)
+  devtools::build()
   unloadNamespace(package_name)
   install.packages(fn[[length(fn)]])
 } else {

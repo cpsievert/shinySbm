@@ -1,6 +1,6 @@
 Package: shinySbm
 Title: Shiny application to use the Stochastic Block Model
-Version: 2023.05.22.15.58.42.855657
+Version: 2023.05.22.16.15.07.437608
 Authors@R: 
     person("Theodore", "VANRENTERGHEM", , "theodore.vanrenterghem@inrae.fr", role = c("cre", "aut"))
 Description: This package is made to allow a simpler use of the {sbm} R
@@ -17,6 +17,7 @@ Imports:
     fresh,
     ggplot2,
     golem (>= 0.3.5),
+    magrittr,
     reshape2,
     sbm,
     shiny (>= 1.7.2),
