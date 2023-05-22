@@ -144,7 +144,6 @@ usethis::use_package("reshape2")
 
 usethis::use_package("plyr")
 usethis::use_package("shinyWidgets")
-usethis::use_package("shinydashboardPlus")
 usethis::use_package("shinythemes")
 usethis::use_package("ggsignif")
 usethis::use_package("sortable")
@@ -154,6 +153,8 @@ usethis::use_package("Rmisc")
 usethis::use_package("moments")
 usethis::use_package("readxl")
 usethis::use_package("openxlsx")
+# usethis::use_package("shinydashboardPlus")
+# usethis::use_package("magrittr")
 
 ## USED modules
 golem::add_module(name = "tab_upload", with_test = TRUE)

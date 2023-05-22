@@ -5,62 +5,96 @@
 #' it does have one method Bipartite and one for Simple Sbm. The `fit` object need
 #' to be construct by one of the `estimate***SBM` function from the `sbm` package.
 #'
-#'  @param fit  : an Sbm model of class `"BipartiteSBM_fit"` or `"SimpleSBM_fit"`
-#'  @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
-#'  @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
-#'  @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
-#'  @param plotOptions : a list providing options. See details below.
-#'  @details The list of parameters \code{plotOptions} for the matrix plot is
-#'  \itemize{
+#' @param fit  : an Sbm model of class `"BipartiteSBM_fit"`, `"SimpleSBM_fit"` or `"matrix`.
+#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
+#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions : a list providing options. See details below.
+#'
+#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' \itemize{
 #'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
 #'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
-#'  }
+#' }
 #'
-#'  @return a ggplot object corresponding to the plot
-#' @export
+#' @return a ggplot object corresponding to the plot
 #'
 #' @examples
-#' data_bi <- fungusTreeNetwork$fungus_tree
-#' my_sbm_bi <- estimateBipartiteSBM(data_bi)
-#' plotSbm(my_sbm_bi, ordered = T, transpose = T, plotOptions = list(title = 'An example Matrix'))
+#' data_bi <- sbm::fungusTreeNetwork$fungus_tree
+#' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+#' plotSbm(my_sbm_bi,
+#'   ordered = TRUE, transpose = TRUE,
+#'   plotOptions = list(title = "An example Matrix")
+#' )
+#'
+#' @export
 plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
-  UseMethod(".plotSbm", fit)
+  UseMethod("plotSbm", fit)
 }
 
 
-#' .plotSbm.default Method
+#' plotSbm.default Method
 #'
 #' @description plotSbm method for unknown object
-#' @noRd
-.plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+#'
+#' @param fit  : any object
+#' @param ordered : isn't used in default method
+#' @param transpose : isn't used in default method
+#' @param labels : isn't used in default method
+#' @param plotOptions : isn't used in default method
+#'
+#'  @return plot of fit
+#'
+#'
+#' @export
+plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   plot(fit)
 }
 
-#' .plotSbm.BipartiteSBM_fit Method
+#' plotSbm.BipartiteSBM_fit Method
 #'
 #' @description plotSbm method for BipartiteSBM_fit object
 #'
-#' @noRd
-.plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
-
-
+#' @param fit  : an Sbm model of class `"BipartiteSBM_fit"`
+#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
+#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions : a list providing options. See details below.
+#'
+#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' \itemize{
+#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
+#'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
+#'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#' }
+#'
+#' @return a ggplot object corresponding to the plot
+#'
+#' @export
+plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
-  if(is.null(labels)){labels = list(row = "row", col = "col")}
+  if (is.null(labels)) {
+    labels <- list(row = "row", col = "col")
+  }
 
-  currentOptions = list(showValues = TRUE,
-                        showPredictions = TRUE,
-                        title=NULL,
-                        colPred = "red",
-                        colValue = "black",
-                        showLegend = FALSE,
-                        interactionName = "Connection")
-  currentOptions[names(plotOptions)] = plotOptions
+  currentOptions <- list(
+    showValues = TRUE,
+    showPredictions = TRUE,
+    title = NULL,
+    colPred = "red",
+    colValue = "black",
+    showLegend = FALSE,
+    interactionName = "Connection"
+  )
+  currentOptions[names(plotOptions)] <- plotOptions
 
   ## At least something is shown
-  if(!currentOptions$showValues & !currentOptions$showPredictions){
+  if (!currentOptions$showValues & !currentOptions$showPredictions) {
     currentOptions$showValues <- T
   }
   ################################################
@@ -93,8 +127,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     mat_pure <- fit$networkData
   }
 
-  plot_net <- reshape2::melt(mat_exp) %>%
-    dplyr::mutate(base_value = reshape2::melt(mat_pure)$value)
+  plot_net <- dplyr::mutate(reshape2::melt(mat_exp),base_value = reshape2::melt(mat_pure)$value)
 
   if (transpose) {
     names(plot_net)[c(1, 2)] <- c("Var2", "Var1")
@@ -104,7 +137,8 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
   if (currentOptions$showPredictions) {
     plt <- plt +
       ggplot2::geom_tile(ggplot2::aes(x = Var2, y = Var1, alpha = value),
-                         fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend)
+        fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend
+      )
   }
   if (currentOptions$showValues) {
     plt <- plt +
@@ -119,7 +153,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
       xintercept = tCol,
       col = currentOptions$colPred, size = .3
     ) +
-    ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
+    ggplot2::scale_fill_gradient(paste("Indiv.", currentOptions$interactionName),
       low = "white", high = currentOptions$colValue
     ) +
     ggplot2::xlab(if (transpose) {
@@ -131,44 +165,63 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
     } else {
       labels$row
     }) +
-    ggplot2::scale_alpha_continuous(paste("Groups",currentOptions$interactionName),range = c(0, 1)) +
-    ggplot2::scale_x_discrete(breaks = "",position = 'top') +
+    ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName), range = c(0, 1)) +
+    ggplot2::scale_x_discrete(breaks = "", position = "top") +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
-    ggplot2::guides(alpha = if(currentOptions$showPredictions){"legend"}else{'none'}) +
+    ggplot2::guides(alpha = if (currentOptions$showPredictions) {
+      "legend"
+    } else {
+      "none"
+    }) +
     ggplot2::coord_equal(expand = FALSE) +
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
-    ggplot2::labs(caption = currentOptions$title)  +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
+    ggplot2::labs(caption = currentOptions$title) +
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2)))
   plot(plt)
 }
 
-#' .plotSbm.SimpleSBM_fit Method
+#' plotSbm.SimpleSBM_fit Method
 #'
 #' @description plotSbm method for SimpleSBM_fit object
 #'
-#' @noRd
-.plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
-
-
+#' @param fit  : an Sbm model of class `"SimpleSBM_fit"`
+#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose : isn't used in this method
+#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions : a list providing options. See details below.
+#'
+#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' \itemize{
+#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
+#'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
+#'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#' }
+#'
+#' @export
+plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
-  if(is.null(labels)){
-    labels = list(row = "row", col = "col")
-  }else if(length(labels) == 1) {
+  if (is.null(labels)) {
+    labels <- list(row = "row", col = "col")
+  } else if (length(labels) == 1) {
     labels <- list(row = labels, col = labels)
   }
 
-  currentOptions = list(showValues = TRUE,
-                        showPredictions = TRUE,
-                        title=NULL,
-                        colPred = "red",
-                        colValue = "black",
-                        showLegend = FALSE,
-                        interactionName = "Connection")
-  currentOptions[names(plotOptions)] = plotOptions
+  currentOptions <- list(
+    showValues = TRUE,
+    showPredictions = TRUE,
+    title = NULL,
+    colPred = "red",
+    colValue = "black",
+    showLegend = FALSE,
+    interactionName = "Connection"
+  )
+  currentOptions[names(plotOptions)] <- plotOptions
 
   ## At least something is shown
-  if(!currentOptions$showValues & !currentOptions$showPredictions){
+  if (!currentOptions$showValues & !currentOptions$showPredictions) {
     currentOptions$showValues <- T
   }
   ################################################
@@ -193,8 +246,7 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
   mat_exp <- mat_exp[nb_rows:1, ]
   mat_pure <- mat_pure[nb_rows:1, ]
 
-  plot_net <- reshape2::melt(mat_exp) %>%
-    dplyr::mutate(base_value = reshape2::melt(mat_pure)$value)
+  plot_net <-  dplyr::mutate(reshape2::melt(mat_exp),base_value = reshape2::melt(mat_pure)$value)
   ## Test
 
 
@@ -203,14 +255,19 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
   if (currentOptions$showPredictions) {
     plt <- plt +
       ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1, alpha = plot_net$value),
-                         fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend)
+        fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend
+      )
   }
 
   if (currentOptions$showValues) {
     plt <- plt +
-      ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1,
-                                      fill = plot_net$base_value, alpha = plot_net$base_value),
-                         show.legend = currentOptions$showLegend)
+      ggplot2::geom_tile(
+        ggplot2::aes(
+          x = plot_net$Var2, y = plot_net$Var1,
+          fill = plot_net$base_value, alpha = plot_net$base_value
+        ),
+        show.legend = currentOptions$showLegend
+      )
   }
 
   plt <- plt +
@@ -222,48 +279,65 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
       xintercept = uCol,
       col = currentOptions$colPred, size = .3
     ) +
-    ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
+    ggplot2::scale_fill_gradient(paste("Indiv.", currentOptions$interactionName),
       low = "white", high = currentOptions$colValue,
       guide = "colourbar"
     ) +
     ggplot2::ylab(labels$row) + ggplot2::xlab(labels$col) +
-    ggplot2::scale_alpha_continuous(paste("Groups",currentOptions$interactionName),range = c(0, 1)) +
-    ggplot2::scale_x_discrete(breaks = "",position = 'top') +
+    ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName), range = c(0, 1)) +
+    ggplot2::scale_x_discrete(breaks = "", position = "top") +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
     ggplot2::coord_equal(expand = FALSE) +
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2)))
   plot(plt)
 }
 
 
-#' .plotSbm.matrix Method
+#' plotSbm.matrix Method
 #'
 #' @description plotSbm method for matrix object
 #'
-#' @noRd
-.plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
-
+#' @param fit  : a numeric matrix
+#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
+#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions : a list providing options. See details below.
+#'
+#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' \itemize{
+#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
+#'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
+#'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#' }
+#' @export
+plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
-  if(is.null(labels)){labels = list(row = "row", col = "col")}
+  if (is.null(labels)) {
+    labels <- list(row = "row", col = "col")
+  }
 
-  currentOptions = list(title = NULL,
-                        colValue = "black",
-                        showLegend = FALSE,
-                        interactionName = "Connection")
-  currentOptions[names(plotOptions)] = plotOptions
+  currentOptions <- list(
+    title = NULL,
+    colValue = "black",
+    showLegend = FALSE,
+    interactionName = "Connection"
+  )
+  currentOptions[names(plotOptions)] <- plotOptions
   ################################################
 
   nb_rows <- dim(fit)[1]
-  if(nb_rows == dim(fit)[2]){
-    if(transpose){
-      mat_exp <- fit[,nb_rows:1]
-    }else{
-      mat_exp <- fit[nb_rows:1,]
+  if (nb_rows == dim(fit)[2]) {
+    if (transpose) {
+      mat_exp <- fit[, nb_rows:1]
+    } else {
+      mat_exp <- fit[nb_rows:1, ]
     }
-  }else{
+  } else {
     mat_exp <- fit
   }
 
@@ -274,9 +348,9 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
   }
 
 
-  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = value))  +
+  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = value)) +
     ggplot2::geom_tile(show.legend = currentOptions$showLegend) +
-    ggplot2::scale_fill_gradient(paste("Indiv.",currentOptions$interactionName),
+    ggplot2::scale_fill_gradient(paste("Indiv.", currentOptions$interactionName),
       low = "white", high = currentOptions$colValue,
       guide = "colourbar"
     ) +
@@ -284,18 +358,19 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
       labels$row
     } else {
       labels$col
-    }) + ggplot2::ylab(if (transpose) {
+    }) +
+    ggplot2::ylab(if (transpose) {
       labels$col
     } else {
       labels$row
     }) +
     ggplot2::scale_alpha(range = c(0, 1)) +
-    ggplot2::scale_x_discrete(breaks = "",position = 'top') +
+    ggplot2::scale_x_discrete(breaks = "", position = "top") +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
     ggplot2::coord_equal(expand = FALSE) +
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
-    ggplot2::labs(caption = currentOptions$title)  +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust=0.5, size=ggplot2::rel(1.2)))
+    ggplot2::labs(caption = currentOptions$title) +
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2)))
   plot(plt)
 }
