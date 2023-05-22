@@ -62,10 +62,10 @@ Rapport automatique : `FactoInvestigate::Investigate`
  I want to put a verbatim windows to show the print and other message shown by s3 sbmMatrix managment
 
 Very important to remind : see file : dev/02_dev.R
--   `verbatimTextOutput("summary")`
--   `blockmodeling::plotMat(UniTable$matrix)`
--   `x <- igraph::graph.adjacency(adjmatrix = UniTable$matrix, add.rownames = TRUE)`
--   `igraph::plot.igraph(x)`
+ - `verbatimTextOutput("summary")`
+ - `blockmodeling::plotMat(UniTable$matrix)`
+ - `x <- igraph::graph.adjacency(adjmatrix = UniTable$matrix, add.rownames = TRUE)`
+ - `igraph::plot.igraph(x)`
 
 Here UniTable is an sbmMatrix class object, function `plotMat` could be used because it's quite beautiful.
 
