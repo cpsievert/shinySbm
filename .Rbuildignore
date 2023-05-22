@@ -10,3 +10,5 @@ $run_dev.*
 ^app\.R$
 ^rsconnect$
 todo.md
+compiler.R
+reloader.R
