@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
@@ -12,3 +14,4 @@ $run_dev.*
 todo.md
 compiler.R
 reloader.R
+^deploy$
