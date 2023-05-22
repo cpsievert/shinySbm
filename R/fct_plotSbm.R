@@ -5,7 +5,7 @@
 #' it does have one method Bipartite and one for Simple Sbm. The `fit` object need
 #' to be construct by one of the `estimate***SBM` function from the `sbm` package.
 #'
-#' @param fit  : an Sbm model of class `"BipartiteSBM_fit"`, `"SimpleSBM_fit"` or `"matrix`.
+#' @param fit  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
 #' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
 #' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
 #' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
@@ -29,6 +29,20 @@
 #'   ordered = TRUE, transpose = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
+#'
+#' data_uni <- sbm::fungusTreeNetwork$tree_tree
+#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+#' plotSbm(my_sbm_uni, ordered = TRUE,
+#'   plotOptions = list(title = "An example Matrix")
+#' )
+#'
+#' n_col <- 100
+#' n_row <- 90
+#' mat <- matrix(sample(0:10,n_col*n_row,replace = TRUE),n_col,n_row)
+#' plotSbm(mat, transpose = TRUE ,
+#'   labels = list(col = "Columns",row = 'Rows'),
+#'   plotOptions = list(colValue = 'blue')
+#'   )
 #'
 #' @export
 plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
@@ -74,6 +88,14 @@ plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NU
 #' }
 #'
 #' @return a ggplot object corresponding to the plot
+#'
+#' @examples
+#' data_bi <- sbm::fungusTreeNetwork$fungus_tree
+#' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+#' plotSbm.BipartiteSBM_fit(my_sbm_bi,
+#'   ordered = TRUE, transpose = TRUE,
+#'   plotOptions = list(title = "An example Matrix")
+#' )
 #'
 #' @export
 plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
@@ -200,6 +222,13 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #' }
 #'
+#' @examples
+#' data_uni <- sbm::fungusTreeNetwork$tree_tree
+#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+#' plotSbm(my_sbm_uni, ordered = TRUE,
+#'   plotOptions = list(title = "An example Matrix")
+#' )
+#'
 #' @export
 plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
@@ -314,6 +343,16 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #' }
+#'
+#' @examples
+#' n_col <- 100
+#' n_row <- 90
+#' mat <- matrix(sample(0:10,n_col*n_row,replace = TRUE),n_col,n_row)
+#' plotSbm(mat, transpose = TRUE ,
+#'   labels = list(col = "Columns",row = 'Rows'),
+#'   plotOptions = list(colValue = 'blue')
+#'  )
+#'
 #' @export
 plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
