@@ -2,3 +2,7 @@ docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
 docker build -f Dockerfile --progress=plain -t shinysbm:latest .
 docker run -p 80:80 shinysbm:latest
 # then go to 127.0.0.1:80
+
+# si necessaire :
+# sudo systemctl stop apache2
+# sudo apt-get purge -y apache2*
