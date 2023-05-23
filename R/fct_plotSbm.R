@@ -92,7 +92,7 @@ plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NU
 #' @examples
 #' data_bi <- sbm::fungusTreeNetwork$fungus_tree
 #' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
-#' plotSbm.BipartiteSBM_fit(my_sbm_bi,
+#' plotSbm(my_sbm_bi,
 #'   ordered = TRUE, transpose = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
