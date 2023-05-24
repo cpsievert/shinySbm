@@ -2,16 +2,37 @@
 #'
 #' @description A fct that build an adjacency matrix from a list of pair of nodes
 #'
-#' @param my_list,type=c('unipartite',"bipartite"),directed=T
-#' `my_list` a data.frame which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
-#' `type` network type can be `'bipartite'` or `'unipartite'`
-#' `directed` boolean : whether or not connections are directed (`T`) or symetrical (`F`)
+#' @param my_list a data.frame which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
+#' @param type network type can be `'bipartite'` or `'unipartite'`
+#' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
 #'
 #' @examples
+#' # For unipartite network
+#' data_uni <- PatientDoctorNetwork$patient_patient
 #'
+#' # If your network is symmetric :
+#' my_mat <- edges_to_adjacency(data_uni,
+#'   type = "unipartite",
+#'   directed = FALSE
+#' )
+#' # If your network is directed :
+#' my_mat <- edges_to_adjacency(data_uni,
+#'   type = "unipartite",
+#'   directed = TRUE
+#' )
+#'
+#' # For bipartite network
+#' data_bi <- PatientDoctorNetwork$doctor_patient
+#'
+#' my_mat <- edges_to_adjacency(data_bi, type = "bipartite")
+#'
+#' # In any case you can also use 2 columns data.frames if your network is binary.
+#' binary_net <- PatientDoctorNetwork$doctor_patient[,-3]
+#'
+#' my_mat <- edges_to_adjacency(binary_net, type = "bipartite")
 #'
 #' @export
 edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), directed = T) {
