@@ -10,7 +10,10 @@
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
 #'
-#' @noRd
+#' @examples
+#'
+#'
+#' @export
 edges_to_adjacency <- function(my_list, type = c("unipartite", "bipartite"), directed = T) {
   ## Rename columns of the pair of node list by 'from', 'to' and 'value' (if needed)
   if (dim(my_list)[2] == 2) {
