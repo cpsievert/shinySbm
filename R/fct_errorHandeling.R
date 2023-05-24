@@ -57,7 +57,7 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
           }
         }
         # The third columns can only be numeric
-        if (dim(dta)[2] == 3 & !is.numeric(dta[[3]])) {
+        if (dim(dta)[2] == 3 && !is.numeric(dta[[3]])) {
           if (!inputs$headercol) {
             # Maybe it's only a name problem so first check the header
             warning("3rd column of a node pairs list can only be numeric : Try with 1st column as names")

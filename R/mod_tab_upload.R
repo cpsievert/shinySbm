@@ -46,10 +46,17 @@ mod_tab_upload_ui <- function(id) {
           conditionalPanel(
             condition = "input.whichData == 'importData'", ns = ns,
             hr(),
+            fileInput(ns("mainDataFile"),
+              label = "Choose the file containing your data",
+              buttonLabel = "Browse...",
+              placeholder = "No file selected",
+              multiple = F,
+              accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
+            ),
+            checkboxInput(ns('showInfo'),"More Information ?"),
             conditionalPanel(
-              condition = "input.dataType == 'matrix'", ns = ns,
+              condition = "input.dataType == 'matrix' & input.showInfo", ns = ns,
               tags$div(
-                tags$strong("Information :"), tags$br(),
                 " - It should be a ", tags$strong("adjacency or incidence"), " matrix", tags$br(),
                 " - ", tags$strong("Bipartite network :"), " nodes in rows and columns can be differents", tags$br(),
                 " - ", tags$strong("Unipartite network :"), " nodes in rows and columns are the same (order and names)", tags$br(),
@@ -58,21 +65,12 @@ mod_tab_upload_ui <- function(id) {
               )
             ),
             conditionalPanel(
-              condition = "input.dataType == 'list'", ns = ns,
+              condition = "input.dataType == 'list' & input.showInfo", ns = ns,
               tags$div(
-                tags$strong("Information :"), tags$br(),
                 " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
                 " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
                 " - For a directed network ", tags$strong("FROM"), " column should be the first and the ", tags$strong("TO"), " the second one"
               )
-            ),
-            br(),
-            fileInput(ns("mainDataFile"),
-              label = "Choose the file containing your data",
-              buttonLabel = "Browse...",
-              placeholder = "No file selected",
-              multiple = F,
-              accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
             ),
             hr(),
             radioButtons(ns("networkType"),
