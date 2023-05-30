@@ -53,7 +53,7 @@ build_node_edge <- function(sbmObject, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-build_node_edge.SimpleSBM_fit <- function(sbmObject, labels, oriented = F, ...) {
+build_node_edge.SimpleSBM_fit <- function(sbmObject, labels, directed = F, ...) {
   nb_nodes <- sbmObject$nbBlocks
   id <- 1:nb_nodes
   # Build nodes tables
@@ -63,8 +63,8 @@ build_node_edge.SimpleSBM_fit <- function(sbmObject, labels, oriented = F, ...) 
     value = sbmObject$blockProp # Group size
   )
   connection_matrix <- sbmObject$connectParam$mean
-  # I the matrix isn't symmetric or we want to force it to be treated as an oriented matrix
-  if (isSymmetric(connection_matrix) & !oriented) {
+  # I the matrix isn't symmetric or we want to force it to be treated as an directed matrix
+  if (isSymmetric(connection_matrix) & !directed) {
     # Edges table
     edges <- data.frame(
       # edges start from
