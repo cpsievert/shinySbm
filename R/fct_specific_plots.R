@@ -130,11 +130,98 @@ build_node_edge.BipartiteSBM_fit <- function(sbmObject, labels, ...) {
     value = as.vector(connection_matrix)
   )
 
-
-
-
   return(list(nodes = nodes, edges = edges, type = "bipartite"))
 }
+
+#' build_node_edge.matrix method
+#'
+#' @description A fct that build a structure for network visualisation
+#' @return list of dataframe for nodes and edges of the graphs
+#'
+#' @noRd
+build_node_edge.matrix <- function(sbmObject,
+                                   labels = list(
+                                     row = rownames(sbmObject),
+                                     col = colnames(sbmObject)
+                                   ),
+                                   type = "unipartite", directed = F, ...) {
+  ## Tests
+  if (dim(sbmObject)[[1]] != length(labels$row) | dim(sbmObject)[[2]] != length(labels$col)) {
+    stop("sbmObject has different dimension than labels")
+  }
+  if (var(dim(sbmObject)) != 0 & type == "unipartite") {
+    stop("sbmObject has different number of raws and columns, it can't be unipartite")
+  }
+  if (var(dim(sbmObject)) == 0 & type == "bipartite") {
+    message("sbmObject has same number of raws and columns are you sure this network is bipartite ?")
+  }
+  if ((length(labels$row) != length(labels$col) || any(labels$row != labels$col)) & type == "unipartite") {
+    warnings("labels has two differents types are you sur the network is unipartite")
+  }
+  if (isSymmetric(sbmObject) & directed) {
+    warnings("sbmObject is symmetric are you sure it is directed")
+  }
+  if (!isSymmetric(sbmObject) & !directed) {
+    warnings("sbmObject isn't symmetric are you sure the network isn't directed")
+  }
+
+  if (type == "unipartite") {
+    labs <- data.frame(label = labels$col)
+  } else {
+    labs <- dplyr::bind_rows(purrr::map(
+      c("row", "col"),
+      ~ setNames(
+        data.frame(labels[.x], .x),
+        c("label", "lab_type")
+      )
+    ))
+  }
+
+  nodes <- data.frame(
+    id = 1:length(labs$label),
+    label = labs$label
+  )
+  if (type == "bipartite") {
+    nodes <- nodes %>%
+      dplyr::mutate(
+        level = ifelse(labs$lab_type == "row", 1, 2),
+        shape = ifelse(labs$lab_type == "row", "triangle", "square")
+      )
+
+    edges <- data.frame(
+      from = rep(nodes$id[nodes$level == 1], sum(nodes$level == 2)),
+      to = rep(nodes$id[nodes$level == 2], each = sum(nodes$level == 1)),
+      value = as.vector(sbmObject)
+    )
+  } else {
+    # I the matrix isn't symmetric or we want to force it to be treated as an oriented matrix
+    if (isSymmetric(sbmObject) & !directed) {
+      # Edges table
+      edges <- data.frame(
+        # edges start from
+        from = sapply(nodes$id, function(i) { # for each group nb
+          rep(i, each = length(labs$label) - i + 1) # connection with the ones it is not yet connected
+        }) %>% unlist(),
+        # edges end to
+        to = sapply(nodes$id, function(i) { # for each group nb
+          i:length(labs$label) # connection with the ones it is not yet connected
+        }) %>% unlist()
+      ) %>%
+        dplyr::mutate(value = apply(., 1, function(i) {
+          sbmObject[i[1], i[2]] # get connection values
+        }) %>% unlist())
+    } else {
+      # if matrix isn't symertic or treated as asymetric
+      edges <- data.frame(
+        from = rep(nodes$id, length(labs$label)),
+        to = rep(nodes$id, each = length(labs$label)),
+        value = as.vector(sbmObject)
+      )
+    }
+  }
+  return(list(nodes = nodes, edges = edges, type = type))
+}
+
 
 
 #' netPlot
