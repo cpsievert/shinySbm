@@ -15,3 +15,4 @@ todo.md
 compiler.R
 reloader.R
 ^deploy$
+.gitlab-ci.yml
