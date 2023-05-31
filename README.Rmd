@@ -25,17 +25,9 @@ knitr::opts_chunk$set(
 
 You can install the development version of shinySbm like so:
 
-From your terminal (can be rstudio terminal) run the following command to clone the repository : 
-
-``` bash
-git clone git@forgemia.inra.fr:theodore.vanrenterghem/shinySbm.git
-```
-Open the `R` project : `shinySbm.Rproj`
-
-And run in your console :
 
 ``` r
-source(file = 'reloader.R')
+remotes::install_github("Jo-Theo/shinySbm")
 ```
 
 The shinySbm package should be installed. 

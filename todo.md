@@ -6,8 +6,6 @@
 ### Ouverture déploiment
 
 - IC + finir deploiment
-- ouvrir le repository (maj issues)
-1 - 
 
 ### Developpement essentiels
 
