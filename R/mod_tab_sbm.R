@@ -76,7 +76,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
     })
 
     output$sbmCode <- renderText({
-      switch(r$upload$networkType(),
+      importSbm <- switch(r$upload$networkType(),
         "unipartite" = paste0(
           "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
           Dataset()$law, ", estimOptions = list(verbosity = 1))"
@@ -86,6 +86,14 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
           Dataset()$law, "', estimOptions = list(verbosity = 1))"
         )
       )
+      if(sum(my_sbm_main()$nbBlocks) != sum(my_sbm()$nbBlocks)){
+        changeGroup <- paste0("\nindex <- which(mySbmModel$storedModels['nbBlocks'] == ",
+               sum(my_sbm()$nbBlocks),")\n",
+               "mySbmModel$setModel(index)")
+      }else{
+        changeGroup <- ''
+      }
+      paste0(importSbm,changeGroup)
     })
 
     mod_help_to_import_server("error_2", sbmData = Dataset)
