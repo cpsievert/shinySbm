@@ -15,7 +15,6 @@ app_server <- function(input, output, session) {
     upload = reactiveValues(),
     sbm = reactiveValues()
   )
-  # .intitial.network is the variable comming from SBMshiny (function)
   ## Importing the data set
   r$upload <- mod_tab_upload_server("tab_upload_1", r,
                           parent_session = session
