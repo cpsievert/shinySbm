@@ -12,28 +12,28 @@
 #'
 #' @examples
 #' # For unipartite network
-#' data_uni <- PatientDoctorNetwork$patient_patient
+#' data_uni <- FungusTreeNetwork$tree_tree
 #'
 #' # If your network is symmetric :
-#' my_mat <- get_adjacency(data_uni,
-#'   type = "unipartite",
+#' my_mat <- get_adjacency(data_uni$edges,
+#'   type = data_uni$type,
 #'   directed = FALSE
 #' )
 #' # If your network is directed :
-#' my_mat <- get_adjacency(data_uni,
-#'   type = "unipartite",
+#' my_mat <- get_adjacency(data_uni$edges,
+#'   type = data_uni$type,
 #'   directed = TRUE
 #' )
 #'
 #' # For bipartite network
-#' data_bi <- PatientDoctorNetwork$doctor_patient
+#' data_bi <- FungusTreeNetwork$fungus_tree
 #'
-#' my_mat <- get_adjacency(data_bi, type = "bipartite")
+#' my_mat <- get_adjacency(data_bi$edges, type = data_bi$type)
 #'
 #' # In any case you can also use 2 columns data.frames if your network is binary.
-#' binary_net <- PatientDoctorNetwork$doctor_patient[,-3]
+#' binary_net <- FungusTreeNetwork$fungus_tree$edges[,-3]
 #'
-#' my_mat <- get_adjacency(binary_net, type = "bipartite")
+#' my_mat <- get_adjacency(binary_net, type = data_bi$type)
 #'
 #' # For igraph object the usage is the same
 #'
@@ -62,28 +62,29 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #'
 #' @examples
 #' # For unipartite network
-#' data_uni <- PatientDoctorNetwork$patient_patient
+#' data_uni <- FungusTreeNetwork$tree_tree
 #'
 #' # If your network is symmetric :
-#' my_mat <- get_adjacency(data_uni,
-#'   type = "unipartite",
+#' my_mat <- get_adjacency(data_uni$edges,
+#'   type = data_uni$type,
 #'   directed = FALSE
 #' )
 #' # If your network is directed :
-#' my_mat <- get_adjacency(data_uni,
-#'   type = "unipartite",
+#' my_mat <- get_adjacency(data_uni$edges,
+#'   type = data_uni$type,
 #'   directed = TRUE
 #' )
 #'
 #' # For bipartite network
-#' data_bi <- PatientDoctorNetwork$doctor_patient
+#' data_bi <- FungusTreeNetwork$fungus_tree
 #'
-#' my_mat <- get_adjacency(data_bi, type = "bipartite")
+#' my_mat <- get_adjacency(data_bi$edges, type = data_bi$type)
 #'
 #' # In any case you can also use 2 columns data.frames if your network is binary.
-#' binary_net <- PatientDoctorNetwork$doctor_patient[,-3]
+#' binary_net <- FungusTreeNetwork$fungus_tree$edges[,-3]
 #'
-#' my_mat <- get_adjacency(binary_net, type = "bipartite")
+#' my_mat <- get_adjacency(binary_net, type = data_bi$type)
+#'
 #'
 #' @export
 get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = T){
