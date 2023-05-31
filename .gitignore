@@ -5,5 +5,4 @@
 .DS_Store
 *.Rhistory
 *.Rd
-*.tar.gz
-deploy
+deploy/
