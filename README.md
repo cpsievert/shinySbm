@@ -20,26 +20,15 @@ basic lines of the `sbm` package.
 
 You can install the development version of shinySbm like so:
 
-From your terminal (can be rstudio terminal) run the following command
-to clone the repository :
-
-``` bash
-git clone git@forgemia.inra.fr:theodore.vanrenterghem/shinySbm.git
-```
-
-Open the `R` project : `shinySbm.Rproj`
-
-And run in your console :
-
 ``` r
-source(file = 'reloader.R')
+remotes::install_github("Jo-Theo/shinySbm")
 ```
 
 The shinySbm package should be installed.
 
 ## Running The Application
 
-From a new rsession you can then run
+From a new `R` session you can then run
 
 ``` r
 shinySbm::run_app()
