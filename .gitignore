@@ -6,4 +6,4 @@
 *.Rhistory
 *.Rd
 *.tar.gz
-compiler.R
+deploy
