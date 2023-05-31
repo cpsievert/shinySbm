@@ -44,7 +44,7 @@
 #' get_adjacency(karate)
 #'
 #' @export
-get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = T){
+get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = F){
   UseMethod("get_adjacency",edges)
 }
 
@@ -87,7 +87,7 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #'
 #'
 #' @export
-get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = T){
+get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = F){
   return(edges_to_adjacency(edges,type,directed))
 }
 
@@ -115,7 +115,7 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 #' get_adjacency(karate)
 #'
 #' @export
-get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), directed = T){
+get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), directed = F){
   edges <- igraph::get.edgelist(edges)
   return(edges_to_adjacency(edges,type,directed))
 }
@@ -133,7 +133,7 @@ get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), dir
 #' @return an adjacency/incidence matrix (data.frame) representing the network
 #'
 #' @noRd
-edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = T) {
+edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = F) {
   edges <- as.data.frame(edges)
   ## Rename columns of the pair of node list by 'from', 'to' and 'value' (if needed)
   if (dim(edges)[2] == 2) {
