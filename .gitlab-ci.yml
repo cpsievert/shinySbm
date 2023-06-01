@@ -33,9 +33,10 @@ docker-build:
         echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
       fi
     - ./deploy
-    - docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
-    - docker build -f Dockerfile --progress=plain -t shinysbm:latest .
-    - docker push shinysbm:latest
+    -  echo "$CI_REGISTRY_IMAGE${tag}"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE${tag}" .
+    - docker push "$CI_REGISTRY_IMAGE${tag}"
+
   # Run this job in a branch where a Dockerfile exists
   only:
     - tags
