@@ -9,16 +9,16 @@
 #
 # This template uses one generic job with conditional builds
 # for the default branch and all other (MR) branches.
+image: docker:20.10.16
+
+services:
+  - docker:20.10.16-dind
+
 stages:
   - build
 
-
 docker-build:
-  # Use the official docker image.
-  image: docker:20.10.16
   stage: build
-  services:
-    - docker:20.10.16-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   # Default branch leaves tag empty (= latest tag)
