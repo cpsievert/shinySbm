@@ -32,8 +32,9 @@ docker-build:
         tag=":$CI_COMMIT_REF_SLUG"
         echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
       fi
-    - docker build -f ./deploy/Dockerfile_base --progress=plain -t shinysbm_base .
-    - docker build -f ./deploy/Dockerfile --progress=plain -t shinysbm:latest .
+    - ./deploy
+    - docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
+    - docker build -f Dockerfile --progress=plain -t shinysbm:latest .
     - docker push shinysbm:latest
   # Run this job in a branch where a Dockerfile exists
   only:
