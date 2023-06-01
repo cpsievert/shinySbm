@@ -34,8 +34,8 @@ docker-build:
       fi
     - ./deploy
     -  echo "$CI_REGISTRY_IMAGE${tag}"
-    - docker build --pull -t "$CI_REGISTRY_IMAGE${tag}" .
-    - docker push "$CI_REGISTRY_IMAGE${tag}"
+    - docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
+    - docker build -f Dockerfile --progress=plain -t shinysbm:latest .
 
   # Run this job in a branch where a Dockerfile exists
   only:
