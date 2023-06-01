@@ -20,7 +20,7 @@ stages:
 docker-build:
   stage: build
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm
   # Default branch leaves tag empty (= latest tag)
   # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
@@ -34,8 +34,8 @@ docker-build:
       fi
     - cd ./deploy
     - docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
-    - docker build -f Dockerfile --progress=plain -t shinysbm:latest .
-    - docker push shinysbm:latest
+    - docker build -f Dockerfile --progress=plain -t registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest .
+    - docker push registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 
   # Run this job in a branch where a Dockerfile exists
   only:
