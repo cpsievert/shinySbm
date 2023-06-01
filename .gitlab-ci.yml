@@ -35,7 +35,7 @@ docker-build:
     - cd ./deploy
     - docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
     - docker build -f Dockerfile --progress=plain -t shinysbm:latest .
-    - docker push registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+    - docker push shinysbm:latest
 
   # Run this job in a branch where a Dockerfile exists
   only:
