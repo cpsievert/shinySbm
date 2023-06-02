@@ -27,7 +27,6 @@ docker-build:
   # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
     - cd ./deploy
-    - docker build -f Dockerfile_base --progress=plain -t shinysbm_base .
     - docker build -f Dockerfile --progress=plain -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
