@@ -6,7 +6,7 @@ RUN R -e 'install.packages(c("config","data.table","dplyr","DT","fresh","ggplot2
 RUN R -e 'remotes::install_github("Jo-Theo/shinySbm",upgrade = "never")'
 
 # Run the application
-EXPOSE 38
-CMD R -e "options('shiny.port'=38,shiny.host='0.0.0.0');library(shinySbm);shinySbm::run_app(options = list(launch.browser = F))"
+EXPOSE 3838
+CMD R -e "options('shiny.port'=3838,shiny.host='0.0.0.0');library(shinySbm);shinySbm::run_app(options = list(launch.browser = F))"
 
 
