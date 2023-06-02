@@ -55,7 +55,7 @@ From a new `R` session you can then run
 shinySbm::run_app()
 ```
 
-### With docker
+### With `docker`
 
 #### Installation
 
