@@ -33,9 +33,11 @@ With this application you should be also able to :
 - Get a modelisation summary
 - Extract nodes lists associated with their groups
 
-## Installation
+## How to use the Application
 
 ### With `R`
+
+#### Installation
 
 You can install the development version of shinySbm like so:
 
@@ -45,7 +47,7 @@ remotes::install_github("Jo-Theo/shinySbm")
 
 The shinySbm package should be installed.
 
-### Running The Application
+#### Running The Application
 
 From a new `R` session you can then run
 
@@ -55,12 +57,16 @@ shinySbm::run_app()
 
 ### With docker
 
+#### Installation
+
 If you are familiar to `docker`, you can also download the docker image
 by running the command :
 
 ``` bash
 docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 ```
+
+#### Running The Application
 
 Once installed you can run the command to launch the app :
 
