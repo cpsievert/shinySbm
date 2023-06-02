@@ -1,14 +1,8 @@
-# This file is a template, and might need editing before it works on your project.
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Docker.gitlab-ci.yml
+# En local :
+# docker build -f Dockerfile --progress=plain -t shinysbm:latest .
+# docker run -p 38:38 shinysbm:latest
+# then : localhost:38
 
-# Build a Docker image with CI/CD and push to the GitLab registry.
-# Docker-in-Docker documentation: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
-#
-# This template uses one generic job with conditional builds
-# for the default branch and all other (MR) branches.
 image: docker:20.10.16
 
 services:
@@ -26,7 +20,6 @@ docker-build:
   # Default branch leaves tag empty (= latest tag)
   # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
-    - cd ./deploy
     - docker build -f Dockerfile --progress=plain -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
