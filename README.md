@@ -45,7 +45,7 @@ remotes::install_github("Jo-Theo/shinySbm")
 
 The shinySbm package should be installed.
 
-## Running The Application
+### Running The Application
 
 From a new `R` session you can then run
 
