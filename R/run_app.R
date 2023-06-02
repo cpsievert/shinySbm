@@ -9,7 +9,7 @@
 #' @importFrom golem with_golem_options
 run_app <- function(
   onStart = NULL,
-  options = list(launch.browser = T),
+  options = list(launch.browser = F),
   enableBookmarking = NULL,
   uiPattern = "/",
   ...
