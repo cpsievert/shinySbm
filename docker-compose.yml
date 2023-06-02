@@ -2,6 +2,6 @@ services:
   shinysbm:
     image: registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm
     ports:
-      - 38:38
+      - 3838:3838
     container_name: shinysbm
     restart: always
