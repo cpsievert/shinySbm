@@ -22,8 +22,8 @@ docker-build:
   script:
     - docker build -f Dockerfile --progress=plain -t $IMAGE_TAG .
     - docker push $IMAGE_TAG 
-    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
-    -  docker push $CI_REGISTRY_IMAGE:latest
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE
 
   # Run this job in a branch where a Dockerfile exists
   only:
