@@ -90,7 +90,7 @@ app_ui <- function(request) {
           ### Informative table
           shinydashboard::tabItem(
             tabName = "tab_about_us",
-            mod_tab_clustering_ui("tab_about_us_1")
+            mod_tab_about_us_ui("tab_about_us_1")
           )
         )
       )

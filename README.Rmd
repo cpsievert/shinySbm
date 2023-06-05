@@ -2,7 +2,18 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, eval=FALSE, include = FALSE, echo = F}
+### Compiling paragraph
+rmarkdown::render(input = "README.Rmd",
+                 output_format = rmarkdown::html_document(),
+                 quiet = TRUE,output_dir = "inst/app/www/")
+rmarkdown::render(input = "README.Rmd",
+                 output_format = rmarkdown::md_document(),
+                 quiet = TRUE)
+```
+
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

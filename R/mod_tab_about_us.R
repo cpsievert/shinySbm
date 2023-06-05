@@ -10,9 +10,11 @@
 mod_tab_about_us_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$iframe(src = './myMarkdown.html', # put myMarkdown.html to /www
+    shinydashboard::box(title = "READ ME",
+    tags$iframe(src = 'www/README.html', # put myMarkdown.html to /www
                 width = '100%', height = '800px',
                 frameborder = 0, scrolling = 'auto'
+                )
     )
   )
 }
