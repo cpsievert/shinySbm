@@ -14,7 +14,7 @@ stages:
 docker-build:
   stage: build
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:CI_COMMIT_TAG
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   # Default branch leaves tag empty (= latest tag)
