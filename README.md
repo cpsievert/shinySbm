@@ -1,6 +1,3 @@
-shinySbm
-================
-
 <!-- Compiling paragraph: start -->
 <!-- badges: start -->
 
@@ -27,10 +24,11 @@ another specific structure.
 
 With this application you should be also able to :
 
-- Easly run a Stochastic Block Model
-- Get some nice outputs as matrix and network plots organized by groups
-- Get a modelisation summary
-- Extract nodes lists associated with their groups
+-   Easly run a Stochastic Block Model
+-   Get some nice outputs as matrix and network plots organized by
+    groups
+-   Get a modelisation summary
+-   Extract nodes lists associated with their groups
 
 ## How to use the Application
 
@@ -40,9 +38,7 @@ With this application you should be also able to :
 
 You can install the development version of shinySbm like so:
 
-``` r
-remotes::install_github("Jo-Theo/shinySbm")
-```
+    remotes::install_github("Jo-Theo/shinySbm")
 
 The shinySbm package should be installed.
 
@@ -50,9 +46,7 @@ The shinySbm package should be installed.
 
 From a new `R` session you can then run
 
-``` r
-shinySbm::run_app()
-```
+    shinySbm::run_app()
 
 ### With `docker`
 
@@ -61,24 +55,20 @@ shinySbm::run_app()
 If you are familiar to `docker`, you can also download the docker image
 by running the command :
 
-``` bash
-docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
-```
+    docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 
 #### Running The Application
 
 Once installed you can run the command to launch the app :
 
-``` bash
-docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
-```
+    docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 
 And then from your browser find the address `http://localhost:3838/`
 
 ## Contact
 
-Any questions, problems or comments regarding this application ? Contact
-us : [shiny.sbm.dev@gmail.com](shiny.sbm.dev@gmail.com)
+Any questions, problems or comments regarding this application ? <br>
+Contact us : [shiny.sbm.dev@gmail.com](shiny.sbm.dev@gmail.com)
 
 ## References
 
