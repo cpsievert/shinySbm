@@ -1,5 +1,7 @@
-# shinySbm
+shinySbm
+================
 
+<!-- Compiling paragraph: start -->
 <!-- badges: start -->
 
 [![Lifecycle:
@@ -25,11 +27,10 @@ another specific structure.
 
 With this application you should be also able to :
 
--   Easyly run a Stochastic Block Model
--   Get some nice outputs as matrix and network plots organized by
-    groups
--   Get a modelisation summary
--   Extract nodes lists associated with their groups
+- Easly run a Stochastic Block Model
+- Get some nice outputs as matrix and network plots organized by groups
+- Get a modelisation summary
+- Extract nodes lists associated with their groups
 
 ## How to use the Application
 
@@ -39,7 +40,9 @@ With this application you should be also able to :
 
 You can install the development version of shinySbm like so:
 
-    remotes::install_github("Jo-Theo/shinySbm")
+``` r
+remotes::install_github("Jo-Theo/shinySbm")
+```
 
 The shinySbm package should be installed.
 
@@ -47,7 +50,9 @@ The shinySbm package should be installed.
 
 From a new `R` session you can then run
 
-    shinySbm::run_app()
+``` r
+shinySbm::run_app()
+```
 
 ### With `docker`
 
@@ -56,13 +61,17 @@ From a new `R` session you can then run
 If you are familiar to `docker`, you can also download the docker image
 by running the command :
 
-    docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+``` bash
+docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+```
 
 #### Running The Application
 
 Once installed you can run the command to launch the app :
 
-    docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+``` bash
+docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+```
 
 And then from your browser find the address `http://localhost:3838/`
 

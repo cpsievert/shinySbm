@@ -1,10 +1,10 @@
 ---
+title: shinySbm
 output: github_document
 ---
 
-
+<!-- Compiling paragraph: start -->
 ```{r, eval=FALSE, include = FALSE, echo = F}
-### Compiling paragraph
 rmarkdown::render(input = "README.Rmd",
                  output_format = rmarkdown::html_document(),
                  quiet = TRUE,output_dir = "inst/app/www/")
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# shinySbm
+
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
@@ -36,7 +36,7 @@ The Stochastic Block Model is applied on network to simplify the information the
 
 With this application you should be also able to : 
 
- - Easyly run a Stochastic Block Model
+ - Easly run a Stochastic Block Model
  - Get some nice outputs as matrix and network plots organized by groups
  - Get a modelisation summary
  - Extract nodes lists associated with their groups
