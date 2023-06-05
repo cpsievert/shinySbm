@@ -21,7 +21,9 @@ docker-build:
   # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
     - docker build -f Dockerfile --progress=plain -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+    - docker push $IMAGE_TAG 
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+    -  docker push $CI_REGISTRY_IMAGE:latest
 
   # Run this job in a branch where a Dockerfile exists
   only:
