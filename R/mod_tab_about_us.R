@@ -39,6 +39,10 @@ mod_tab_about_us_ui <- function(id) {
                   <a href = \"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0001740\">
                   \"Architecture of an antagonistic tree/fungus network: the asymmetric influence of past evolutionary history.\"</a>
                   <i>PloS one</i> 3.3 (2008): e1740.
+                </p>
+
+                <p>
+                  <u>Developers:</u> <a href = \"https://mia-ps.inrae.fr/julie-aubert\"> Aubert Julie </a>  and  <a href = \"https://forgemia.inra.fr/theodore.vanrenterghem\"> Vanrenterghem Théodore </a>
                   <br>
                   <p align=\"center\" position=\"absolute\" bottom\"80px\">
                     <img src=\"www/INRAE.png\" width=\"150\"/>
