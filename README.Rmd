@@ -72,6 +72,11 @@ docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysb
 
 And then from your browser find the address `http://localhost:3838/`
 
+## Contact
+
+Any questions, problems or comments regarding this application ?
+Contact us : [shiny.sbm.dev@gmail.com](shiny.sbm.dev@gmail.com)
+
 ## References
 
 Chiquet J, Donnet S, Barbillon P (2023).  sbm: Stochastic Blockmodels. R package version 0.4.5,  

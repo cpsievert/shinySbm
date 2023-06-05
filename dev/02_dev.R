@@ -162,6 +162,8 @@ golem::add_module(name = "tab_show", with_test = TRUE)
 golem::add_module(name = "tab_sbm", with_test = TRUE)
 golem::add_module(name = "tab_network", with_test = TRUE)
 golem::add_module(name = "tab_extraction", with_test = TRUE)
+golem::add_module(name = "tab_about_us", with_test = TRUE)
+
 golem::add_module(name = "select_nb_groups", with_test = TRUE)
 golem::add_module(name = "select_net_type", with_test = TRUE)
 golem::add_module(name = "show_group_names", with_test = TRUE)

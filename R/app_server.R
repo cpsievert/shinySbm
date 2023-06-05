@@ -36,6 +36,8 @@ app_server <- function(input, output, session) {
 
   mod_tab_clustering_server("tab_clustering_1", r)
 
+  mod_tab_about_us_server("tab_about_us_1")
+
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {
     stopApp()

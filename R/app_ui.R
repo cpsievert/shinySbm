@@ -48,7 +48,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Network Plots", tabName = "tab_network",
                                    icon = icon("share-alt", lib = "font-awesome")),
           shinydashboard::menuItem("Clustering", tabName = "tab_clustering",
-                                   icon = icon("line-chart", lib = "font-awesome"))
+                                   icon = icon("line-chart", lib = "font-awesome")),
+          shinydashboard::menuItem("About us", tabName = "tab_about_us",
+                                   icon = icon("circle-info", lib = "font-awesome"))
         )
       ),
       shinydashboard::dashboardBody(
@@ -84,7 +86,12 @@ app_ui <- function(request) {
           shinydashboard::tabItem(
             tabName = "tab_clustering",
             mod_tab_clustering_ui("tab_clustering_1")
-            )
+            ),
+          ### Informative table
+          shinydashboard::tabItem(
+            tabName = "tab_about_us",
+            mod_tab_clustering_ui("tab_about_us_1")
+          )
         )
       )
     )
