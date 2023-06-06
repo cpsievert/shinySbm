@@ -3,8 +3,9 @@ title: "shinySBM report"
 format: html
 params:
   groups: 4
+  matrix: NULL
   sbm: NULL
-  options: NUL
+  options: NULL
 ---
 
 # Introduction
@@ -13,6 +14,13 @@ données décrites
 application sbm + plus citatio
 
 # Matrice de Reseaux
+
+```{r}
+if(is.null(params$matrix)){
+  plotSbm(params$matrix)
+}
+```
+
 
 un visuel de Matrice
 

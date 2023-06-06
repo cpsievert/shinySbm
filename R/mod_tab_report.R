@@ -1,4 +1,4 @@
-#' tab_clustering UI Function
+#' tab_report UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_tab_clustering_ui <- function(id) {
+mod_tab_report_ui <- function(id) {
   ns <- NS(id)
   tagList(
     mod_select_nb_groups_ui(ns("select_nb_groups_4")),
@@ -15,10 +15,10 @@ mod_tab_clustering_ui <- function(id) {
   )
 }
 
-#' tab_clustering Server Functions
+#' tab_report Server Functions
 #'
 #' @noRd
-mod_tab_clustering_server <- function(id, r) {
+mod_tab_report_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     ns_tab_sbm <- function(id) {
@@ -65,7 +65,7 @@ mod_tab_clustering_server <- function(id, r) {
 }
 
 ## To be copied in the UI
-# mod_tab_clustering_ui("tab_clustering_1")
+# mod_tab_report_ui("tab_report_1")
 
 ## To be copied in the server
-# mod_tab_clustering_server("tab_clustering_1")
+# mod_tab_report_server("tab_report_1")

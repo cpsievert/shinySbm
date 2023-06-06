@@ -47,7 +47,7 @@ app_ui <- function(request) {
                                    icon = icon("eye", lib = "font-awesome")),
           shinydashboard::menuItem("Network Plots", tabName = "tab_network",
                                    icon = icon("share-alt", lib = "font-awesome")),
-          shinydashboard::menuItem("Clustering", tabName = "tab_clustering",
+          shinydashboard::menuItem("Report", tabName = "tab_report",
                                    icon = icon("line-chart", lib = "font-awesome")),
           shinydashboard::menuItem("About us", tabName = "tab_about_us",
                                    icon = icon("circle-info", lib = "font-awesome"))
@@ -84,8 +84,8 @@ app_ui <- function(request) {
             ),
           ### GEN GROUPS
           shinydashboard::tabItem(
-            tabName = "tab_clustering",
-            mod_tab_clustering_ui("tab_clustering_1")
+            tabName = "tab_report",
+            mod_tab_report_ui("tab_report_1")
             ),
           ### Informative table
           shinydashboard::tabItem(
