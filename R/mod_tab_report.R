@@ -10,6 +10,24 @@
 mod_tab_report_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    shinydashboard::box(
+      title = "Parameters", solidHeader = T,
+      status = "info", collapsible = T,
+      radioButtons(ns("language"), "Select your language:",
+        choices = list(
+          "Français" = "_fr.qmd",
+          "English" = "_en.qmd"
+        ),
+        selected = "_fr.qmd",
+        inline = T
+      ),
+      actionButton(ns("doReport"),label = 'Compile Report')
+    ),
+    shinydashboard::box(
+      title = "Report Preview", solidHeader = T,
+      status = "info", collapsible = T,
+      uiOutput(ns("report_preview"))
+    ),
     mod_select_nb_groups_ui(ns("select_nb_groups_4")),
     uiOutput(ns("namesGroups"))
   )
@@ -28,12 +46,52 @@ mod_tab_report_server <- function(id, r) {
       paste0("tab_upload_1-", id)
     }
 
-
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_4",
       r$sbm$main_sbm,
       session
     )
+
+
+    observeEvent(input$doReport, {
+      params <- list(matrix = r$upload$Dataset)
+
+      report_name <- paste0(
+        "summary_template",
+        input$language
+      )
+      docu_type <- "html"
+      output_name <- paste0(
+        tempdir(),
+        "/quarto_rendered.",
+        docu_type
+      )
+
+      tempReport <- file.path(
+        tempdir(),
+        report_name
+      )
+      file.copy(report_name, tempReport, overwrite = T)
+      quarto::quarto_render(tempReport,
+        output_file = output_name,
+        output_format = paste0(
+          docu_type,
+          "_document"
+        ),
+        execute_params = params
+      )
+
+      getPage <- function(){
+        return(includeHTML(output_name))
+      }
+
+      output$report_preview <- renderUI({getPage()})
+
+    })
+
+
+
+
 
     group_of_name <- reactive({
       getGroupNames(my_sbm(), r$sbm$Dataset())

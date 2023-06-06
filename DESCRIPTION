@@ -22,6 +22,7 @@ Imports:
     igraph,
     magrittr,
     purrr,
+    quarto,
     reshape2,
     sbm,
     shiny (>= 1.7.2),

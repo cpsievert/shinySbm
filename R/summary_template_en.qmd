@@ -16,7 +16,7 @@ application sbm + plus citatio
 # Matrice de Reseaux
 
 ```{r}
-if(is.null(params$matrix)){
+if(is.null(params$matrix){
   plotSbm(params$matrix)
 }
 ```

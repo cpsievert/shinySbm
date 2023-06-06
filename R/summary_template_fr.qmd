@@ -2,9 +2,7 @@
 title: "shinySBM report"
 format: html
 params:
-  groups: 4
-  sbm: NULL
-  options: NUL
+  matrix: NULL
 ---
 
 # Introduction
