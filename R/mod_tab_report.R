@@ -66,17 +66,18 @@ mod_tab_report_server <- function(id, r) {
     output$downReport <- downloadHandler(
       filename = reactive({paste0(input$fileName,'.',input$fileType)}),
       content = function(file) {
-        params <- list(matrix = r$upload$Dataset())
-        outmark <- rmarkdown::render(
-          input = paste0("rmd/summary_template",input$language),
+        rmd_name <- paste0("summary_template",input$language)
+        tempReport <- file.path(tempdir(), rmd_name,fsep = '\\')
+        file.copy(paste0("inst/rmd/",rmd_name), tempReport, overwrite = TRUE)
+        rmarkdown::render(
+          input = tempReport,
+          output_file = file,
           output_format = paste0(input$fileType, "_document"),
           params = list(matrix = r$upload$Dataset()#,
                         # sbm = my_sbm()
                         ),
-          envir = globalenv()
+          envir = new.env(parent = globalenv())
         )
-        file.copy(outmark,file)
-        file.remove(outmark)
       }
     )
 

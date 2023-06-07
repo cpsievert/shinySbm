@@ -15,6 +15,11 @@ application sbm + plus citatio
 # Matrice de Reseaux
 
 ```{r}
+library(shinySbm)
+```
+
+
+```{r}
 class(params$matrix)
 ```
 
