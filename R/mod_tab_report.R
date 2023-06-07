@@ -15,7 +15,7 @@ mod_tab_report_ui <- function(id) {
       status = "info", collapsible = T,
       radioButtons(ns("language"), "Select your language:",
         choices = list(
-          "Français" = "_fr.Rmd",
+          "Francais" = "_fr.Rmd",
           "English" = "_en.Rmd"
         ),
         selected = "_fr.Rmd",
@@ -68,10 +68,11 @@ mod_tab_report_server <- function(id, r) {
       content = function(file) {
         params <- list(matrix = r$upload$Dataset())
         outmark <- rmarkdown::render(
-          input = paste0("R/summary_template",input$language),
+          input = paste0("rmd/summary_template",input$language),
           output_format = paste0(input$fileType, "_document"),
-          params = list(matrix = r$upload$Dataset(),
-                        sbm = my_sbm()),
+          params = list(matrix = r$upload$Dataset()#,
+                        # sbm = my_sbm()
+                        ),
           envir = globalenv()
         )
         file.copy(outmark,file)
