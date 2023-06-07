@@ -1,0 +1,37 @@
+---
+title: "shinySBM report"
+format: html
+params:
+  groups: 4
+  matrix: NULL
+  sbm: NULL
+  options: NULL
+---
+
+# Introduction
+
+données décrites
+application sbm + plus citatio
+
+# Matrice de Reseaux
+
+```{r}
+class(params$matrix)
+```
+
+```{r}
+plotSbm(params$matrix$matrix)
+```
+
+
+un visuel de Matrice
+
+# SBM resultat
+
+resultats pour tout les nb groups
+
+résumé des valeur
+Matrices (which)
+reseaux simplifi
+
+# conclusion

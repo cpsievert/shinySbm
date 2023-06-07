@@ -15,10 +15,10 @@ mod_tab_report_ui <- function(id) {
       status = "info", collapsible = T,
       radioButtons(ns("language"), "Select your language:",
         choices = list(
-          "Français" = "_fr.qmd",
-          "English" = "_en.qmd"
+          "Français" = "_fr.Rmd",
+          "English" = "_en.Rmd"
         ),
-        selected = "_fr.qmd",
+        selected = "_fr.Rmd",
         inline = T
       ),
       actionButton(ns("doReport"),label = 'Compile Report')
@@ -26,6 +26,7 @@ mod_tab_report_ui <- function(id) {
     shinydashboard::box(
       title = "Report Preview", solidHeader = T,
       status = "info", collapsible = T,
+      verbatimTextOutput(ns('tests')),
       uiOutput(ns("report_preview"))
     ),
     mod_select_nb_groups_ui(ns("select_nb_groups_4")),
@@ -54,7 +55,7 @@ mod_tab_report_server <- function(id, r) {
 
 
     observeEvent(input$doReport, {
-      params <- list(matrix = r$upload$Dataset)
+      params <- list(matrix = as.matrix(r$upload$Dataset()))
 
       report_name <- paste0(
         "summary_template",
@@ -63,29 +64,37 @@ mod_tab_report_server <- function(id, r) {
       docu_type <- "html"
       output_name <- paste0(
         tempdir(),
-        "/quarto_rendered.",
+        "rendered.",
         docu_type
       )
 
       tempReport <- file.path(
-        tempdir(),
+        gsub("\\\\","/",tempdir()),
         report_name
       )
-      file.copy(report_name, tempReport, overwrite = T)
-      quarto::quarto_render(tempReport,
+      file.copy(paste0("R/",report_name), tempReport, overwrite = T)
+
+
+      rmarkdown::render(tempReport,
         output_file = output_name,
         output_format = paste0(
           docu_type,
           "_document"
         ),
-        execute_params = params
+        params = params,
+        envir = globalenv()
       )
 
       getPage <- function(){
         return(includeHTML(output_name))
       }
-
-      output$report_preview <- renderUI({getPage()})
+      output$tests <- renderPrint({
+        print(report_name)
+        print(tempReport)
+        print(gsub("\\\\","/",tempdir()))
+        print(dir(gsub("\\\\","/",tempdir())))
+      })
+      output$report_preview <- renderUI({ getPage()})
 
     })
 
