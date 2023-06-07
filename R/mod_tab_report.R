@@ -62,13 +62,13 @@ mod_tab_report_server <- function(id, r) {
 
 
 
-
     output$downReport <- downloadHandler(
       filename = reactive({paste0(input$fileName,'.',input$fileType)}),
       content = function(file) {
-        rmd_name <- paste0("summary_template",input$language)
+        rmd_name <- system.file("rmd", paste0("summary_template",input$language),
+                                package = "shinySbm")
         tempReport <- file.path(tempdir(), rmd_name,fsep = '\\')
-        file.copy(paste0("inst/rmd/",rmd_name), tempReport, overwrite = TRUE)
+        file.copy(rmd_name, tempReport, overwrite = TRUE)
         rmarkdown::render(
           input = tempReport,
           output_file = file,
