@@ -3,6 +3,8 @@ title: "shinySBM report"
 format: html
 params:
   matrix: NULL
+  sbm: NULL
+  options: NULL
 ---
 
 # Introduction

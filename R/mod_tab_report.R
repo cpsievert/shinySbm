@@ -21,16 +21,21 @@ mod_tab_report_ui <- function(id) {
         selected = "_fr.Rmd",
         inline = T
       ),
-      actionButton(ns("doReport"),label = 'Compile Report')
+      textInput(ns("fileName"),
+                label = "File Name",
+                value = "Shiny_SBM_Report"
+      ),
+      radioButtons(ns("fileType"), "Select file type:",
+                   choices = list(
+                     "pdf" = "pdf",
+                     "html" = "html"
+                   ),
+                   selected = "html",
+                   inline = T
+      ),
+      downloadButton(ns("downReport"),label = 'Download Report')
     ),
-    shinydashboard::box(
-      title = "Report Preview", solidHeader = T,
-      status = "info", collapsible = T,
-      uiOutput(ns("report_preview"))
-    ),
-    verbatimTextOutput(ns('tests')),
-    mod_select_nb_groups_ui(ns("select_nb_groups_4")),
-    uiOutput(ns("namesGroups"))
+    mod_select_nb_groups_ui(ns("select_nb_groups_4"))
   )
 }
 
@@ -47,6 +52,8 @@ mod_tab_report_server <- function(id, r) {
       paste0("tab_upload_1-", id)
     }
 
+
+
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_4",
       r$sbm$main_sbm,
@@ -54,80 +61,58 @@ mod_tab_report_server <- function(id, r) {
     )
 
 
-    observeEvent(input$doReport, {
-      params <- list(matrix = r$upload$Dataset())
-
-      report_name <- paste0(
-        "summary_template",
-        input$language
-      )
-      tmp_dir <- gsub("\\\\","/",tempdir())
-
-      docu_type <- "html"
-      output_name <- paste0(
-        tmp_dir,'/',
-        "rendered.",
-        docu_type
-      )
-
-      tempReport <- file.path(
-        tmp_dir,
-        report_name
-      )
-      file.copy(paste0("R/",report_name), tempReport, overwrite = T)
 
 
-      # rmarkdown::render(tempReport,
-      #   output_file = output_name,
-      #   output_format = paste0(
-      #     docu_type,
-      #     "_document"
-      #   ),
-      #   params = params,
-      #   envir = globalenv()
-      # )
-
-      # getPage <- function(){
-      #   return(includeHTML(output_name))
-      # }
-      # output$report_preview <- renderUI({ getPage()})
-      output$tests <- renderPrint({
-        print(tmp_dir)
-        print(dir(tmp_dir))
-      })
-    })
-
-
-
-
-
-
-    group_of_name <- reactive({
-      getGroupNames(my_sbm(), r$sbm$Dataset())
-    })
-
-    output$trythis <- renderPrint({
-      print(group_of_name()$liste)
-    })
-
-    # print(parent_session$input$`tab_sbm_1-runSbm`)
-
-    # observe({
-    #   mod_show_group_names_server("show_group_names",group_of_name()$listed_groups,1)
-    #   })
-
-    output$namesGroups <- renderUI({
-      tagList(
-        conditionalPanel(
-          condition = "output.sbmRan == 'YES'", ns = ns_tab_upload,
-          shinydashboard::box(
-            title = "Groups", solidHeader = T,
-            status = "info", collapsible = T, width = 9,
-            verbatimTextOutput(ns("trythis"))
-          )
+    output$downReport <- downloadHandler(
+      filename = reactive({paste0(input$fileName,'.',input$fileType)}),
+      content = function(file) {
+        params <- list(matrix = r$upload$Dataset())
+        outmark <- rmarkdown::render(
+          input = paste0("R/summary_template",input$language),
+          output_format = paste0(input$fileType, "_document"),
+          params = list(matrix = r$upload$Dataset(),
+                        sbm = my_sbm()),
+          envir = globalenv()
         )
-      )
-    })
+        file.copy(outmark,file)
+        file.remove(outmark)
+      }
+    )
+
+
+
+    # output_name <- paste0(
+    #   tmp_dir,'\\',
+    #   "rendered.",
+    #   docu_type
+    # )
+    # tmp_dir <- tempdir(check = TRUE)
+    # # tmp_dir <- gsub("\\\\","/",tempdir())
+    # get_page <- function(){
+    #   return(includeHTML(gsub("\\\\","/",output_name)))
+    # }
+    # observeEvent(input$doReport, {
+    #
+    #   tempReport <- file.path(tmp_dir, report_name())
+    #
+    #   file.copy(paste0("R\\",report_name()), tempReport, overwrite = T)
+    #
+    #   rmarkdown::render(tempReport,
+    #     output_file = output_name,
+    #     output_format = paste0(
+    #       docu_type,
+    #       "_document"
+    #     ),
+    #     params = list(matrix = r$upload$Dataset()),
+    #     envir = globalenv()
+    #   )
+    #
+    #   output$report_preview <- renderUI({
+    #     get_page()
+    #   })
+    # })
+
+
   })
 }
 
