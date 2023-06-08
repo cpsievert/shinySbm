@@ -32,7 +32,9 @@ library(shinySbm)
 
 
 ```{r}
-plotSbm(params$data$Dataset$matrix)
+
+plotSbm(params$data$Dataset$matrix, tanspose = params$options$showTransposed,
+        labels = params$data$labels,plotOptions = params$options)
 
 ```
 
