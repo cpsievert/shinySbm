@@ -55,7 +55,6 @@ mod_tab_report_server <- function(id, r) {
 
 
     output$params <- renderPrint({
-      print(params$data)
       print(reactiveValuesToList(params))
     })
 

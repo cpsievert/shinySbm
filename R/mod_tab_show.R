@@ -20,8 +20,8 @@ mod_tab_show_ui <- function(id) {
         6,
         radioButtons(ns("whichShow"), "Type of visualisation",
           choices = list(
-            "Print a table" = "print",
-            "Plot a matrix" = "plot"
+            "Plot a matrix" = "plot",
+            "Print a table" = "print"
           ),
           inline = T
         ),
