@@ -78,7 +78,7 @@ mod_tab_report_server <- function(id, r) {
 
 
     observeEvent(purrr::map(r$show,~.x()),{
-      params$options  <- r$show$showTransposed()
+      params$options  <- purrr::map(r$show,~.x())
     })
 
 

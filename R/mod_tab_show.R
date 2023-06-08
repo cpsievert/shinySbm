@@ -152,39 +152,23 @@ mod_tab_show_server <- function(id, r) {
     })
 
 
-
-    my_Options <- reactiveValues(
-      title =  NULL,
-      showLegend = NULL,
-      showPredictions = NULL,
-      colPred = NULL,
-      colValue = NULL,
-      interactionName = NULL
-    )
-
-    observe({
-      my_Options$title <- if (input$setTitle == "") {
-        NULL
-      } else {
-        input$setTitle
-      }
-      my_Options$showLegend <- input$showLegend
-      my_Options$showPredictions <- input$showPred
-      my_Options$colPred <- input$colorPred
-      my_Options$colValue <- input$colorValues
-      my_Options$interactionName <- input$interactionName
-    })
-
-
-
-
-
-
     PlotMat <- reactive({
       req(input$whichShow)
       if (input$whichShow == "plot") {
         x <- as.matrix(r$upload$Dataset())
         labels_list <- r$upload$labels()
+        my_Options <- list(
+          title =  if (input$setTitle == "") {
+            NULL
+          } else {
+            input$setTitle
+          },
+          showLegend = input$showLegend,
+          showPredictions = input$showPred,
+          colPred = input$colorPred,
+          colValue = input$colorValues,
+          interactionName = input$interactionName
+        )
 
         if (session$userData$vars$sbm$runSbm != 0) {
           data_sbm <- my_sbm()$clone()
@@ -192,23 +176,23 @@ mod_tab_show_server <- function(id, r) {
             "raw" = plotSbm(data_sbm,
               ordered = FALSE, transpose = input$showTransposed,
               labels = labels_list,
-              plotOptions = reactiveValuesToList(my_Options)
+              plotOptions = my_Options
             ),
             "ordered" = plotSbm(data_sbm,
               ordered = TRUE, transpose = input$showTransposed,
               labels = labels_list,
-              plotOptions = reactiveValuesToList(my_Options)
+              plotOptions = my_Options
             ),
             "expected" = plotSbm(data_sbm,
               ordered = TRUE, transpose = input$showTransposed,
               labels = labels_list,
-              plotOptions = c(reactiveValuesToList(my_Options), showValues = F)
+              plotOptions = c(my_Options, showValues = F)
             )
           )
         } else {
           plotSbm(x,
             transpose = input$showTransposed,
-            labels = labels_list, plotOptions = reactiveValuesToList(my_Options)
+            labels = labels_list, plotOptions = my_Options
           )
         }
       } else {
@@ -281,7 +265,7 @@ mod_tab_show_server <- function(id, r) {
       showLegend = reactive({input$showLegend}),
       showPredictions = reactive({input$showPred}),
       colPred = reactive({input$colorPred}),
-      colValue = reactive({input$colValue}),
+      colValue = reactive({input$colorValues}),
       interactionName = reactive({input$interactionName}),
       whichMatrix = reactive({input$whichMatrix}),
       showTransposed = reactive({input$showTransposed})
