@@ -18,6 +18,26 @@ un visuel de Matrice
 
 # SBM resultat
 
+# Introduction
+
+données décrites
+application sbm + plus citatio
+
+# Matrice de Reseaux
+
+```{r}
+library(shinySbm)
+```
+
+
+```{r}
+class(params$matrix)
+```
+
+```{r}
+plotSbm(params$matrix$matrix)
+```
+
 resultats pour tout les nb groups
 
 résumé des valeur

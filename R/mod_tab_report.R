@@ -35,7 +35,8 @@ mod_tab_report_ui <- function(id) {
       ),
       downloadButton(ns("downReport"),label = 'Download Report')
     ),
-    mod_select_nb_groups_ui(ns("select_nb_groups_4"))
+    mod_select_nb_groups_ui(ns("select_nb_groups_4")),
+    verbatimTextOutput(ns('params'))
   )
 }
 
@@ -52,13 +53,27 @@ mod_tab_report_server <- function(id, r) {
       paste0("tab_upload_1-", id)
     }
 
+    params <- reactiveValues(matrix = NA,
+                             sbm = NA,
+                             options = list())
 
+    output$params <- renderPrint({
+      print(reactiveValuesToList(params))
+    })
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_4",
       r$sbm$main_sbm,
       session
     )
+
+    observeEvent(r$upload$Dataset(),{
+      params$matrix <- r$upload$Dataset()$matrix
+    })
+
+    observeEvent(my_sbm(),{
+      params$sbm <- my_sbm()
+    })
 
 
 
@@ -73,47 +88,11 @@ mod_tab_report_server <- function(id, r) {
           input = tempReport,
           output_file = file,
           output_format = paste0(input$fileType, "_document"),
-          params = list(matrix = r$upload$Dataset()#,
-                        # sbm = my_sbm()
-                        ),
+          params = reactiveValuesToList(params),
           envir = new.env(parent = globalenv())
         )
       }
     )
-
-
-
-    # output_name <- paste0(
-    #   tmp_dir,'\\',
-    #   "rendered.",
-    #   docu_type
-    # )
-    # tmp_dir <- tempdir(check = TRUE)
-    # # tmp_dir <- gsub("\\\\","/",tempdir())
-    # get_page <- function(){
-    #   return(includeHTML(gsub("\\\\","/",output_name)))
-    # }
-    # observeEvent(input$doReport, {
-    #
-    #   tempReport <- file.path(tmp_dir, report_name())
-    #
-    #   file.copy(paste0("R\\",report_name()), tempReport, overwrite = T)
-    #
-    #   rmarkdown::render(tempReport,
-    #     output_file = output_name,
-    #     output_format = paste0(
-    #       docu_type,
-    #       "_document"
-    #     ),
-    #     params = list(matrix = r$upload$Dataset()),
-    #     envir = globalenv()
-    #   )
-    #
-    #   output$report_preview <- renderUI({
-    #     get_page()
-    #   })
-    # })
-
 
   })
 }
