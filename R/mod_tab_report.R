@@ -55,7 +55,7 @@ mod_tab_report_server <- function(id, r) {
 
     params <- reactiveValues(matrix = NA,
                              sbm = NA,
-                             options = list())
+                             options = 0)
 
     output$params <- renderPrint({
       print(reactiveValuesToList(params))
@@ -75,8 +75,10 @@ mod_tab_report_server <- function(id, r) {
       params$sbm <- my_sbm()
     })
 
-    observeEvent(r$show,{
-      params$options  <- r$show
+
+
+    observeEvent(purrr::map(r$show,~.x()),{
+      params$options  <- r$show$showTransposed()
     })
 
 

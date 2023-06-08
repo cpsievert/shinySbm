@@ -159,9 +159,7 @@ mod_tab_show_server <- function(id, r) {
       showPredictions = NULL,
       colPred = NULL,
       colValue = NULL,
-      interactionName = NULL,
-      whichMatrix = NULL,
-      showTransposed = NULL
+      interactionName = NULL
     )
 
     observe({
@@ -175,8 +173,6 @@ mod_tab_show_server <- function(id, r) {
       my_Options$colPred <- input$colorPred
       my_Options$colValue <- input$colorValues
       my_Options$interactionName <- input$interactionName
-      my_Options$whichMatrix <- input$whichMatrix
-      my_Options$showTransposed <- input$showTransposed
     })
 
 
@@ -275,7 +271,23 @@ mod_tab_show_server <- function(id, r) {
       }
     )
 
-    return(my_Options)
+
+    showParameters <- list(
+      title =  reactive({if (input$setTitle == "") {
+        NULL
+      } else {
+        input$setTitle
+      }}),
+      showLegend = reactive({input$showLegend}),
+      showPredictions = reactive({input$showPred}),
+      colPred = reactive({input$colorPred}),
+      colValue = reactive({input$colValue}),
+      interactionName = reactive({input$interactionName}),
+      whichMatrix = reactive({input$whichMatrix}),
+      showTransposed = reactive({input$showTransposed})
+    )
+
+    return(showParameters)
   })
 }
 
