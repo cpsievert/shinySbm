@@ -426,11 +426,11 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     return(list(
+      dataType = reactive({input$dataType}),
+      directed = reactive({as.logical(input$orientation)}),
       labels = labels,
       Dataset = datasetUploaded,
-      networkType = reactive({
-        input$networkType
-      })
+      networkType = reactive({input$networkType})
     ))
   })
 }

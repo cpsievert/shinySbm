@@ -66,13 +66,13 @@ mod_tab_report_server <- function(id, r) {
 
     ## Parameters from tab_show
 
-    params <- reactiveValues(data = NA,
+    params <- reactiveValues(upload = NA,
                              sbm = NA,
                              options = NA)
 
 
     observeEvent(purrr::map(r$upload,~.x()),{
-      params$data  <- purrr::map(r$upload,~.x())
+      params$upload  <- purrr::map(r$upload,~.x())
     })
 
     observeEvent(my_sbm(),{
@@ -88,12 +88,18 @@ mod_tab_report_server <- function(id, r) {
     output$downReport <- downloadHandler(
       filename = reactive({paste0(input$fileName,'.',input$fileType)}),
       content = function(file) {
-        rmd_name <-  paste0("summary_template",input$language)
-        file_path <-  system.file("rmd",rmd_name, package = "shinySbm")
-        tempReport <- file.path(tempdir(), rmd_name,fsep = '\\')
-        file.copy(file_path, tempReport, overwrite = TRUE)
+        file_names <- c("summary_template","child_imported","child_sbm")
+        visual_names <- c("child_imported_visual.Rmd","child_sbm_visual.Rmd")
+        rmd_names <- purrr::map_chr(file_names,~paste0(.x,input$language))
+        all_files <- c(rmd_names,visual_names)
+        file_paths <- purrr::map_chr(all_files,
+                                     ~system.file("rmd",.x, package = "shinySbm"))
+        tempReports <- purrr::map_chr(all_files,
+                                      ~file.path(tempdir(), .x,fsep = '/'))
+        purrr::map2(file_paths,tempReports,~file.copy(.x,.y, overwrite = TRUE))
+
         rmarkdown::render(
-          input = tempReport,
+          input = tempReports[[1]],
           output_file = file,
           output_format = paste0(input$fileType, "_document"),
           params = reactiveValuesToList(params),

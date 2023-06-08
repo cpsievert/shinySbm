@@ -1,29 +1,38 @@
 ---
-title: "shinySBM report"
+title: "Rapport Shiny SBM"
 format: html
 params:
-  data: NULL
-  sbm: NULL
-  options: NULL
+  upload: NA
+  sbm: NA
+  options: NA
 ---
 
-# Introduction
+```{r setup, echo=FALSE}
+R <- purrr::map(params,~if(identical(.x,"NA")){NA}else{.x})
+show_mat <- !identical(R$upload,NA)
+show_sbm <- !identical(R$sbm,NA)
+is_bipartite <- R$upload$Dataset$type == 'bipartite'
+```
+
+
+```{r child1, child=if(show_mat) 'child_imported_fr.Rmd'}
+```
+
+un visuel de Matrice attention indiquer si col and row have been inversed
+
+
+
+## Résultats du Modèle à Blocks stochastique
+
+
+## Visualisation du SBM
+
+
 
 données décrites
 application sbm + plus citatio
 
-# Matrice de Reseaux
 
-un visuel de Matrice
-
-# SBM resultat
-
-# Introduction
-
-données décrites
-application sbm + plus citatio
-
-# Matrice de Reseaux
 
 ```{r}
 library(shinySbm)
@@ -31,33 +40,33 @@ library(shinySbm)
 
 
 
-```{r}
-
-plotSbm(params$data$Dataset$matrix, tanspose = params$options$showTransposed,
-        labels = params$data$labels,plotOptions = params$options)
+```{r, eval=show_mat}
+# class(R$upload$Dataset$matrix)
+# plotSbm(R$upload$Dataset$matrix, transpose = R$options$showTransposed,
+#         labels = R$upload$labels,plotOptions = R$options)
 
 ```
 
 resultats pour tout les nb groups
 
 
-```{r}
-switch(params$options$whichMatrix,
-       "raw" = plotSbm(params$sbm,
-              ordered = FALSE, transpose = params$options$showTransposed,
-              labels = params$data$labels,
-              plotOptions = params$options
-            ),
-       "ordered" = plotSbm(params$sbm,
-              ordered = TRUE, transpose = params$options$showTransposed,
-              labels = params$data$labels,
-              plotOptions = params$options
-            ),
-       "expected" = plotSbm(params$sbm,
-              ordered = TRUE, transpose = params$options$showTransposed,
-              labels = params$data$labels,
-              plotOptions = c(params$options, showValues = F)
-            ))  
+```{r eval=show_sbm}
+# switch(R$options$whichMatrix,
+#        "raw" = plotSbm(R$sbm,
+#               ordered = FALSE, transpose = R$options$showTransposed,
+#               labels = R$upload$labels,
+#               plotOptions = R$options
+#             ),
+#        "ordered" = plotSbm(R$sbm,
+#               ordered = TRUE, transpose = R$options$showTransposed,
+#               labels = R$upload$labels,
+#               plotOptions = R$options
+#             ),
+#        "expected" = plotSbm(R$sbm,
+#               ordered = TRUE, transpose = R$options$showTransposed,
+#               labels = R$upload$labels,
+#               plotOptions = c(R$options, showValues = F)
+#             ))  
 
 ```
 
@@ -67,4 +76,18 @@ reseaux simplifi
 
 
 
-# conclusion
+# Références
+
+1.  Chiquet J, Donnet S, Barbillon P (2023).  sbm: Stochastic Blockmodels. R package version 0.4.5,  
+  [https://CRAN.R-project.org/package=sbm](https://CRAN.R-project.org/package=sbm).
+  
+2.  Vanrenterghem T, Julie A (2023).  ShinySBM: A shiny application for Stochastic Blockmodels. R package on gitlab,  
+  [https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm).
+  
+3.  We are grateful to the INRAE MIGALE bioinformatics facility (MIGALE, INRAE, 2020. Migale bioinformatics Facility, doi:
+  10.15454/1.5572390655343293E12) for providing help and/or computing and/or storage resources.
+  
+
+
+
+
