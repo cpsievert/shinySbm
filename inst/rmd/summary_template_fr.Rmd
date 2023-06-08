@@ -55,11 +55,14 @@ switch(params$options$whichMatrix,
               ordered = TRUE, transpose = params$options$showTransposed,
               labels = params$data$labels,
               plotOptions = c(params$options, showValues = F)
-            ))
+            ))  
+
 ```
 
 résumé des valeur
 Matrices (which)
 reseaux simplifi
+
+
 
 # conclusion

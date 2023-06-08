@@ -199,7 +199,12 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2)))
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2))) +
+    ggplot2::theme(legend.key.size = ggplot2::unit(0.5, 'cm'), #change legend key size
+                   legend.key.height = ggplot2::unit(0.5, 'cm'), #change legend key height
+                   legend.key.width = ggplot2::unit(0.5, 'cm'), #change legend key width
+                   legend.title = ggplot2::element_text(size=12), #change legend title font size
+                   legend.text = ggplot2::element_text(size=8)) #change legend text font size
   plot(plt)
 }
 
@@ -320,7 +325,12 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2)))
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2))) +
+    ggplot2::theme(legend.key.size = ggplot2::unit(0.5, 'cm'), #change legend key size
+                   legend.key.height = ggplot2::unit(0.5, 'cm'), #change legend key height
+                   legend.key.width = ggplot2::unit(0.5, 'cm'), #change legend key width
+                   legend.title = ggplot2::element_text(size=12), #change legend title font size
+                   legend.text = ggplot2::element_text(size=8)) #change legend text font size
   plot(plt)
 }
 
@@ -410,6 +420,11 @@ plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NUL
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2)))
+    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2))) +
+    ggplot2::theme(legend.key.size = ggplot2::unit(0.5, 'cm'), #change legend key size
+                   legend.key.height = ggplot2::unit(0.5, 'cm'), #change legend key height
+                   legend.key.width = ggplot2::unit(0.5, 'cm'), #change legend key width
+                   legend.title = ggplot2::element_text(size=12), #change legend title font size
+                   legend.text = ggplot2::element_text(size=8)) #change legend text font size
   plot(plt)
 }
