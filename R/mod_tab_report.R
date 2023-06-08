@@ -64,6 +64,7 @@ mod_tab_report_server <- function(id, r) {
       session
     )
 
+
     ## Parameters from tab_show
 
     params <- reactiveValues(upload = NA,
@@ -86,7 +87,7 @@ mod_tab_report_server <- function(id, r) {
 
 
     output$downReport <- downloadHandler(
-      filename = reactive({paste0(input$fileName,'.',input$fileType)}),
+      filename = reactive({paste0(input$fileName,'_',sum(my_sbm()$nbBlocks),'_groups','.',input$fileType)}),
       content = function(file) {
         file_names <- c("summary_template","child_imported","child_sbm")
         visual_names <- c("child_imported_visual.Rmd","child_sbm_visual.Rmd")

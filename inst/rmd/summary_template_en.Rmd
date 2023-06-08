@@ -1,27 +1,34 @@
 ---
-title: "shinySBM report"
+title: "Shiny SBM Report"
 format: html
 params:
-  upload: NULL
-  sbm: NULL
-  options: NULL
+  upload: NA
+  sbm: NA
+  options: NA
+  langue: 'EN'
 ---
 
 ```{r setup, echo=FALSE}
+library(shinySbm)
 R <- purrr::map(params,~if(identical(.x,"NA")){NA}else{.x})
 show_mat <- !identical(R$upload,NA)
 show_sbm <- !identical(R$sbm,NA)
 is_bipartite <- R$upload$Dataset$type == 'bipartite'
 ```
 
+## Introduction
+
+Ce rapport automatique à été produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un résumé d'application d'un modèle à blocs stochastique. La partie moélisation est basé sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R.
 
 ```{r child1, child=if(show_mat) 'child_imported_en.Rmd'}
 ```
 
-un visuel de Matrice attention indiquer si col and row have been inversed
+## Visuel de Matrice
 
 ```{r child2, child=if(show_mat) 'child_imported_visual.Rmd'}
 ```
+
+`r ifelse(R$options$showTransposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
 
 ## Résultats du Modèle à Blocks stochastique
 
@@ -32,6 +39,8 @@ un visuel de Matrice attention indiquer si col and row have been inversed
 
 ```{r child4, child=if(show_sbm) 'child_sbm_visual.Rmd'}
 ```
+
+`r ifelse(R$options$showTransposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
 
 
 # Références
@@ -45,3 +54,7 @@ un visuel de Matrice attention indiquer si col and row have been inversed
 3.  We are grateful to the INRAE MIGALE bioinformatics facility (MIGALE, INRAE, 2020. Migale bioinformatics Facility, doi:
   10.15454/1.5572390655343293E12) for providing help and/or computing and/or storage resources.
   
+
+
+
+
