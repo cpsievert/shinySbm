@@ -13,7 +13,8 @@ app_server <- function(input, output, session) {
 
   r <- reactiveValues(
     upload = reactiveValues(),
-    sbm = reactiveValues()
+    sbm = reactiveValues(),
+    show = reactiveValues()
   )
 
   ## Importing the data set
@@ -28,7 +29,7 @@ app_server <- function(input, output, session) {
                        )
 
   ## Visualisation part
-  mod_tab_show_server("tab_show_1", r)
+  r$show <- mod_tab_show_server("tab_show_1", r)
 
 
   ## Network visualisation part

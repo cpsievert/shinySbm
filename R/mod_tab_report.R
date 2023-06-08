@@ -75,6 +75,10 @@ mod_tab_report_server <- function(id, r) {
       params$sbm <- my_sbm()
     })
 
+    observeEvent(r$show,{
+      params$options  <- r$show
+    })
+
 
 
     output$downReport <- downloadHandler(
