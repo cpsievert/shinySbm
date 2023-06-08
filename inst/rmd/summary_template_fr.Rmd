@@ -20,12 +20,20 @@ is_bipartite <- R$upload$Dataset$type == 'bipartite'
 
 un visuel de Matrice attention indiquer si col and row have been inversed
 
-
+```{r child2, child=if(show_mat) 'child_imported_visual.Rmd'}
+```
 
 ## Résultats du Modèle à Blocks stochastique
 
+```{r child3, child=if(show_sbm) 'child_sbm_fr.Rmd'}
+```
 
 ## Visualisation du SBM
+
+```{r child4, child=if(show_sbm) 'child_sbm_visual.Rmd'}
+```
+
+
 
 
 
