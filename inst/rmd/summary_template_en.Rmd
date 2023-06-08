@@ -2,7 +2,7 @@
 title: "shinySBM report"
 format: html
 params:
-  matrix: NULL
+  data: NULL
   sbm: NULL
   options: NULL
 ---
@@ -20,11 +20,11 @@ library(shinySbm)
 
 
 ```{r}
-class(params$matrix)
+class(params$data)
 ```
 
 ```{r}
-plotSbm(params$matrix$matrix)
+plotSbm(params$data$matrix)
 ```
 
 

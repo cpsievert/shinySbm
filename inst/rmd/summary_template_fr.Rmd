@@ -2,7 +2,7 @@
 title: "shinySBM report"
 format: html
 params:
-  matrix: NULL
+  data: NULL
   sbm: NULL
   options: NULL
 ---
@@ -30,15 +30,33 @@ library(shinySbm)
 ```
 
 
-```{r}
-class(params$matrix)
-```
 
 ```{r}
-plotSbm(params$matrix$matrix)
+plotSbm(params$data$Dataset$matrix)
+
 ```
 
 resultats pour tout les nb groups
+
+
+```{r}
+switch(params$options$whichMatrix,
+       "raw" = plotSbm(params$sbm,
+              ordered = FALSE, transpose = params$options$showTransposed,
+              labels = params$data$labels,
+              plotOptions = params$options
+            ),
+       "ordered" = plotSbm(params$sbm,
+              ordered = TRUE, transpose = params$options$showTransposed,
+              labels = params$data$labels,
+              plotOptions = params$options
+            ),
+       "expected" = plotSbm(params$sbm,
+              ordered = TRUE, transpose = params$options$showTransposed,
+              labels = params$data$labels,
+              plotOptions = c(params$options, showValues = F)
+            ))
+```
 
 résumé des valeur
 Matrices (which)

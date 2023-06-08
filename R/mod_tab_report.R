@@ -53,11 +53,9 @@ mod_tab_report_server <- function(id, r) {
       paste0("tab_upload_1-", id)
     }
 
-    params <- reactiveValues(matrix = NA,
-                             sbm = NA,
-                             options = 0)
 
     output$params <- renderPrint({
+      print(params$data)
       print(reactiveValuesToList(params))
     })
 
@@ -67,15 +65,20 @@ mod_tab_report_server <- function(id, r) {
       session
     )
 
-    observeEvent(r$upload$Dataset(),{
-      params$matrix <- r$upload$Dataset()$matrix
+    ## Parameters from tab_show
+
+    params <- reactiveValues(data = NA,
+                             sbm = NA,
+                             options = NA)
+
+
+    observeEvent(purrr::map(r$upload,~.x()),{
+      params$data  <- purrr::map(r$upload,~.x())
     })
 
     observeEvent(my_sbm(),{
       params$sbm <- my_sbm()
     })
-
-
 
     observeEvent(purrr::map(r$show,~.x()),{
       params$options  <- purrr::map(r$show,~.x())
