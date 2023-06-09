@@ -1,11 +1,10 @@
 ---
 title: "Rapport Shiny SBM"
-format: html
 params:
   upload: NA
   sbm: NA
   options: NA
-  langue: 'FR'
+  langue: FR
 ---
 
 ```{r setup, echo=FALSE}

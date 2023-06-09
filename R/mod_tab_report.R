@@ -80,18 +80,20 @@ mod_tab_report_server <- function(id, r) {
       parameters$options  <- purrr::map(r$show,~.x())
     })
 
-    report_name <- reactive({
-      params <- reactiveValuesToList(parameters)
-      if("sbm" %in% names(params)){
-        add_group <- paste0('_',sum(params$sbm$nbBlocks),'_groups')
-      }else{
-        add_group <- ''
-      }
-      return(paste0(input$fileName,add_group,'.',input$fileType))
-    })
+
+
 
     output$downReport <- downloadHandler(
-      filename = report_name(),
+      filename = eventReactive(c(parameters$sbm$nbBlocks,input$fileType,input$fileName),{
+        params <- reactiveValuesToList(parameters)
+        if("sbm" %in% names(params)){
+          add_group <- paste0('_',sum(params$sbm$nbBlocks),'_groups')
+        }else{
+          add_group <- ''
+        }
+
+        return(paste0(input$fileName,add_group,'.',input$fileType))
+      }),
       content = function(file) {
         file_names <- c("summary_template","child_imported","child_sbm","child_empty")
         visual_names <- c("child_imported_visual.Rmd","child_sbm_visual.Rmd")

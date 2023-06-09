@@ -1,6 +1,5 @@
 ---
 title: "Shiny SBM Report"
-format: html
 params:
   upload: NA
   sbm: NA
