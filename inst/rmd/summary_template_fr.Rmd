@@ -25,6 +25,9 @@ if(show_mat){
 }
 ```
 
+```{r child1, child=if(show_mat & show_sbm) 'child_empty_fr.Rmd'}
+```
+
 ## Introduction
 
 Ce rapport automatique à été produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un résumé d'application d'un modèle à blocs stochastique. La partie moélisation est basé sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R.

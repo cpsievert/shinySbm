@@ -1,2 +1,38 @@
-resultats pour tout les nb groups
+
+### Sélection du modèle
+
+```{r echo=FALSE}
+nb_models <- dim(R$sbm$storedModels)[1]
+
+if(is_bipartite){
+  bip_min <- paste0(' (',R$sbm$storedModels$rowBlocks[1],' ',R$upload$labels$row,
+         ' et ',R$sbm$storedModels$colBlocks[1],' ',R$upload$labels$col,')')
+  bip_max <- paste0(' (',R$sbm$storedModels$rowBlocks[nb_models],' ',R$upload$labels$row,
+         ' et ',R$sbm$storedModels$colBlocks[nb_models],' ',R$upload$labels$col,')')
+  bip_cur <- paste0(' (',R$sbm$nbBlocks[[1]],' ',R$upload$labels$row,
+         ' et ',R$sbm$nbBlocks[[2]],' ',R$upload$labels$col,')')
+}else{
+  bip_min <- ""
+  bip_max <- ""
+  bip_cur <- ""
+}
+```
+
+
+Suite à l'application du modèle sbm, `r nb_models` modèles ont été trouvés avec pour chacun un nombre de groupe différent allant de `r R$sbm$storedModels$nbBlocks[1]` `r bip_min` à `r R$sbm$storedModels$nbBlocks[nb_models]``r bip_max` groupes. Le modèle sélectionné dans ce document est à `r sum(R$sbm$nbBlocks)``r bip_cur` groupes.
+
+
+
+
+```{r}
+cat("\nBlock Proportions:\n")
+print(R$sbm$blockProp)
+cat("Connectivity Betweens Blocks:\n")
+print(R$sbm$connectParam$mean)
+cat("\nModel Entropy (clustering quality):\n")
+print(R$sbm$entropy)
+cat("\nStored Models:\n")
+print(R$sbm$storedModels)
+```
+
 
