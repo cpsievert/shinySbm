@@ -53,11 +53,6 @@ mod_tab_report_server <- function(id, r) {
       paste0("tab_upload_1-", id)
     }
 
-
-    output$params <- renderPrint({
-      print(reactiveValuesToList(params))
-    })
-
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_4",
       r$sbm$main_sbm,
@@ -67,43 +62,52 @@ mod_tab_report_server <- function(id, r) {
 
     ## Parameters from tab_show
 
-    params <- reactiveValues(upload = NA,
-                             sbm = NA,
-                             options = NA)
+    parameters <- reactiveValues()
+    output$params <- renderPrint({
+      print(reactiveValuesToList(parameters))
+    })
 
 
     observeEvent(purrr::map(r$upload,~.x()),{
-      params$upload  <- purrr::map(r$upload,~.x())
+      parameters$upload  <- purrr::map(r$upload,~.x())
     })
 
     observeEvent(my_sbm(),{
-      params$sbm <- my_sbm()
+      parameters$sbm <- my_sbm()
     })
 
     observeEvent(purrr::map(r$show,~.x()),{
-      params$options  <- purrr::map(r$show,~.x())
+      parameters$options  <- purrr::map(r$show,~.x())
     })
 
-
+    report_name <- reactive({
+      params <- reactiveValuesToList(parameters)
+      if("sbm" %in% names(params)){
+        add_group <- paste0('_',sum(params$sbm$nbBlocks),'_groups')
+      }else{
+        add_group <- ''
+      }
+      return(paste0(input$fileName,add_group,'.',input$fileType))
+    })
 
     output$downReport <- downloadHandler(
-      filename = reactive({paste0(input$fileName,'_',sum(my_sbm()$nbBlocks),'_groups','.',input$fileType)}),
+      filename = report_name(),
       content = function(file) {
-        file_names <- c("summary_template","child_imported","child_sbm")
+        file_names <- c("summary_template","child_imported","child_sbm","child_empty")
         visual_names <- c("child_imported_visual.Rmd","child_sbm_visual.Rmd")
         rmd_names <- purrr::map_chr(file_names,~paste0(.x,input$language))
         all_files <- c(rmd_names,visual_names)
         file_paths <- purrr::map_chr(all_files,
                                      ~system.file("rmd",.x, package = "shinySbm"))
         tempReports <- purrr::map_chr(all_files,
-                                      ~file.path(tempdir(), .x,fsep = '/'))
+                                      ~file.path(gsub('\\\\','/',tempdir()), .x,fsep = '/'))
         purrr::map2(file_paths,tempReports,~file.copy(.x,.y, overwrite = TRUE))
 
         rmarkdown::render(
           input = tempReports[[1]],
           output_file = file,
           output_format = paste0(input$fileType, "_document"),
-          params = reactiveValuesToList(params),
+          params = reactiveValuesToList(parameters),
           envir = new.env(parent = globalenv())
         )
       }

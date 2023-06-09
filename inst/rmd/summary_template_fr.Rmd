@@ -13,7 +13,17 @@ library(shinySbm)
 R <- purrr::map(params,~if(identical(.x,"NA")){NA}else{.x})
 show_mat <- !identical(R$upload,NA)
 show_sbm <- !identical(R$sbm,NA)
-is_bipartite <- R$upload$Dataset$type == 'bipartite'
+
+if(!identical(R$options,NA)){
+  is_transposed <- R$options$showTransposed
+}else{
+  is_transposed <- F
+}
+if(show_mat){
+  is_bipartite <- R$upload$Dataset$type == 'bipartite'
+}else{
+  is_bipartite <- F
+}
 ```
 
 ## Introduction
@@ -28,7 +38,7 @@ Ce rapport automatique à été produit par l'application [Shiny SBM](https://fo
 ```{r child2, child=if(show_mat) 'child_imported_visual.Rmd'}
 ```
 
-`r ifelse(R$options$showTransposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
+`r ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
 
 ## Résultats du Modèle à Blocks stochastique
 
@@ -40,7 +50,7 @@ Ce rapport automatique à été produit par l'application [Shiny SBM](https://fo
 ```{r child4, child=if(show_sbm) 'child_sbm_visual.Rmd'}
 ```
 
-`r ifelse(R$options$showTransposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
+`r ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
 
 
 # Références
