@@ -25,34 +25,51 @@ if(show_mat){
 }
 ```
 
-```{r child1, child=if(show_mat & show_sbm) 'child_empty_fr.Rmd'}
+```{r child1, child=if(!show_mat & !show_sbm) 'child_empty_fr.Rmd'}
 ```
 
-## Introduction
 
-Ce rapport automatique à été produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un résumé d'application d'un modèle à blocs stochastique. La partie moélisation est basé sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R.
+```{r, echo=FALSE, results = 'asis'}
 
-```{r child1, child=if(show_mat) 'child_imported_fr.Rmd'}
+if(show_mat){
+  
+  cat("## Introduction\nCe rapport automatique à été produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un résumé d'application d'un modèle à blocs stochastique. La partie moélisation est basé sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R.")
+  
+  imported_text <- knitr::knit_child('child_imported_fr.Rmd', quiet = TRUE)
+  cat(imported_text, sep = '\n')
+  
+  cat("## Visuel de Matrice")
+  
+  imported_vis <- knitr::knit_child('child_imported_visual.Rmd', quiet = TRUE)
+  cat(imported_vis, sep = '\n')
+  
+  cat(ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),""))
+  
+}
+
 ```
 
-## Visuel de Matrice
 
-```{r child2, child=if(show_mat) 'child_imported_visual.Rmd'}
+```{r, echo=FALSE, results = 'asis'}
+
+if(show_sbm){
+  
+  cat("## R","\ue9","sultats du mod","\ue8","le ","\ue0"," blocks stochastique",sep = "")
+  
+  sbm_text <- knitr::knit_child('child_sbm_fr.Rmd', quiet = TRUE)
+  cat(sbm_text, sep = '\n')
+  
+  cat("## Visualisation du SBM")
+  
+  sbm_vis <- knitr::knit_child('child_sbm_visual.Rmd', quiet = TRUE)
+  cat(sbm_vis, sep = '\n')
+  
+  cat(ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),""))
+  
+}
+
 ```
 
-`r ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
-
-## Résultats du Modèle à Blocks stochastique
-
-```{r child3, child=if(show_sbm) 'child_sbm_fr.Rmd'}
-```
-
-## Visualisation du SBM
-
-```{r child4, child=if(show_sbm) 'child_sbm_visual.Rmd'}
-```
-
-`r ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),"")`
 
 
 # Références
