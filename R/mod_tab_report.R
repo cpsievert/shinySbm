@@ -90,7 +90,7 @@ mod_tab_report_server <- function(id, r) {
       }),
       content = function(file) {
         file_names <- c("summary_template","child_imported","child_sbm","child_empty")
-        visual_names <- c("child_imported_visual.Rmd","child_sbm_visual.Rmd")
+        visual_names <- c("child_setup.Rmd","child_imported_visual.Rmd","child_sbm_visual.Rmd")
         rmd_names <- purrr::map_chr(file_names,~paste0(.x,input$language))
         all_files <- c(rmd_names,visual_names)
         file_paths <- purrr::map_chr(all_files,

@@ -11,54 +11,7 @@ output:
   
 ---
 
-```{r function, include = F}
-nb_digits <- 2
-
-round_prop <- function(x,digits = 2){
-  prop_vec <- round(x,digits)
-  prop_vec[length(prop_vec)] <- 1 - sum(prop_vec[1:(length(prop_vec)-1)])
-  return(prop_vec)
-}
-
-smalltable <- function(data, header = F, rownames = F, title = NULL,nb_digits = 2){
-  flextable::set_flextable_defaults(digits = nb_digits)
-  fp_cap <- flextable::fp_text_default(bold = T)
-  tbl <- flextable::as_flextable(data,show_coltype = F)
-  if(!header){
-    tbl <- flextable::delete_part(tbl, part = "header")
-  }
-  if(!is.null(title)){
-    tbl <- flextable::set_caption(tbl,caption = title,fp_p = fp_cap)
-  }
-  if(rownames){
-     tbl <- flextable::void(tbl,j = 1, part = "header")
-  }
-  tbl <- flextable::border_inner(tbl) %>%
-    flextable::border_outer()
-  return(tbl)
-}
-```
-
-
-```{r setup, echo=FALSE}
-options(digits = nb_digits)
-
-library(shinySbm)
-
-R <- purrr::map(params,~if(identical(.x,"NA")){NA}else{.x})
-show_mat <- !identical(R$upload,NA)
-show_sbm <- !identical(R$sbm,NA)
-
-if(!identical(R$options,NA)){
-  is_transposed <- R$options$showTransposed
-}else{
-  is_transposed <- F
-}
-if(show_mat){
-  is_bipartite <- R$upload$Dataset$type == 'bipartite'
-}else{
-  is_bipartite <- F
-}
+```{r child0, child= 'child_setup.Rmd'}
 ```
 
 ```{r child1, child=if(!show_mat & !show_sbm) 'child_empty_fr.Rmd'}
