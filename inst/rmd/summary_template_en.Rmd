@@ -1,10 +1,11 @@
 ---
-title: "Rapport Shiny SBM"
+title: "Shiny SBM Report"
 params:
   upload: NA
   sbm: NA
   options: NA
-  langue: FR
+  langue: EN
+
 output:
   pdf_doxument:
     latex_engine: xelatex
@@ -61,7 +62,7 @@ if(show_mat){
 }
 ```
 
-```{r child1, child=if(!show_mat & !show_sbm) 'child_empty_fr.Rmd'}
+```{r child1, child=if(!show_mat & !show_sbm) 'child_empty_en.Rmd'}
 ```
 
 
@@ -69,9 +70,9 @@ if(show_mat){
 
 if(show_mat){
   
-  cat(paste0("## Introduction\nCe rapport automatique ","\ue0"," ","\ue9","t","\ue9"," produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un r","\ue9","sum","\ue9"," d'application d'un modèle ","\ue0"," blocs stochastique. La partie mod","\ue9","lisation est bas","\ue9"," sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R."))
+  cat("## Introduction\nThis automatic report was produced by the [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) application (also available via this [link](https://shiny.migale.inrae.fr/app/ShinySBM)). It is an application summary of a stochastic block model. The modeling part is based on the R package [sbm](https://CRAN.R-project.org/package=sbm).")
   
-  imported_text <- knitr::knit_child('child_imported_fr.Rmd', quiet = TRUE)
+  imported_text <- knitr::knit_child('child_imported_en.Rmd', quiet = TRUE)
   cat(imported_text, sep = '\n')
   
   cat("## Visuel de Matrice")
@@ -79,7 +80,7 @@ if(show_mat){
   imported_vis <- knitr::knit_child('child_imported_visual.Rmd', quiet = TRUE)
   cat(imported_vis, sep = '\n')
   
-  cat(ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),""))
+  cat(ifelse(is_transposed,"Note that in this image, columns and rows are reversed.",""))
   
 }
 
@@ -90,17 +91,17 @@ if(show_mat){
 
 if(show_sbm){
   
-  cat("## R","\ue9","sultats du mod","\ue8","le ","\ue0"," blocks stochastique",sep = "")
+  cat("## Results of the stochastic block model",sep = "")
   
-  sbm_text <- knitr::knit_child('child_sbm_fr.Rmd', quiet = TRUE)
+  sbm_text <- knitr::knit_child('child_sbm_en.Rmd', quiet = TRUE)
   cat(sbm_text, sep = '\n')
   
-  cat("## Visualisation du SBM")
+  cat("## SBM visualization")
   
   sbm_vis <- knitr::knit_child('child_sbm_visual.Rmd', quiet = TRUE)
   cat(sbm_vis, sep = '\n')
   
-  cat(ifelse(is_transposed,paste0("\uc0"," noter que sur cette image, colonnes et lignes sont invers","\ue9","es."),""))
+  cat(ifelse(is_transposed,"Note that in this image, columns and rows are reversed.",""))
   
 }
 
@@ -108,7 +109,7 @@ if(show_sbm){
 
 
 
-# Références
+# References
 
 1.  Chiquet J, Donnet S, Barbillon P (2023).  sbm: Stochastic Blockmodels. R package version 0.4.5,  
   [https://CRAN.R-project.org/package=sbm](https://CRAN.R-project.org/package=sbm).

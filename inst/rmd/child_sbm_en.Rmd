@@ -1,25 +1,21 @@
 
-### Sélection du modèle
+### Modele selection
 
 ```{r echo=FALSE}
 
-if(R$sbm$modelName %in% c("bernoulli","poisson")){
-  modelName <- stringr::str_to_title(R$sbm$modelName)
-}else{
-  modelName <- "Gaussien"
-}
+modelName <- stringr::str_to_title(R$sbm$modelName)
 
 nb_models <- dim(R$sbm$storedModels)[1]
 
 if(is_bipartite){
   bip_min <- paste0(' (',R$sbm$storedModels$rowBlocks[1],' ',R$upload$labels$row,
-         ' et ',R$sbm$storedModels$colBlocks[1],' ',R$upload$labels$col,')')
+         ' and ',R$sbm$storedModels$colBlocks[1],' ',R$upload$labels$col,')')
   bip_max <- paste0(' (',R$sbm$storedModels$rowBlocks[nb_models],' ',R$upload$labels$row,
-         ' et ',R$sbm$storedModels$colBlocks[nb_models],' ',R$upload$labels$col,')')
+         ' and ',R$sbm$storedModels$colBlocks[nb_models],' ',R$upload$labels$col,')')
   bip_cur <- paste0(' (',R$sbm$nbBlocks[[1]],' ',R$upload$labels$row,
-         ' et ',R$sbm$nbBlocks[[2]],' ',R$upload$labels$col,')')
+         ' and ',R$sbm$nbBlocks[[2]],' ',R$upload$labels$col,')')
   bip_best <- paste0(' (',R$sbm$storedModels$rowBlocks[[which.max(R$sbm$storedModels$ICL)]][[1]],
-                     ' ',R$upload$labels$row,' et ',
+                     ' ',R$upload$labels$row,' and ',
                      R$sbm$storedModels$colBlocks[[which.max(R$sbm$storedModels$ICL)]][[1]],
                      ' ',R$upload$labels$col,')')
 }else{
@@ -32,22 +28,23 @@ if(is_bipartite){
 nb_group_best <- R$sbm$storedModels$nbBlocks[[which.max(R$sbm$storedModels$ICL)]][[1]]
 
 if(R$sbm$ICL != max(R$sbm$storedModels$ICL)){
-  entrop_cur <- paste0("Contre ", round(max(R$sbm$storedModels$ICL),2), 
-                       " pour le mod","\ue8","le le plus vraisemblant ","\ue0 ",
-                       nb_group_best, " groupes ", bip_best,"." )
+  entrop_cur <- paste0("The most likely model has an ILC of ",
+                       round(max(R$sbm$storedModels$ICL),2), 
+                       " for ",
+                       nb_group_best, " groups ", bip_best,"." )
 }else{
-  entrop_cur <- paste0("Sur tout les SBM observ","\ue9","s ce mod","\ue8","le ","\ue0"," l'ICL la plus ","\ue9","l","\ue9","v","\ue9","e, c'est le plus vraisemblable.")
+  entrop_cur <- paste0("On all estimated SBM, the selected one is the most likely.")
 }
 
 ```
 
 
-Suite à l'application du modèle sbm (`r modelName`), `r nb_models` modèles ont été trouvés avec pour chacun un nombre de groupes différent allant de `r R$sbm$storedModels$nbBlocks[1]` `r bip_min` à `r R$sbm$storedModels$nbBlocks[nb_models]` groupes`r bip_max`. 
+Following application of the sbm model (`r modelName`), `r nb_models` models were estimated, each with a different number of groups ranging from `r R$sbm$storedModels$nbBlocks[1]` `r bip_min` to `r R$sbm$storedModels$nbBlocks[nb_models]` `r bip_max` groups.
 
-Le modèle sélectionné dans ce document est à `r sum(R$sbm$nbBlocks)` groupes`r bip_cur`. L'ICL (Critère de vraisemblance intégrée sur données-complète) de ce modèle vaut `r R$sbm$ICL`. `r entrop_cur`
+The selected model in this document has `r sum(R$sbm$nbBlocks)` groups`r bip_cur`. The ICL of this model is `r R$sbm$ICL`. `r entrop_cur`.
 
 
-### Modèle sélectionné 
+### Selected model 
 
 ```{r block-prop, echo=FALSE,results='asis',fig.align = 'center', fig.width=12}
 
@@ -63,7 +60,7 @@ if(is_bipartite){
     matrix(ncol = 2) %>% 
     t %>% 
     as.data.frame() %>% 
-    smalltable(title = 'Proportion des groupes en colonnes')  %>% 
+    smalltable(title = 'Proportion of groups in columns')  %>% 
     flextable::flextable_to_rmd()
   
   
@@ -72,7 +69,7 @@ if(is_bipartite){
     matrix(ncol = 2) %>%
     t %>%
     as.data.frame() %>%
-    smalltable(title = 'Proportion des groupes en lignes')  %>% 
+    smalltable(title = 'Proportion of groups in lines')  %>% 
     flextable::flextable_to_rmd()
 }else{
   c(row_group_names,
@@ -80,12 +77,12 @@ if(is_bipartite){
     matrix(ncol = 2)) %>% 
     t %>% 
     as.data.frame() %>% 
-    smalltable(title = 'Proportion des groupes')  %>% 
+    smalltable(title = 'Proportion of groups')  %>% 
     flextable::flextable_to_rmd()
 }
 ```
 <br>
-Ici par exemple `r round_prop(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]]*100`\% des `r R$upload$labels$row` sont dans le groupe `r col_group_names[[R$sbm$nbBlocks[[1]]]]`. 
+Here, for example, `r round_prop(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]]*100`\% of the `r R$upload$labels$row` are in the `r col_group_names[[R$sbm$nbBlocks[[1]]]]` group. 
 
 
 ```{r connectivity, echo=FALSE,results='asis',fig.align = 'center', fig.width=12}
@@ -96,7 +93,7 @@ connect_table <- R$sbm$connectParam$mean %>%
   dplyr::mutate(rn = row_group_names) %>% 
   dplyr::select(rn,dplyr::everything()) %>% 
   smalltable(header = T,rownames = T,
-             title = paste0('Table de connectivit','\ue9')) 
+             title = 'Connectivity Table') 
 if(R$sbm$modelName == "gaussian"){
   connect_table <- flextable::add_body_row(connect_table,top = F,
       values = c('Variance',as.character(round(R$sbm$connectParam$var[[1]],3)),""),
@@ -109,34 +106,34 @@ connect_table %>%
 
 ```
 <br> 
-Les valeurs dans ce tableau sont les paramètres de connectivité du model sbm (`r modelName`). <br>
+The values in this table are the connectivity parameters of the sbm model (`r modelName`). <br>
 ```{r echo=FALSE,results='asis'}
-exemple_val <- round(R$sbm$connectParam$mean[1,2],nb_digits)
+example_val <- round(R$sbm$connectParam$mean[1,2],nb_digits)
 if(R$sbm$modelName == "bernoulli"){
-  connect_paraph <- paste0("Par exemple, si l'on prend un noeud A dans le groupe ",
-         row_group_names[[1]]," en lignes et un noeud B dans le groupe ",
-         col_group_names[[2]]," en colonnes. Alors le noeud A ","\ue0",
-         " une probabilit","\ue9"," ",exemple_val," d'",
-         "\uea","tre connect","\ue9"," au noeud B.")
+  connect_paraph <- paste0("For example, if we take a node A in the group ",
+         row_group_names[[1]]," in rows and a node B in the group ",
+         col_group_names[[2]]," in columns. Then node A ","\ue0",
+         "a probability ",example_val," of being connected to node B.")
 }else if(R$sbm$modelName == "poisson"){
-  connect_paraph <- paste0("Par exemple, les noeuds du groupe ",
-         row_group_names[[1]]," en lignes et les noeuds du groupe ",
-         col_group_names[[2]]," en colonnes ont une connection valant en moyenne ",
-         exemple_val," . On peut simuler leur connection par une loi de ",
-         modelName," de param","\ue8","tre lamba = ",exemple_val," .")
+  connect_paraph <- paste0("For example, nodes in group ",
+         row_group_names[[1]]," in rows and group nodes ",
+         col_group_names[[2]]," in columns have an average connection value of ",
+         example_val," . Their connection can be simulated by a ",
+         modelName," parameter lamba = ",example_val," .")
 }else{
-  connect_paraph <- paste0("Par exemple, les noeuds du groupe ",
-         row_group_names[[1]]," en lignes et les noeuds du groupe ",
-         col_group_names[[2]]," en colonnes ont une connection valant en moyenne ",
-         exemple_val,
-         " . On peut simuler leur connection par une loi Normale de param","\ue8",
-         "tre mu = ", exemple_val," et sigma = ",
+  connect_paraph <- paste0("For example, nodes in group ",
+         row_group_names[[1]]," in rows and group nodes ",
+         col_group_names[[2]]," in columns have an average connection value of ",
+         example_val,
+         " . We can simulate their connection using a Normal",
+         " distribution with parameters mu = ",
+         example_val," and sigma = ",
          round(R$sbm$connectParam$var[[1]],3)," .")
 }
 cat(connect_paraph)
 ```
 <br>
-Le modèle séléctionné possède une entropie (Indice globale de certitude d'appartenance aux groupes attribués) de `r R$sbm$entropy` .
+The selected model has an entropy (overall index of certainty of belonging to the assigned groups) of `r R$sbm$entropy` .
 
 
 

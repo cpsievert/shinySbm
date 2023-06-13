@@ -1,9 +1,9 @@
 
-## Données
+## Data
 
-  - Le réseau est `r R$upload$Dataset$type`
-  - Les noeuds du réseaux sont composés de `r ifelse(is_bipartite, paste(dim(R$upload$Dataset$matrix)[2],R$upload$labels$col,"en colonnes et",dim(R$upload$Dataset$matrix)[1], R$upload$labels$row,"en lignes"), paste(dim(R$upload$Dataset$matrix)[2],R$upload$labels$col))`
-  - Les arêtes prennent des valeurs `r ifelse(R$upload$Dataset$law == "bernoulli","binaires (0 ou 1)",ifelse(R$upload$Dataset$law == "poisson", "enti\ue8res (0, 1, 2 , ...)","r\ue9elles"))` `r ifelse(is_bipartite,"",ifelse(R$upload$directed,"et sont dirig\ue9es.","et sont sym\ue9triques."))`
+  - The network is `r R$upload$Dataset$type`
+  - The network nodes are made up of `r ifelse(is_bipartite, paste(dim(R$upload$Dataset$matrix)[2],R$upload$labels$col,"in columns and",dim(R$upload$Dataset$matrix)[1], R$upload$labels$row,"in lines"), paste(dim(R$upload$Dataset$matrix)[2],R$upload$labels$col))`
+  - Edges take values `r ifelse(R$upload$Dataset$law == "bernoulli", "binary (0 or 1)",ifelse(R$upload$Dataset$law == "poisson", "integers (0, 1, 2 , . .)", "real"))` `r ifelse(is_bipartite,"",ifelse(R$upload$directed, "and are directed.", "and are symmetrical."))`
 
 
 
