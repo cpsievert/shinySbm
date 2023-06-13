@@ -52,7 +52,7 @@ Le modèle sélectionné dans ce document est à `r sum(R$sbm$nbBlocks)` groupes
 ```{r block-prop, echo=FALSE,results='asis',fig.align = 'center', fig.width=12}
 
 col_group_names <- paste0('Group_', R$upload$labels$col,'_',
-           1:R$sbm$nbBlocks[[2]])
+           1:R$sbm$nbBlocks[[1+is_bipartite]])
 row_group_names <- paste0('Group_', R$upload$labels$row,'_',
            1:R$sbm$nbBlocks[[1]])
 
@@ -66,6 +66,8 @@ if(is_bipartite){
     smalltable(title = 'Proportion des groupes en colonnes')  %>% 
     flextable::flextable_to_rmd()
   
+  example_group <- round_prop(R$sbm$blockProp$col)[[R$sbm$nbBlocks[[1]]]]*100
+  
   
   c(row_group_names,
     round_prop(R$sbm$blockProp$row)) %>%
@@ -76,16 +78,18 @@ if(is_bipartite){
     flextable::flextable_to_rmd()
 }else{
   c(row_group_names,
-    round_prop(R$sbm$blockProp$row) %>% 
-    matrix(ncol = 2)) %>% 
+    round_prop(R$sbm$blockProp)) %>% 
+    matrix(ncol = 2) %>% 
     t %>% 
     as.data.frame() %>% 
     smalltable(title = 'Proportion des groupes')  %>% 
     flextable::flextable_to_rmd()
+  
+  example_group <- round_prop(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]]*100
 }
 ```
 <br>
-Ici par exemple `r round_prop(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]]*100`\% des `r R$upload$labels$row` sont dans le groupe `r col_group_names[[R$sbm$nbBlocks[[1]]]]`. 
+Ici par exemple `r example_group`\% des `r R$upload$labels$row` sont dans le groupe `r col_group_names[[R$sbm$nbBlocks[[1]]]]`. 
 
 
 ```{r connectivity, echo=FALSE,results='asis',fig.align = 'center', fig.width=12}
@@ -100,7 +104,7 @@ connect_table <- R$sbm$connectParam$mean %>%
 if(R$sbm$modelName == "gaussian"){
   connect_table <- flextable::add_body_row(connect_table,top = F,
       values = c('Variance',as.character(round(R$sbm$connectParam$var[[1]],3)),""),
-       colwidths = c(1,1,R$sbm$nbBlocks[[2]]-1))
+       colwidths = c(1,1,R$sbm$nbBlocks[[1+is_bipartite]]-1))
 }
 
 
@@ -111,23 +115,24 @@ connect_table %>%
 <br> 
 Les valeurs dans ce tableau sont les paramètres de connectivité du model sbm (`r modelName`). <br>
 ```{r echo=FALSE,results='asis'}
-exemple_val <- round(R$sbm$connectParam$mean[1,2],nb_digits)
+ex_index <- min(2,R$sbm$nbBlocks[[1+is_bipartite]])
+exemple_val <- round(R$sbm$connectParam$mean[1,ex_index],nb_digits)
 if(R$sbm$modelName == "bernoulli"){
   connect_paraph <- paste0("Par exemple, si l'on prend un noeud A dans le groupe ",
          row_group_names[[1]]," en lignes et un noeud B dans le groupe ",
-         col_group_names[[2]]," en colonnes. Alors le noeud A ","\ue0",
+         col_group_names[[ex_index]]," en colonnes. Alors le noeud A ","\ue0",
          " une probabilit","\ue9"," ",exemple_val," d'",
          "\uea","tre connect","\ue9"," au noeud B.")
 }else if(R$sbm$modelName == "poisson"){
   connect_paraph <- paste0("Par exemple, les noeuds du groupe ",
          row_group_names[[1]]," en lignes et les noeuds du groupe ",
-         col_group_names[[2]]," en colonnes ont une connection valant en moyenne ",
+         col_group_names[[ex_index]]," en colonnes ont une connection valant en moyenne ",
          exemple_val," . On peut simuler leur connection par une loi de ",
          modelName," de param","\ue8","tre lamba = ",exemple_val," .")
 }else{
   connect_paraph <- paste0("Par exemple, les noeuds du groupe ",
          row_group_names[[1]]," en lignes et les noeuds du groupe ",
-         col_group_names[[2]]," en colonnes ont une connection valant en moyenne ",
+         col_group_names[[ex_index]]," en colonnes ont une connection valant en moyenne ",
          exemple_val,
          " . On peut simuler leur connection par une loi Normale de param","\ue8",
          "tre mu = ", exemple_val," et sigma = ",
