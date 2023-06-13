@@ -6,23 +6,12 @@ round_prop <- function(x,digits = 2){
   prop_vec[length(prop_vec)] <- 1 - sum(prop_vec[1:(length(prop_vec)-1)])
   return(prop_vec)
 }
-
-smalltable <- function(data, header = F, rownames = F, title = NULL,nb_digits = 2){
-  flextable::set_flextable_defaults(digits = nb_digits)
-  fp_cap <- flextable::fp_text_default(bold = T)
-  tbl <- flextable::as_flextable(data,show_coltype = F)
-  if(!header){
-    tbl <- flextable::delete_part(tbl, part = "header")
-  }
-  if(!is.null(title)){
-    tbl <- flextable::set_caption(tbl,caption = title,fp_p = fp_cap)
-  }
-  if(rownames){
-     tbl <- flextable::void(tbl,j = 1, part = "header")
-  }
-  tbl <- flextable::border_inner(tbl) %>%
-    flextable::border_outer()
-  return(tbl)
+small_tbl <- function(prop,names,title){
+  round_prop(prop) %>% 
+    matrix(nrow = 1) %>% 
+    `colnames<-`(paste0('**',names,'**')) %>% 
+    as.data.frame() %>% 
+    knitr::kable(caption = title,format = 'pipe')
 }
 ```
 
