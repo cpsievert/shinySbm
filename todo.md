@@ -20,14 +20,31 @@
 
 - Visualisation : Tableau & Réseau + Extraction de groupe
 - visu graph sans sbm
+- est-ce possible de zoomer sur certains graphiques ?
 
 ### Données en entrée
 
 - Permettre la simulation d'un jeu de données d'entrées ?
 - Dataseq voir comment traiter avec sbm
 
+### Typos ou mise en forme/harmonisation
+- Attention parfois des majuscules pour les noms commusn, parfois que ds minuscules
+- Parfois you, parfois 
+- Espace autour des ":" pas d'espace avant, seulement après
+- Specify what ... peut-etre remplacer par Label for ...
 
+Module Data Plots: ploted -> plotted
 
+Color settings: changer les valeurs par défaut ?
+
+### Exploration
+
+- Loupe pour réduire la matrice en fonction d'une valeur : ne fonctionne que sur les lignes et pas sur les colonnes
+(testé en bipartite)
+
+### Pb ??
+
+Je n'ai pas réussi à voir les matrices que ce soit brutes, ou réordonnées ou attendues (test avec version Migale)
 
 
 
