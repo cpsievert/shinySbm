@@ -18,7 +18,7 @@ if (show_mat) {
   cat(paste0("## Introduction\nCe rapport automatique ", "\ue0", " ", "\ue9", "t", "\ue9", " produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un r", "\ue9", "sum", "\ue9", " d'application d'un modèle ", "\ue0", " blocs stochastique. La partie mod", "\ue9", "lisation est bas", "\ue9", " sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R."))
 
   imported_text <- knitr::knit_child("child_imported_fr.Rmd", quiet = TRUE)
-  cat(imported_text, sep = "\n")
+  cat(imported_text,'\n', sep = "\n")
 
   cat("## Visuel de Matrice")
 
