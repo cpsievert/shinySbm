@@ -49,8 +49,8 @@ app_ui <- function(request) {
                                    icon = icon("share-alt", lib = "font-awesome")),
           shinydashboard::menuItem("Report", tabName = "tab_report",
                                    icon = icon("line-chart", lib = "font-awesome")),
-          shinydashboard::menuItem("Extract Results", tabName = "tab_extraction",
-                                   icon = icon("circle-info", lib = "font-awesome")),
+          shinydashboard::menuItem("Extract Groups", tabName = "tab_extraction",
+                                   icon = icon("table", lib = "font-awesome")),
           shinydashboard::menuItem("About us", tabName = "tab_about_us",
                                    icon = icon("circle-info", lib = "font-awesome"))
 

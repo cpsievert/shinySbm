@@ -5,11 +5,6 @@ params:
   sbm: NA
   options: NA
   langue: EN
-
-output:
-  pdf_doxument:
-    latex_engine: xelatex
-  
 ---
 
 ```{r child0, child= 'child_setup.Rmd'}
