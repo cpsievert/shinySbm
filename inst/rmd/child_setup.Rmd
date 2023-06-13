@@ -1,39 +1,41 @@
 ```{r functions-variables, include = F}
 nb_digits <- 2
 
-round_prop <- function(x,digits = 2){
-  prop_vec <- round(x,digits)
-  prop_vec[length(prop_vec)] <- 1 - sum(prop_vec[1:(length(prop_vec)-1)])
+round_prop <- function(x, digits = 2) {
+  prop_vec <- round(x, digits)
+  prop_vec[length(prop_vec)] <- 1 - sum(prop_vec[1:(length(prop_vec) - 1)])
   return(prop_vec)
 }
-small_tbl <- function(prop,names,title){
-  round_prop(prop) %>% 
-    matrix(nrow = 1) %>% 
-    `colnames<-`(paste0('**',names,'**')) %>% 
-    as.data.frame() %>% 
-    knitr::kable(caption = title,format = 'pipe')
+small_tbl <- function(prop, names, title) {
+  round_prop(prop) %>%
+    matrix(nrow = 1) %>%
+    `colnames<-`(paste0("**", names, "**")) %>%
+    as.data.frame() %>%
+    knitr::kable(caption = title, format = "pipe")
 }
 ```
-
-
 
 ```{r setup, echo=FALSE}
 options(digits = nb_digits)
 
 library(shinySbm)
 
-R <- purrr::map(params,~if(identical(.x,"NA")){NA}else{.x})
-show_mat <- !identical(R$upload,NA)
-show_sbm <- !identical(R$sbm,NA)
+R <- purrr::map(params, ~ if (identical(.x, "NA")) {
+  NA
+} else {
+  .x
+})
+show_mat <- !identical(R$upload, NA)
+show_sbm <- !identical(R$sbm, NA)
 
-if(!identical(R$options,NA)){
+if (!identical(R$options, NA)) {
   is_transposed <- R$options$showTransposed
-}else{
+} else {
   is_transposed <- F
 }
-if(show_mat){
-  is_bipartite <- R$upload$Dataset$type == 'bipartite'
-}else{
+if (show_mat) {
+  is_bipartite <- R$upload$Dataset$type == "bipartite"
+} else {
   is_bipartite <- F
 }
 ```
