@@ -177,6 +177,7 @@ golem::add_fct( "sbmMatrixClass" )
 golem::add_fct( "specific_css_style" )
 golem::add_fct("specific_plots")
 golem::add_fct( "getGroup" )
+golem::add_fct( "flextables" )
 
 golem::add_fct( "plotSbm" )
 

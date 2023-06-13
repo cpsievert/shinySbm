@@ -35,8 +35,8 @@ mod_tab_report_ui <- function(id) {
       ),
       downloadButton(ns("downReport"),label = 'Download Report')
     ),
-    mod_select_nb_groups_ui(ns("select_nb_groups_4")),
-    verbatimTextOutput(ns('params'))
+    mod_select_nb_groups_ui(ns("select_nb_groups_4"))
+    # verbatimTextOutput(ns('params'))
   )
 }
 
@@ -63,9 +63,9 @@ mod_tab_report_server <- function(id, r) {
     ## Parameters from tab_show
 
     parameters <- reactiveValues()
-    output$params <- renderPrint({
-      print(reactiveValuesToList(parameters))
-    })
+    # output$params <- renderPrint({
+    #   print(reactiveValuesToList(parameters))
+    # })
 
 
     observeEvent(purrr::map(r$upload,~.x()),{

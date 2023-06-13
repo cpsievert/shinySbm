@@ -1,13 +1,50 @@
 ---
-title: "Shiny SBM Report"
+title: "Rapport Shiny SBM"
 params:
   upload: NA
   sbm: NA
   options: NA
-  langue: 'EN'
+  langue: FR
+output:
+  pdf_doxument:
+    latex_engine: xelatex
+  
 ---
+
+```{r function, include = F}
+nb_digits <- 2
+
+round_prop <- function(x,digits = 2){
+  prop_vec <- round(x,digits)
+  prop_vec[length(prop_vec)] <- 1 - sum(prop_vec[1:(length(prop_vec)-1)])
+  return(prop_vec)
+}
+
+smalltable <- function(data, header = F, rownames = F, title = NULL,nb_digits = 2){
+  flextable::set_flextable_defaults(digits = nb_digits)
+  fp_cap <- flextable::fp_text_default(bold = T)
+  tbl <- flextable::as_flextable(data,show_coltype = F)
+  if(!header){
+    tbl <- flextable::delete_part(tbl, part = "header")
+  }
+  if(!is.null(title)){
+    tbl <- flextable::set_caption(tbl,caption = title,fp_p = fp_cap)
+  }
+  if(rownames){
+     tbl <- flextable::void(tbl,j = 1, part = "header")
+  }
+  tbl <- flextable::border_inner(tbl) %>%
+    flextable::border_outer()
+  return(tbl)
+}
+```
+
+
 ```{r setup, echo=FALSE}
+options(digits = nb_digits)
+
 library(shinySbm)
+
 R <- purrr::map(params,~if(identical(.x,"NA")){NA}else{.x})
 show_mat <- !identical(R$upload,NA)
 show_sbm <- !identical(R$sbm,NA)
@@ -24,7 +61,7 @@ if(show_mat){
 }
 ```
 
-```{r child1, child=if(!show_mat & !show_sbm) 'child_empty_en.Rmd'}
+```{r child1, child=if(!show_mat & !show_sbm) 'child_empty_fr.Rmd'}
 ```
 
 
@@ -32,9 +69,9 @@ if(show_mat){
 
 if(show_mat){
   
-  cat("## Introduction\nCe rapport automatique à été produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un résumé d'application d'un modèle à blocs stochastique. La partie moélisation est basé sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R.")
+  cat(paste0("## Introduction\nCe rapport automatique ","\ue0"," ","\ue9","t","\ue9"," produit par l'application [Shiny SBM](https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm) (aussi disponible via ce [lien](https://shiny.migale.inrae.fr/app/ShinySBM)). C'est un r","\ue9","sum","\ue9"," d'application d'un modèle ","\ue0"," blocs stochastique. La partie mod","\ue9","lisation est bas","\ue9"," sur le package [sbm](https://CRAN.R-project.org/package=sbm) de R."))
   
-  imported_text <- knitr::knit_child('child_imported_en.Rmd', quiet = TRUE)
+  imported_text <- knitr::knit_child('child_imported_fr.Rmd', quiet = TRUE)
   cat(imported_text, sep = '\n')
   
   cat("## Visuel de Matrice")
@@ -55,7 +92,7 @@ if(show_sbm){
   
   cat("## R","\ue9","sultats du mod","\ue8","le ","\ue0"," blocks stochastique",sep = "")
   
-  sbm_text <- knitr::knit_child('child_sbm_en.Rmd', quiet = TRUE)
+  sbm_text <- knitr::knit_child('child_sbm_fr.Rmd', quiet = TRUE)
   cat(sbm_text, sep = '\n')
   
   cat("## Visualisation du SBM")
