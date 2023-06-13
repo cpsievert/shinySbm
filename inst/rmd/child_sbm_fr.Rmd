@@ -81,7 +81,7 @@ if (is_bipartite) {
     "Proportion des groupes en lignes"
   )
 
-  example_group <- round_prop(R$sbm$blockProp$col)[[R$sbm$nbBlocks[[1]]]] * 100
+  example_group <- round_prop(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]] * 100
 } else {
   get_tables[[1]] <- small_tbl(
     R$sbm$blockProp,
@@ -93,10 +93,8 @@ if (is_bipartite) {
 
 purrr::map(get_tables, ~ cat(.x, sep = "\n")) %>% invisible()
 ```
-
 <br>
-
-Ici par exemple `r example_group`\% des `r R$upload$labels$row` sont dans le groupe `r col_group_names[[R$sbm$nbBlocks[[1]]]]`. 
+Ici par exemple `r example_group`\% des `r R$upload$labels$row` sont dans le groupe `r row_group_names[[R$sbm$nbBlocks[[1]]]]`. 
 
 ```{r block-connectivity, echo=FALSE,results='asis'}
 connect_table <- round(R$sbm$connectParam$mean, nb_digits) %>%
@@ -117,8 +115,7 @@ connect_table %>%
 Les valeurs dans ce tableau sont les paramètres de connectivité du model sbm (`r modelName`). 
 
 ```{r description-connectivity,echo=FALSE,results='asis'}
-
-ex_index <- min(2,length(col_group_names))
+ex_index <- min(2, R$sbm$nbBlocks[[1 + is_bipartite]])
 example_val <- round(R$sbm$connectParam$mean[1, ex_index], nb_digits)
 if (R$sbm$modelName == "bernoulli") {
   connect_paraph <- paste0(
