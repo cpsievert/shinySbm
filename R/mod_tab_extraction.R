@@ -19,7 +19,7 @@ mod_tab_extraction_ui <- function(id){
         column(width = 6,
                checkboxInput(ns("attribution"),label = "Group membership",value = T)),
         column(width = 6,
-               checkboxInput(ns("proportion"),label = "Probability of group membership",value = T))
+               checkboxInput(ns("proportion"),label = "Probability of group membership",value = F))
       ),
       hr(),
       textInput(ns("fileName"),
@@ -38,10 +38,7 @@ mod_tab_extraction_ui <- function(id){
       uiOutput(ns("downButtons"))
     ),
     mod_select_nb_groups_ui(ns("select_nb_groups_5"))),
-    shinydashboard::box(title = "Tables", solidHeader = T,
-                        status = "info", collapsible = T,width = 12,
-                        verbatimTextOutput(ns("test")))
-  )
+    uiOutput(ns("watchRes")))
 }
 
 #' tab_extraction Server Functions
@@ -69,6 +66,86 @@ mod_tab_extraction_server <- function(id,r){
     observeEvent(my_sbm(),{
       check_sbm$is_sbm <- T
     })
+
+
+    output$watchRes <- renderUI({
+      if(r$upload$networkType() == 'bipartite'){
+        tagList(
+          shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
+                              solidHeader = T, status = "info",
+                              collapsible = T,width = 6,
+                              DT::dataTableOutput(ns("dataRow")),
+                              tags$head(tags$style(css_big_table(ns("dataRow"))))),
+        shinydashboard::box(title = paste0(r$upload$labels()$col,":"),
+                              solidHeader = T, status = "info",
+                              collapsible = T,width = 6,
+                              DT::dataTableOutput(ns("dataCol")),
+                              tags$head(tags$style(css_big_table(ns("dataCol")))))
+        )
+      }else{
+        tagList(
+          shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
+                              solidHeader = T, status = "info",
+                              collapsible = T,width = 6,
+                              DT::dataTableOutput(ns("data")),
+                              tags$head(tags$style(css_big_table(ns("data")))))
+
+
+        )
+      }
+    })
+
+    output$dataRow <- DT::renderDataTable({
+      DT::datatable(
+        as.data.frame(to_extract()$row),
+        extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
+        option = list(
+          fixedHeader = TRUE,
+          fixedColumns = list(leftColumns = 1),
+          scrollX = T,
+          scrollY = T,
+          keys = TRUE,
+          paging = F
+        )
+      ) %>%
+        DT::formatStyle(c(1:dim(to_extract()$row)[2]), border = "1px solid #ddd")
+    })
+
+    output$dataCol <- DT::renderDataTable({
+      DT::datatable(
+        as.data.frame(to_extract()$col),
+        extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
+        option = list(
+          fixedHeader = TRUE,
+          fixedColumns = list(leftColumns = 1),
+          scrollX = T,
+          scrollY = T,
+          keys = TRUE,
+          paging = F
+        )
+      ) %>%
+        DT::formatStyle(c(1:dim(to_extract()$col)[2]), border = "1px solid #ddd")
+    })
+
+    output$data <- DT::renderDataTable({
+      DT::datatable(
+        as.data.frame(to_extract()),
+        extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
+        option = list(
+          fixedHeader = TRUE,
+          fixedColumns = list(leftColumns = 1),
+          scrollX = T,
+          scrollY = T,
+          keys = TRUE,
+          paging = F
+        )
+      ) %>%
+        DT::formatStyle(c(1:dim(to_extract())[2]), border = "1px solid #ddd")
+    })
+
+
+
+
 
     output$downButtons <- renderUI({
       if(r$upload$networkType() == 'bipartite'){
