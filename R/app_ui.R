@@ -49,8 +49,11 @@ app_ui <- function(request) {
                                    icon = icon("share-alt", lib = "font-awesome")),
           shinydashboard::menuItem("Report", tabName = "tab_report",
                                    icon = icon("line-chart", lib = "font-awesome")),
+          shinydashboard::menuItem("Extract Results", tabName = "tab_extraction",
+                                   icon = icon("circle-info", lib = "font-awesome")),
           shinydashboard::menuItem("About us", tabName = "tab_about_us",
                                    icon = icon("circle-info", lib = "font-awesome"))
+
         )
       ),
       shinydashboard::dashboardBody(
@@ -76,17 +79,21 @@ app_ui <- function(request) {
           ),
 
 
-
           ### NETWORK VISUALISATION
           shinydashboard::tabItem(
             tabName = "tab_network",
             mod_tab_network_ui("tab_network_1")
             ),
-          ### GEN GROUPS
+          ### Build report
           shinydashboard::tabItem(
             tabName = "tab_report",
             mod_tab_report_ui("tab_report_1")
             ),
+          # Extract data
+          shinydashboard::tabItem(
+            tabName = "tab_extraction",
+            mod_tab_extraction_ui("tab_extraction_1")
+          ),
           ### Informative table
           shinydashboard::tabItem(
             tabName = "tab_about_us",

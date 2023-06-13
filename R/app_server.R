@@ -37,7 +37,10 @@ app_server <- function(input, output, session) {
 
   mod_tab_report_server("tab_report_1", r)
 
+  mod_tab_extraction_server("tab_extraction_1",r)
+
   mod_tab_about_us_server("tab_about_us_1")
+
 
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {

@@ -46,12 +46,6 @@ mod_tab_report_ui <- function(id) {
 mod_tab_report_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    ns_tab_sbm <- function(id) {
-      paste0("tab_sbm_1-", id)
-    }
-    ns_tab_upload <- function(id) {
-      paste0("tab_upload_1-", id)
-    }
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_4",
