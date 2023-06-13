@@ -5,8 +5,9 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-getGroupNames <- function(sbmObject, data) {
-  UseMethod("getGroupNames", object = sbmObject)
+getGroups <- function(sbmObject, sbmData, attribution = T,
+                      proportion = F, labels = NULL) {
+  UseMethod("getGroups", object = sbmObject)
 }
 
 #' getGroup.SimpleSBM_fit method
@@ -16,14 +17,25 @@ getGroupNames <- function(sbmObject, data) {
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-getGroupNames.SimpleSBM_fit <- function(sbmObject, data) {
-  results <- list()
-  results$listed_groups <- sapply(1:sbmObject$nbBlocks, function(i) {
-    indices <- sbmObject$indMemberships[, i] == 1
-    data$nodes_names$col[indices]
-  })
-  results$type <- 'unipartite'
-  return(results)
+getGroups.SimpleSBM_fit <- function(sbmObject, sbmData, attribution = T,
+                                    proportion = F, labels = NULL) {
+
+  if (!(attribution | proportion)) {
+    attribution <- T
+  }
+  res <- data.frame(Nodes_names = sbmData$nodes_names$col)
+  if (attribution) {
+    res$Groups <- paste0("Group_", sbmObject$memberships)
+  }
+  if (proportion) {
+    res <- cbind(
+      res,
+      sbmObject$probMemberships %>%
+        as.data.frame() %>%
+        setNames(paste0("Proba_group_", 1:sbmObject$nbBlocks[[1]]))
+    )
+  }
+  return(res)
 }
 
 
@@ -34,19 +46,31 @@ getGroupNames.SimpleSBM_fit <- function(sbmObject, data) {
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-getGroupNames.BipartiteSBM_fit <- function(sbmObject, data) {
-  results <- list()
-  results$listed_groups <- lapply(c("row", "col"), function(margin) {
-    sapply(1:as.list(sbmObject$nbBlocks)[[margin]], function(i) {
-      indices <- sbmObject$indMemberships[[margin]][, i] == 1
-      if (margin == "col") {
-        return(data$nodes_names$col[indices])
-      } else {
-        return(data$nodes_names$row[indices])
-      }
-    })
-  })
-  names(results$listed_groups) <- c("row", "col")
-  results$type <- 'bipartite'
-  return(results)
+getGroups.BipartiteSBM_fit <- function(sbmObject, sbmData, attribution = T,
+                                       proportion = F, labels = list(row = "row",
+                                                                     col = "col")) {
+  if (!(attribution | proportion)) {
+    attribution <- T
+  }
+  res <- list(row = data.frame(Nodes_names = sbmData$nodes_names$row),
+              col = data.frame(Nodes_names = sbmData$nodes_names$col))
+  if (attribution) {
+    res$row$Groups <- paste0("Group_",labels$row,'_',sbmObject$memberships$row)
+    res$col$Groups <- paste0("Group_", labels$col,'_',sbmObject$memberships$col)
+  }
+  if (proportion) {
+    res$row <- cbind(
+      res$row,
+      sbmObject$probMemberships$row %>%
+        as.data.frame() %>%
+        setNames(paste0("Prop_group_", 1:sbmObject$nbBlocks[[1]]))
+    )
+    res$col <- cbind(
+      res$col,
+      sbmObject$probMemberships$col %>%
+        as.data.frame() %>%
+        setNames(paste0("Prop_group_", 1:sbmObject$nbBlocks[[2]]))
+    )
+  }
+  return(res)
 }

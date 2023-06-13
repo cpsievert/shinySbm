@@ -13,7 +13,8 @@ app_server <- function(input, output, session) {
 
   r <- reactiveValues(
     upload = reactiveValues(),
-    sbm = reactiveValues()
+    sbm = reactiveValues(),
+    show = reactiveValues()
   )
 
   ## Importing the data set
@@ -28,15 +29,18 @@ app_server <- function(input, output, session) {
                        )
 
   ## Visualisation part
-  mod_tab_show_server("tab_show_1", r)
+  r$show <- mod_tab_show_server("tab_show_1", r)
 
 
   ## Network visualisation part
   mod_tab_network_server("tab_network_1", r)
 
-  mod_tab_clustering_server("tab_clustering_1", r)
+  mod_tab_report_server("tab_report_1", r)
+
+  mod_tab_extraction_server("tab_extraction_1",r)
 
   mod_tab_about_us_server("tab_about_us_1")
+
 
   # shut down the app when it's closes on the browser
   session$onSessionEnded(function() {

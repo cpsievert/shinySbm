@@ -141,7 +141,7 @@ usethis::use_package("stringr")
 usethis::use_package("dplyr")
 usethis::use_package("colourpicker")
 usethis::use_package("reshape2")
-
+usethis::use_package("quarto")
 usethis::use_package("plyr")
 usethis::use_package("shinyWidgets")
 usethis::use_package("shinythemes")
@@ -177,6 +177,7 @@ golem::add_fct( "sbmMatrixClass" )
 golem::add_fct( "specific_css_style" )
 golem::add_fct("specific_plots")
 golem::add_fct( "getGroup" )
+golem::add_fct( "flextables" )
 
 golem::add_fct( "plotSbm" )
 

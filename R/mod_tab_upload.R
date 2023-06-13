@@ -19,7 +19,7 @@ mod_tab_upload_ui <- function(id) {
           radioButtons(ns("whichData"), "Which data do you want to use ?",
             choices = list(
               "My own data" = "importData",
-              "SBM exemples" = "sbmData"
+              "SBM examples" = "sbmData"
             ),
             inline = T, selected = "importData"
           ),
@@ -426,11 +426,11 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     return(list(
+      dataType = reactive({input$dataType}),
+      directed = reactive({as.logical(input$orientation)}),
       labels = labels,
       Dataset = datasetUploaded,
-      networkType = reactive({
-        input$networkType
-      })
+      networkType = reactive({input$networkType})
     ))
   })
 }

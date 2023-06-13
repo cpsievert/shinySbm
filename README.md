@@ -67,7 +67,7 @@ And then from your browser find the address `http://localhost:3838/`
 
 ## Contact
 
-Any questions, problems or comments regarding this application ? <br>
+Any questions, problems or comments regarding this application ?  
 Contact us : [shiny.sbm.dev@gmail.com](shiny.sbm.dev@gmail.com)
 
 ## References
