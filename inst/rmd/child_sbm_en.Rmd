@@ -75,7 +75,7 @@ if(is_bipartite){
     flextable::flextable_to_rmd()
 }else{
   c(row_group_names,
-    round_prop(R$sbm$blockProp$row)) %>% 
+    round_prop(R$sbm$blockProp)) %>% 
     matrix(ncol = 2) %>% 
     t %>% 
     as.data.frame() %>% 
@@ -113,7 +113,7 @@ connect_table %>%
 The values in this table are the connectivity parameters of the sbm model (`r modelName`). <br>
 ```{r echo=FALSE,results='asis'}
 ex_index <- min(2,R$sbm$nbBlocks[[1+is_bipartite]])
-exemple_val <- round(R$sbm$connectParam$mean[1,ex_index],nb_digits)
+example_val <- round(R$sbm$connectParam$mean[1,ex_index],nb_digits)
 
 if(R$sbm$modelName == "bernoulli"){
   connect_paraph <- paste0("For example, if we take a node A in the group ",
