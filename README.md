@@ -5,32 +5,46 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-`shinySbm` is a package containing a shiny application. This application
-is build for network analysis based on the `sbm` package made by Chiquet
-J, Donnet S and Barbillon P (2023)
-[CRAN](https://CRAN.R-project.org/package=sbm). It allow to apply and
-explore the outputs of a Stochastic Block Model. It is useful if you
-want to analyse your data (could be adjacency matrix or edges list)
-without `R` language knowledge or to learn the basic lines of the `sbm`
-package.
+`shinySbm` is a R package containing a shiny application. This
+application provides a user-friendly interface for network analysis
+based on the `sbm` package made by Chiquet J, Donnet S and Barbillon P
+(2023) [CRAN](https://CRAN.R-project.org/package=sbm). The `sbm` package
+regroups into a unique framework tools for estimating and manipulating
+variants of the stochastic block model. `shinySbm` allows you to easily
+apply and explore the outputs of a Stochastic Block Model without
+programming. It is useful if you want to analyse your network data
+(adjacency matrix or list of edges) without knowing the `R` language or
+to learn the basics of the `sbm` package.
 
-The Stochastic Block Model is applied on network to simplify the
-information they gather, and help to visualize the main
-behaviours/categories/relations there is in your network. It’s a latent
-model which identify significant groups with similar behaviour by
-gathering the network nodes. By this you could be able to know if your
-network is : hidding closed sub-communities, hierachized, or is having
-another specific structure.
+Stochastic block models (SBMs) are probabilistic models in statistical
+analysis of graphs or networks, that can be used to discover or
+understand the (hidden/latent) structure of a network, as well as for
+clustering purposes.
 
-With this application you should be also able to :
+Stochastic Block Models are applied on network to simplify the
+information they gather, and help visualize the main
+behaviours/categories/relationships present in your network. It’s a
+latent model which identify significant groups of nodes with similar
+connectivity patterns. This could help you to know if your network:
+hides closed sub-communities, is hierarchical, or has another specific
+structure.
 
--   Easly run a Stochastic Block Model
--   Get some nice outputs as matrix and network plots organized by
+With `shinySbm` you should also be able to :
+
+-   Easily run a Stochastic Block Model (set your model, infer
+    associated parameters and choose the number of groups)
+-   Get some nice outputs as matrix and network plots organised by
     groups
--   Get a modelisation summary
--   Extract nodes lists associated with their groups
+-   Get a summary of the modelling
+-   Extract lists of nodes associated with their groups
 
 ## How to use the Application
+
+### On Shiny Migale
+
+I you want to use ShinySBM without having to code a single line, the app
+is accesible on
+[Migale](https://shinyproxy-dev.migale.inrae.fr/app/SBM).
 
 ### With `R`
 

@@ -47,6 +47,10 @@ With `shinySbm` you should also be able to :
 
 ## How to use the Application
 
+### On Shiny Migale
+
+I you want to use ShinySBM without having to code a single line, the app is accesible on [Migale](https://shinyproxy-dev.migale.inrae.fr/app/SBM).
+
 ### With `R`
 
 #### Installation

@@ -356,31 +356,44 @@ display: none;
 <!-- Compiling paragraph: start -->
 <!-- badges: start -->
 <p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTM4IiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImxpZmVjeWNsZTogZXhwZXJpbWVudGFsIj48dGl0bGU+bGlmZWN5Y2xlOiBleHBlcmltZW50YWw8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjEzOCIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L2NsaXBQYXRoPjxnIGNsaXAtcGF0aD0idXJsKCNyKSI+PHJlY3Qgd2lkdGg9IjU1IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iNTUiIHdpZHRoPSI4MyIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZlN2QzNyIvPjxyZWN0IHdpZHRoPSIxMzgiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMjg1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0NTAiPmxpZmVjeWNsZTwvdGV4dD48dGV4dCB4PSIyODUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjQ1MCI+bGlmZWN5Y2xlPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI5NTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjczMCI+ZXhwZXJpbWVudGFsPC90ZXh0Pjx0ZXh0IHg9Ijk1NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNzMwIj5leHBlcmltZW50YWw8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Lifecycle: experimental" /></a> <!-- badges: end --></p>
-<p><code>shinySbm</code> is a package containing a shiny application.
-This application is build for network analysis based on the
-<code>sbm</code> package made by Chiquet J, Donnet S and Barbillon P
-(2023) <a href="https://CRAN.R-project.org/package=sbm">CRAN</a>. It
-allow to apply and explore the outputs of a Stochastic Block Model. It
-is useful if you want to analyse your data (could be adjacency matrix or
-edges list) without <code>R</code> language knowledge or to learn the
-basic lines of the <code>sbm</code> package.</p>
-<p>The Stochastic Block Model is applied on network to simplify the
-information they gather, and help to visualize the main
-behaviours/categories/relations there is in your network. It’s a latent
-model which identify significant groups with similar behaviour by
-gathering the network nodes. By this you could be able to know if your
-network is : hidding closed sub-communities, hierachized, or is having
-another specific structure.</p>
-<p>With this application you should be also able to :</p>
+<p><code>shinySbm</code> is a R package containing a shiny application.
+This application provides a user-friendly interface for network analysis
+based on the <code>sbm</code> package made by Chiquet J, Donnet S and
+Barbillon P (2023) <a href="https://CRAN.R-project.org/package=sbm">CRAN</a>. The
+<code>sbm</code> package regroups into a unique framework tools for
+estimating and manipulating variants of the stochastic block model.
+<code>shinySbm</code> allows you to easily apply and explore the outputs
+of a Stochastic Block Model without programming. It is useful if you
+want to analyse your network data (adjacency matrix or list of edges)
+without knowing the <code>R</code> language or to learn the basics of
+the <code>sbm</code> package.</p>
+<p>Stochastic block models (SBMs) are probabilistic models in
+statistical analysis of graphs or networks, that can be used to discover
+or understand the (hidden/latent) structure of a network, as well as for
+clustering purposes.</p>
+<p>Stochastic Block Models are applied on network to simplify the
+information they gather, and help visualize the main
+behaviours/categories/relationships present in your network. It’s a
+latent model which identify significant groups of nodes with similar
+connectivity patterns. This could help you to know if your network:
+hides closed sub-communities, is hierarchical, or has another specific
+structure.</p>
+<p>With <code>shinySbm</code> you should also be able to :</p>
 <ul>
-<li>Easly run a Stochastic Block Model</li>
-<li>Get some nice outputs as matrix and network plots organized by
+<li>Easily run a Stochastic Block Model (set your model, infer
+associated parameters and choose the number of groups)</li>
+<li>Get some nice outputs as matrix and network plots organised by
 groups</li>
-<li>Get a modelisation summary</li>
-<li>Extract nodes lists associated with their groups</li>
+<li>Get a summary of the modelling</li>
+<li>Extract lists of nodes associated with their groups</li>
 </ul>
 <div id="how-to-use-the-application" class="section level2">
 <h2>How to use the Application</h2>
+<div id="on-shiny-migale" class="section level3">
+<h3>On Shiny Migale</h3>
+<p>I you want to use ShinySBM without having to code a single line, the
+app is accesible on <a href="https://shinyproxy-dev.migale.inrae.fr/app/SBM">Migale</a>.</p>
+</div>
 <div id="with-r" class="section level3">
 <h3>With <code>R</code></h3>
 <div id="installation" class="section level4">
