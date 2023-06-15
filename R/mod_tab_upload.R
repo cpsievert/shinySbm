@@ -106,7 +106,7 @@ mod_tab_upload_ui <- function(id) {
             shinydashboard::box(
               title = "Reading Parameters", solidHeader = T,
               status = "info", width = 4,
-              radioButtons(ns("whichSep"), "What kind of separator should I use ?",
+              radioButtons(ns("whichSep"), "Separator:",
                 choices = list(
                   "semicolon" = ";",
                   "tabulation" = "|",
@@ -121,6 +121,21 @@ mod_tab_upload_ui <- function(id) {
                   value = NULL
                 )
               ),
+              radioButtons(ns("whichDec"), "Decimals:",
+                           choices = list(
+                             "point" = ".",
+                             "comma" = ",",
+                             "others" = "others"
+                           ),inline = T
+              ),
+              conditionalPanel(
+                condition = "input.whichDec == 'others'", ns = ns,
+                textInput(ns("whichDec_other"),
+                          label = "Write your dec character :",
+                          value = NULL
+                )
+              ),
+              strong("Header/Rownames:"),
               checkboxInput(ns("headercol"), "1st row is Column names", value = T),
               checkboxInput(ns("headerrow"), "1st column is Row names", value = F)
             )
@@ -210,6 +225,18 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+    # reactive decimal pointer for reading
+    dev <- reactive({
+      if (input$whichDec == "others") {
+        if (input$whichDec_other == "") {
+          "."
+        } else {
+          input$whichDec_other
+        }
+      } else {
+        input$whichDec
+      }
+    })
 
     ## Selected data path or name of exemples one
     datasetSelected <- eventReactive(c(
@@ -222,7 +249,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         validate(
           need(input$mainDataFile$datapath, "")
         )
-        try_data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol)
+        try_data <- read.table(file = input$mainDataFile$datapath, sep = sep(),dec = dec(), header = input$headercol)
         if (!any(duplicated(try_data[[1]])) & input$headerrow) {
           data <- read.table(
             file = input$mainDataFile$datapath, sep = sep(),
