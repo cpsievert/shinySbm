@@ -226,7 +226,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     # reactive decimal pointer for reading
-    dev <- reactive({
+    dec <- reactive({
       if (input$whichDec == "others") {
         if (input$whichDec_other == "") {
           "."
@@ -242,7 +242,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     datasetSelected <- eventReactive(c(
       input$whichData, input$dataBase,
       input$mainDataFile$datapath,
-      sep(), input$headerrow,
+      sep(),dec(), input$headerrow,
       input$headercol
     ), {
       if (input$whichData == "importData") {
@@ -429,7 +429,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         }
         cat("myNetworkMatrix <- read.table(file = '",
           input$mainDataFile$name,
-          "', sep = '", sep(), "', header = ", input$headercol, headerrow, ")",
+          "', sep = '", sep(),"', dec = '",dec(), "', header = ", input$headercol, headerrow, ")",
           sep = ""
         )
         if(input$dataType == 'list'){
