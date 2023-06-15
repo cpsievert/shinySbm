@@ -1,5 +1,5 @@
 
-### Modele selection
+### Model selection
 
 ```{r description-sbm, echo=FALSE}
 modelName <- stringr::str_to_title(R$sbm$modelName)

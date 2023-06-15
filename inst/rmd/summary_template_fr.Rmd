@@ -31,7 +31,7 @@ if (show_mat) {
 
 ```{r child-sbm, echo=FALSE, results = 'asis'}
 if (show_sbm) {
-  cat("## R", "\ue9", "sultats du mod", "\ue8", "le ", "\ue0", " blocks stochastique", sep = "")
+  cat("## R", "\ue9", "sultats du mod", "\ue8", "le ", "\ue0", " blocs stochastiques", sep = "")
 
   sbm_text <- knitr::knit_child("child_sbm_fr.Rmd", quiet = TRUE)
   cat(sbm_text,"\n", sep = "\n")

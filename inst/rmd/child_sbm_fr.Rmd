@@ -130,7 +130,7 @@ if (R$sbm$modelName == "bernoulli") {
     "Par exemple, les noeuds du groupe ",
     row_group_names[[1]], " en lignes et les noeuds du groupe ",
     col_group_names[[ex_index]], " en colonnes ont une connection valant en moyenne ",
-    example_val, " . On peut simuler leur connection par une loi de ",
+    example_val, " . On peut simuler leurs connections par une loi de ",
     modelName, " de param", "\ue8", "tre lamba = ", example_val, " ."
   )
 } else {
