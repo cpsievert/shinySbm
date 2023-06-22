@@ -5,6 +5,7 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
+  options(shiny.maxRequestSize = 50*1024^2) # can upload 50MB files
   session$userData$vars <- reactiveValues(
     tab = reactive({input$tab}),
     sbm = list(NbBlocks = 4,
