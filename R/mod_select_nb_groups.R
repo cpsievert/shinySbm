@@ -27,9 +27,14 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
         ),
         solidHeader = T,
         status = "info", collapsible = F, width = wind_width,
-        numericInput(ns("Nbblocks"),
-          label = "Select the total number of blocks:",
-          value = 4, min = 1, max = 6, step = 1
+        fluidRow(
+          column(6,
+                 numericInput(ns("Nbblocks"),
+                              label = "Select the total number of blocks:",
+                              value = 4, min = 1, max = 6, step = 1
+                 )),
+          column(6,
+                 uiOutput(ns("showGroupRep")))
         ),
         conditionalPanel(
           condition = "input.showGraph % 2 == 0", ns = ns,
@@ -136,6 +141,16 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, parent_session) {
 
     output$showILC <- renderPlot({
       print(plotILC())
+    })
+
+    output$showGroupRep <- renderUI({
+      my_sbm()$nbBlocks %>%
+        t() %>%
+        as.data.frame() %>%
+        setNames(my_sbm_main()$dimLabels) %>%
+        flextable::flextable() %>%
+        flextable::autofit() %>%
+        flextable::htmltools_value()
     })
 
 
