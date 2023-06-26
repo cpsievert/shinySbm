@@ -149,7 +149,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_2",
       my_sbm_main,
-      session
+      r$upload$labels
     )
 
 

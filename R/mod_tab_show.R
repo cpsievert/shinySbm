@@ -127,7 +127,7 @@ mod_tab_show_server <- function(id, r) {
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_1",
       r$sbm$main_sbm,
-      session
+      r$upload$labels
     )
 
     output$matrixPrint <- DT::renderDataTable({

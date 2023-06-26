@@ -27,15 +27,7 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
         ),
         solidHeader = T,
         status = "info", collapsible = F, width = wind_width,
-        fluidRow(
-          column(6,
-                 numericInput(ns("Nbblocks"),
-                              label = "Select the total number of blocks:",
-                              value = 4, min = 1, max = 6, step = 1
-                 )),
-          column(6,
-                 uiOutput(ns("showGroupRep")))
-        ),
+        uiOutput(ns("selGroup")),
         conditionalPanel(
           condition = "input.showGraph % 2 == 0", ns = ns,
           plotOutput(ns("showILC"),
@@ -51,7 +43,7 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
 #' select_nb_groups Server Functions
 #'
 #' @noRd
-mod_select_nb_groups_server <- function(id, my_sbm_main, parent_session) {
+mod_select_nb_groups_server <- function(id, my_sbm_main, labels) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     plot_info <- reactiveValues(is_zoomed = F)
@@ -144,13 +136,33 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, parent_session) {
     })
 
     output$showGroupRep <- renderUI({
-      my_sbm()$nbBlocks %>%
-        t() %>%
-        as.data.frame() %>%
-        setNames(my_sbm_main()$dimLabels) %>%
-        flextable::flextable() %>%
-        flextable::autofit() %>%
-        flextable::htmltools_value()
+      if(exists(my_sbm()) && "BipartiteSBM_fit" %in% class(my_sbm())){
+        tagList(
+          fluidRow(
+            column(6,
+                   numericInput(ns("Nbblocks"),
+                                label = "Select the total number of blocks:",
+                                value = 4, min = 1, max = 6, step = 1
+                   )),
+            column(6,
+                   br(),
+                   my_sbm()$nbBlocks %>%
+                     t() %>%
+                     as.data.frame() %>%
+                     setNames(as.vector(labels())) %>%
+                     flextable::flextable() %>%
+                     flextable::theme_vanilla() %>%
+                     flextable::autofit() %>%
+                     flextable::htmltools_value()
+            )
+          )
+        )
+      }else{
+        numericInput(ns("Nbblocks"),
+                     label = "Select the total number of blocks:",
+                     value = 4, min = 1, max = 6, step = 1
+        )
+      }
     })
 
 

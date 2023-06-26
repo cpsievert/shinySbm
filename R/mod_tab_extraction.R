@@ -51,7 +51,7 @@ mod_tab_extraction_server <- function(id,r){
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_5",
       r$sbm$main_sbm,
-      session
+      r$upload$labels
     )
     to_extract <- reactive({getGroups(my_sbm(),r$upload$Dataset(),
                                       input$attribution,input$proportion,

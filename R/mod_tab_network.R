@@ -36,7 +36,7 @@ mod_tab_network_server <- function(id, r) {
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_3",
       r$sbm$main_sbm,
-      session
+      r$upload$labels
     )
 
     node_edge <- reactive({
