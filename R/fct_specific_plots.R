@@ -37,7 +37,7 @@ ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_
     )
 
 
-  if("BipartiteSBM_fit" %in% class(selected_sbm)){
+  if(is.bipartite(selected_sbm)){
     ft <- selected_sbm$nbBlocks %>%
       t() %>%
       as.data.frame() %>%
