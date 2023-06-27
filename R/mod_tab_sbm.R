@@ -9,6 +9,9 @@
 #' @importFrom shiny NS tagList
 mod_tab_sbm_ui <- function(id) {
   ns <- NS(id)
+  ns_tab_upload <- function(id) {
+    paste0("tab_upload_1-", id)
+  }
   tagList(
     column(
       width = 3,
@@ -30,20 +33,25 @@ mod_tab_sbm_ui <- function(id) {
     ),
     column(
       width = 9,
-      shinydashboard::box(
-        title = "SBM outputs", solidHeader = T,
-        status = "info", width = 12,
-        strong("SBM code:"),
-        verbatimTextOutput(ns("sbmCode")),
-        mod_help_to_import_ui(ns("error_2")),
-        hr(),
-        strong("SBM summary:"),
-        verbatimTextOutput(ns("sbmSummarySelect")),
-        tags$head(tags$style(paste0(
-          "#", ns("sbmSummarySelect"),
-          "{font-weight: bold}"
-        ))),
-        verbatimTextOutput(ns("sbmSummary"))
+      conditionalPanel(
+        condition = "output.sbmRan == 'YES'",
+        ns = ns_tab_upload,
+        shinydashboard::box(
+          title = "SBM outputs", solidHeader = T,
+          status = "info", width = 12,
+          strong("SBM code:"),
+          verbatimTextOutput(ns("sbmCode")),
+          mod_help_to_import_ui(ns("error_2")),
+          hr(),
+          strong("SBM summary:"),
+          uiOutput(ns("ftsummary")),
+          # verbatimTextOutput(ns("sbmSummarySelect")),
+          # tags$head(tags$style(paste0(
+          #   "#", ns("sbmSummarySelect"),
+          #   "{font-weight: bold}"
+          # ))),
+          verbatimTextOutput(ns("sbmSummary"))
+        )
       )
     )
   )
@@ -153,7 +161,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
     )
 
 
-    observeEvent(my_sbm(), {
+    observeEvent(c(my_sbm(),r$upload$labels()), {
       data_sbm <- my_sbm()$clone()
       output$sbmSummary <- renderPrint({
         options(digits = 2)
@@ -165,6 +173,14 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
         print(data_sbm$entropy)
         cat("\nStored Models:\n")
         print(data_sbm$storedModels)
+      })
+      output$ftsummary <- renderUI({
+        tagList(
+          flexBlockProp(data_sbm,r$upload$labels()) %>%
+            flextable::htmltools_value(),
+          flexConnect(data_sbm,r$upload$labels()) %>%
+            flextable::htmltools_value()
+        )
       })
     })
 
