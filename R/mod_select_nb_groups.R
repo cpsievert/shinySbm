@@ -27,7 +27,10 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
         ),
         solidHeader = T,
         status = "info", collapsible = F, width = wind_width,
-        uiOutput(ns("selGroup")),
+        numericInput(ns("Nbblocks"),
+                     label = "Select the total number of blocks:",
+                     value = 4, min = 1, max = 6, step = 1
+        ),
         conditionalPanel(
           condition = "input.showGraph % 2 == 0", ns = ns,
           plotOutput(ns("showILC"),
@@ -125,47 +128,15 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, labels) {
     })
 
 
-    plotILC <- eventReactive(c(input$Nbblocks, my_sbm_main(), input$plotDblclick), {
+    plotILC <- eventReactive(c(input$Nbblocks, my_sbm_main(), input$plotDblclick,labels()), {
       data_sbm <- my_sbm()$clone()
       data_sbm_main <- my_sbm_main()$clone()
-      ILC_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed)
+      ILC_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed, labels = as.vector(labels()))
     })
 
     output$showILC <- renderPlot({
       print(plotILC())
     })
-
-    output$showGroupRep <- renderUI({
-      if(exists(my_sbm()) && "BipartiteSBM_fit" %in% class(my_sbm())){
-        tagList(
-          fluidRow(
-            column(6,
-                   numericInput(ns("Nbblocks"),
-                                label = "Select the total number of blocks:",
-                                value = 4, min = 1, max = 6, step = 1
-                   )),
-            column(6,
-                   br(),
-                   my_sbm()$nbBlocks %>%
-                     t() %>%
-                     as.data.frame() %>%
-                     setNames(as.vector(labels())) %>%
-                     flextable::flextable() %>%
-                     flextable::theme_vanilla() %>%
-                     flextable::autofit() %>%
-                     flextable::htmltools_value()
-            )
-          )
-        )
-      }else{
-        numericInput(ns("Nbblocks"),
-                     label = "Select the total number of blocks:",
-                     value = 4, min = 1, max = 6, step = 1
-        )
-      }
-    })
-
-
 
     return(my_sbm)
   })

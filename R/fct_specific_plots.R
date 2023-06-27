@@ -5,7 +5,7 @@
 #' @return no value
 #'
 #' @noRd
-ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_edges = F) {
+ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_edges = F, labels = c(row = 'row', col = 'col')) {
   if (zoom) {
     xmin <- min(sum(selected_sbm$nbBlocks), sum(comparison_sbm$nbBlocks)) - 1
     xmax <- max(sum(selected_sbm$nbBlocks), sum(comparison_sbm$nbBlocks)) + 1
@@ -20,6 +20,8 @@ ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_
     return(list(min = xmin, max = xmax))
   }
 
+
+
   my_plot <- ggplot2::ggplot(plot_table) +
     ggplot2::xlim(xmin, xmax) +
     ggplot2::aes(x = nbBlocks, y = ICL, linetype = "ICL") +
@@ -33,7 +35,30 @@ ILC_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_
       legend.position = "bottom",
       legend.box = "vertical"
     )
-  return(my_plot)
+
+
+  if("BipartiteSBM_fit" %in% class(selected_sbm)){
+    ft <- selected_sbm$nbBlocks %>%
+      t() %>%
+      as.data.frame() %>%
+      setNames(labels) %>%
+      flextable::flextable() %>%
+      flextable::theme_vanilla() %>%
+      flextable::autofit()
+
+    final_plot <- my_plot + patchwork::inset_element(
+      flextable::gen_grob(ft, fit = "width"),
+      left = 0.15, bottom = 0.01,
+      right = 0.85, top = 0.15
+    )  + ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "transparent"),
+      panel.background = ggplot2::element_rect(fill = "transparent")
+    )
+  }else{
+    final_plot <- my_plot
+  }
+
+  return(final_plot)
 }
 
 
