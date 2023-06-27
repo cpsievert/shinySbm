@@ -1,3 +1,24 @@
+#' is.bipartite
+#'
+#' @description it's a function that says if your sbm is bipartite or not
+#'
+#' @param sbm an sbm model from {sbm} package
+#'
+#' @return a Boolean, TRUE for bipartite or FALSE if else
+#'
+#' @noRd
+is.bipartite <- function(sbm){
+  if(!sbm::is_SBM(sbm)){
+    stop("is.bipartite function should be applied to SBM objects")
+  }
+  if("BipartiteSBM" %in% class(sbm)){
+    return(TRUE)
+  }else{
+    return(FALSE)
+  }
+}
+
+
 #' addindice
 #'
 #' @description it's a function that add an numeric index to a character name if it's in the character list
