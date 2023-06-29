@@ -170,16 +170,16 @@ golem::add_module(name = "show_group_names", with_test = TRUE)
 golem::add_module(name = "help_to_import", with_test = TRUE)
 
 ## USED functions
-golem::add_fct( "matrixNicePrint")
-golem::add_fct( "errorHandeling")
-golem::add_fct( "linkListMatrix")
-golem::add_fct( "sbmMatrixClass" )
-golem::add_fct( "specific_css_style" )
+golem::add_fct("matrixNicePrint")
+golem::add_fct("errorHandeling")
+golem::add_fct("linkListMatrix")
+golem::add_fct("sbmMatrixClass")
+golem::add_fct("specific_css_style")
 golem::add_fct("specific_plots")
-golem::add_fct( "getGroup" )
-golem::add_fct( "flextables" )
-
-golem::add_fct( "plotSbm" )
+golem::add_fct("getGroup")
+golem::add_fct("flextables")
+golem::add_fct("is_bipartite")
+golem::add_fct("plotSbm")
 
 a = sortable::rank_list(
   text = "Cliquer glisser dans l'ordre souhaité (plusieurs selection possible avec la touche CTRL)",
