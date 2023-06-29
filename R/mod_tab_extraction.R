@@ -53,14 +53,11 @@ mod_tab_extraction_server <- function(id,r){
       r$sbm$main_sbm,
       r$upload$labels
     )
+
     to_extract <- reactive({getGroups(my_sbm(),r$upload$Dataset(),
                                       input$attribution,input$proportion,
                                       r$upload$labels())})
 
-
-    output$test <- renderPrint({
-      to_extract()
-    })
 
     check_sbm <- reactiveValues(is_sbm = F)
     observeEvent(my_sbm(),{
@@ -161,7 +158,7 @@ mod_tab_extraction_server <- function(id,r){
     output$downData <- downloadHandler(
       filename = eventReactive(c(my_sbm(),input$fileType,input$fileName),{
         if(check_sbm$is_sbm){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_groups')
+          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
         }else{
           add_group <- ''
         }
@@ -174,7 +171,7 @@ mod_tab_extraction_server <- function(id,r){
     output$downDataRow <- downloadHandler(
       filename = eventReactive(c(my_sbm(),input$fileType,input$fileName),{
         if(check_sbm$is_sbm){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_groups')
+          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
         }else{
           add_group <- ''
         }
@@ -187,7 +184,7 @@ mod_tab_extraction_server <- function(id,r){
     output$downDataCol <- downloadHandler(
       filename = eventReactive(c(my_sbm(),input$fileType,input$fileName),{
         if(check_sbm$is_sbm){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_groups')
+          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
         }else{
           add_group <- ''
         }

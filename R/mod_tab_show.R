@@ -36,7 +36,7 @@ mod_tab_show_ui <- function(id) {
               width = 8,
               textInput(ns("fileName"),
                 label = "File Name",
-                value = "ShinyMatrixPlot"
+                value = "Shiny_Matrix_Plot"
               )
             ),
             column(
@@ -231,9 +231,16 @@ mod_tab_show_server <- function(id, r) {
       },
       deleteFile = TRUE
     )
+
+
     output$downloadPlot <- downloadHandler(
-      filename = reactive({
-        paste0(input$fileName, input$fileExtention)
+      filename = eventReactive(c(input$whichMatrix,input$fileName,input$fileExtention),{
+        if(input$whichMatrix != 'raw'){
+          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
+        }else{
+          add_group <- ''
+        }
+        return(paste0(input$fileName,add_group,input$fileExtention))
       }),
       content = function(file) {
         width <- session$clientData$`output_tab_show_1-matrixPlot_width`

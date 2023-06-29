@@ -76,7 +76,7 @@ mod_tab_report_server <- function(id, r) {
       filename = eventReactive(c(parameters$sbm$nbBlocks,input$fileType,input$fileName),{
         params <- reactiveValuesToList(parameters)
         if("sbm" %in% names(params)){
-          add_group <- paste0('_',sum(params$sbm$nbBlocks),'_groups')
+          add_group <- paste0('_',sum(params$sbm$nbBlocks),'_blocks')
         }else{
           add_group <- ''
         }
