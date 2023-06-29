@@ -29,32 +29,47 @@ mod_tab_sbm_ui <- function(id) {
         ),
         uiOutput(ns("sbmButton"))
       ),
-      mod_select_nb_groups_ui(ns("select_nb_groups_2"), 12)
-    ),
-    column(
-      width = 9,
+      mod_select_nb_groups_ui(ns("select_nb_groups_2"), 12),
       conditionalPanel(
         condition = "output.sbmRan == 'YES'",
         ns = ns_tab_upload,
+        shinydashboard::box(
+          title = "Download Tables", solidHeader = T,
+          status = "info", width = 12,
+          radioButtons(ns("whichTable"),
+                      "Select the Table",
+                      choices = list(
+                        "Block proportions" = "block_proportions",
+                        "Connectivity Table" = "connectivity_table",
+                        "Overall summary" = "stored_models"
+                      ),
+                      selected = "block_proportions"
+          ),
+          downloadButton(ns("downloadTable"),
+                         label = " Save Table",
+                         icon = icon("download", lib = "font-awesome")
+          )
+        )
+      )
+    ),
+    column(
+      width = 9,
         shinydashboard::box(
           title = "SBM outputs", solidHeader = T,
           status = "info", width = 12,
           strong("SBM code:"),
           verbatimTextOutput(ns("sbmCode")),
           mod_help_to_import_ui(ns("error_2")),
-          hr(),
-          strong("SBM summary:"),
-          uiOutput(ns("ftsummary")),
-          # verbatimTextOutput(ns("sbmSummarySelect")),
-          # tags$head(tags$style(paste0(
-          #   "#", ns("sbmSummarySelect"),
-          #   "{font-weight: bold}"
-          # ))),
-          verbatimTextOutput(ns("sbmSummary"))
+          conditionalPanel(
+            condition = "output.sbmRan == 'YES'",
+            ns = ns_tab_upload,
+            hr(),
+            strong("SBM summary:"),
+            uiOutput(ns("ftsummary"))
+          )
         )
       )
     )
-  )
 }
 
 #' tab_sbm Server Functions
@@ -163,26 +178,97 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     observeEvent(c(my_sbm(),r$upload$labels()), {
       data_sbm <- my_sbm()$clone()
-      output$sbmSummary <- renderPrint({
-        options(digits = 2)
-        cat("\nBlock Proportions:\n")
-        print(data_sbm$blockProp)
-        cat("Connectivity Betweens Blocks:\n")
-        print(data_sbm$connectParam$mean)
-        cat("\nModel Entropy (clustering quality):\n")
-        print(data_sbm$entropy)
-        cat("\nStored Models:\n")
-        print(data_sbm$storedModels)
-      })
+
+      ## Exemples values
+      first_par <- paste0("Tables 1 & 2 are the block description for the selected SBM. This model has an Entropy of ",
+                        round(data_sbm$entropy,2),
+                        ". The higher is the entropy, the less there is confusion inblock attribution.")
+
+      example_lab <- r$upload$labels()[["row"]]
+      example_connect <- round(data_sbm$connectParam$mean[1,1],2)
+      law <- stringr::str_to_title(data_sbm$modelName)
+      if(law == "Gaussian"){
+        example_param <- paste0("(mu = ",example_connect,", sigma² = ",round(data_sbm$connectParam$var,2),").")
+      }else if(law == "Poisson"){
+        example_param <- paste0("(lambda = ",example_connect,").")
+      }else{
+        example_param <- paste0("(p = ",example_connect,").")
+      }
+
+      if(is.bipartite(data_sbm)){
+        example_prop <- round_prop(data_sbm$blockProp$row,2)[[1]]
+        connect_sentance <- paste0('a ',r$upload$labels()[["row"]], ' in block 1 and a ',r$upload$labels()[["col"]],' in block 1')
+      }else{
+        example_prop <- round_prop(data_sbm$blockProp,2)[[1]]
+        connect_sentance <- 'two nodes in block 1'
+      }
+
+      second_par <- paste0("Table 1 gives blocks proportions, it's an indication of relative block sizes. If you take a random ",
+                           example_lab,", it has a probability of ",
+                           example_prop, " to belong to the first ",example_lab,
+                           " group.")
+      third_par <- paste0("Table 2 gives the connectivity values, it's an indication of block connection. Each values is a parameter of a ",
+                          law ," law. We can simulate the connection between ",
+                          connect_sentance," with a ",law ," law ",example_param)
+
+
+
+
       output$ftsummary <- renderUI({
         tagList(
-          flexBlockProp(data_sbm,r$upload$labels()) %>%
-            flextable::htmltools_value(),
-          flexConnect(data_sbm,r$upload$labels()) %>%
+          tags$div(tags$br(),
+            first_par,
+            second_par,
+            third_par,
+            tags$br(),
+            tags$br()
+          ),
+          fluidRow(
+            column(4,
+                   flexBlockProp(data_sbm,r$upload$labels()) %>%
+                     flextable::htmltools_value()),
+            column(8,
+                   flexConnect(data_sbm,r$upload$labels()) %>%
+                     flextable::htmltools_value())
+            ),
+          tags$div(tags$br(),
+                   "All stored models are in Table 3, the",
+                   HTML("<font color=red>red line</font>"),
+                   "is the best model based on ICL criteria. The",
+                   HTML('<mark color=\"#FFA500\">orange line</mark>'),
+                   "is the selected model.",
+                   tags$br(),
+                   tags$br()
+          ),
+          flexStoredModels(data_sbm,r$upload$labels()) %>%
             flextable::htmltools_value()
         )
       })
     })
+
+
+    output$downloadTable <- downloadHandler(
+      filename = eventReactive(c(my_sbm(),input$whichTable),{
+          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
+        return(paste0(input$whichTable,add_group,'.png'))
+      }),
+      content = function(file){
+        data_sbm <- my_sbm()$clone()
+        if(input$whichTable == "block_proportions"){
+          ft <- flexBlockProp(data_sbm,r$upload$labels())
+        }else if(input$whichTable == "connectivity_table"){
+          ft <- flexConnect(data_sbm,r$upload$labels())
+        }else{
+          ft <- flexStoredModels(data_sbm,r$upload$labels())
+        }
+        flextable::save_as_image(ft,path = file)
+      }
+    )
+
+
+
+
+
 
     return(list(
       Dataset = Dataset,
