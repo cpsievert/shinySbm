@@ -1,24 +1,3 @@
-#' is.bipartite
-#'
-#' @description it's a function that says if your sbm is bipartite or not
-#'
-#' @param sbm an sbm model from {sbm} package
-#'
-#' @return a Boolean, TRUE for bipartite or FALSE if else
-#'
-#' @noRd
-is.bipartite <- function(sbm){
-  if(!sbm::is_SBM(sbm)){
-    stop("is.bipartite function should be applied to SBM objects")
-  }
-  if("BipartiteSBM" %in% class(sbm)){
-    return(TRUE)
-  }else{
-    return(FALSE)
-  }
-}
-
-
 #' addindice
 #'
 #' @description it's a function that add an numeric index to a character name if it's in the character list
@@ -596,6 +575,66 @@ covar <- function(x) {
     stop("value should be a data.frame or a matrix")
   }
 }
+
+
+#' applySbm Method
+#'
+#' @description apply the sbm from {sbm} package on object
+#'
+#' @param object  object on wich to apply the sbm
+#' @param dimLabels dimLabels argument of {sbm} package
+#' @param estimOptions estimOptions argument of {sbm} package
+#' @param type network type default from sbmMatrix object
+#' @param model network model default from sbmMatrix object
+#' @param covariates network covariates default from sbmMatrix object
+#' @param directed is the network directed by default acording to matrix symmetry
+#'
+#' @return sbm model from {sbm} package
+#'
+#' @noRd
+applySbm <- function(object,
+                     dimLabels = character(),
+                     estimOptions = list(),
+                     type = object$type,
+                     model = object$law,
+                     covariates = object$covar,
+                     directed = !isSymmetric(object$matrix)) {
+
+  if(is.sbmMatrix(object)){
+    if(is.null(covariates)){
+      covariates <- list()
+    }
+
+    if(type == 'bipartite'){
+      if(!is.character(dimLabels) || length(dimLabels) != 2){
+        warnings("dimLabels has wrong format, network is bipartite so it should be formated this way:\ndimLabels = c(row = 'row', col = 'col')")
+        dimLabels  <- c(row = "row", col = "col")
+      }
+      my_sbm <- sbm::estimateBipartiteSBM(netMat = object$matrix,
+                                          model = model,
+                                          dimLabels = dimLabels,
+                                          covariates = covariates,
+                                          estimOptions = estimOptions)
+
+    }else{
+      if(!is.character(dimLabels) || length(dimLabels) != 2){
+        warnings("dimLabels has wrong format, network is bipartite so it should be formated this way:\ndimLabels = c('nodes)")
+        dimLabels  <- c("nodes")
+      }
+      my_sbm <- sbm::estimateSimpleSBM(netMat = object$matrix,
+                                       model = model,
+                                       directed = directed,
+                                       dimLabels = dimLabels,
+                                       covariates = covariates,
+                                       estimOptions = estimOptions)
+    }
+    return(my_sbm)
+  }else{
+    stop("object should be of class 'sbmMatrix'")
+  }
+}
+
+
 
 
 # add_covar !
