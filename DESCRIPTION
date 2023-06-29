@@ -15,12 +15,13 @@ Imports:
     data.table,
     dplyr,
     DT,
+    flextable,
     fresh,
     ggplot2,
     golem (>= 0.3.5),
     igraph,
-    knitr,
     magrittr,
+    patchwork,
     purrr,
     reshape2,
     rmarkdown,
@@ -30,7 +31,7 @@ Imports:
     shinydashboard,
     stringr,
     visNetwork
-Suggests: igraphdata, spelling, testthat (>= 3.0.0)
+Suggests: knitr, igraphdata, spelling, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
