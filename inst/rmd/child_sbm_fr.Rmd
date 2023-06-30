@@ -67,49 +67,19 @@ row_group_names <- paste0(
   1:R$sbm$nbBlocks[[1]]
 )
 
-
-get_tables <- list()
 if (is_bipartite) {
-  get_tables[[1]] <- small_tbl(
-    R$sbm$blockProp$col,
-    col_group_names,
-    "Proportion des groupes en colonnes"
-  )
-  get_tables[[2]] <- small_tbl(
-    R$sbm$blockProp$row,
-    row_group_names,
-    "Proportion des groupes en lignes"
-  )
-
-  example_group <- round_prop(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]] * 100
+  example_group <- round_proportion(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]] * 100
 } else {
-  get_tables[[1]] <- small_tbl(
-    R$sbm$blockProp,
-    row_group_names,
-    "Proportion des groupes"
-  )
-  example_group <- round_prop(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]] * 100
+  example_group <- round_proportion(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]] * 100
 }
 
-purrr::map(get_tables, ~ cat(.x, sep = "\n")) %>% invisible()
+get_flextable(R$sbm,R$upload$labels,type = 'blockProp')
 ```
 <br>
 Ici par exemple `r example_group`\% des `r R$upload$labels$row` sont dans le groupe `r row_group_names[[R$sbm$nbBlocks[[1]]]]`. 
 
 ```{r block-connectivity, echo=FALSE,results='asis'}
-connect_table <- round(R$sbm$connectParam$mean, nb_digits) %>%
-  as.data.frame() %>%
-  `names<-`(paste0("**", col_group_names, "**")) %>%
-  `rownames<-`(paste0("**", row_group_names, "**"))
-
-if (R$sbm$modelName == "gaussian") {
-  connect_table[nrow(connect_table) + 1, ] <- c(round(R$sbm$connectParam$var[[1]], 3), rep("", R$sbm$nbBlocks[[1 + is_bipartite]] - 1))
-  row.names(connect_table)[nrow(connect_table)] <- "**Variance**"
-}
-
-
-connect_table %>%
-  knitr::kable(caption = paste0("Table de connectivit", "\ue9"), format = "pipe")
+get_flextable(R$sbm,R$upload$labels,type = "connectParam")
 ```
 <br> 
 Les valeurs dans ce tableau sont les paramètres de connectivité du model sbm (`r modelName`). 

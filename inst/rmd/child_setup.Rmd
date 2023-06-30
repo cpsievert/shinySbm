@@ -1,21 +1,6 @@
-```{r functions-variables, include = F}
-nb_digits <- 2
-
-round_prop <- function(x, digits = 2) {
-  prop_vec <- round(x, digits)
-  prop_vec[length(prop_vec)] <- 1 - sum(prop_vec[1:(length(prop_vec) - 1)])
-  return(prop_vec)
-}
-small_tbl <- function(prop, names, title) {
-  round_prop(prop) %>%
-    matrix(nrow = 1) %>%
-    `colnames<-`(paste0("**", names, "**")) %>%
-    as.data.frame() %>%
-    knitr::kable(caption = title, format = "pipe")
-}
-```
 
 ```{r setup, echo=FALSE}
+nb_digits <- 2
 options(digits = nb_digits)
 
 library(shinySbm)
