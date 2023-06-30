@@ -53,7 +53,7 @@ The selected model in this document has `r sum(R$sbm$nbBlocks)` groups`r bip_cur
 On this table the `r colorize("red line",'red')` is the best model according to the ICL criteria and the `r colorize("orange line",'orange')` is the selected one.
 
 ```{r all-sbm, echo=FALSE,results='asis',warning=FALSE}
-get_flextable(R$sbm,R$upload$labels,type = 'storedModels', caption = "All Stored Models") %>% 
+get_flextable(R$sbm,R$upload$labels,type = 'storedModels', settings = list(caption = "All Stored Models")) %>% 
   fit_width_to_output()
 ```
 
@@ -75,14 +75,14 @@ if (is_bipartite) {
   example_group <- round_proportion(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]] * 100
 }
 
-get_flextable(R$sbm,R$upload$labels,type = 'blockProp', caption = "Block proportion") %>% 
+get_flextable(R$sbm,R$upload$labels,type = 'blockProp', settings = list(caption = "Block proportion")) %>% 
   fit_width_to_output()
 ```
 <br>
 Here, for example, `r example_group`\% of the `r R$upload$labels$row` are in the `r row_group_names[[R$sbm$nbBlocks[[1]]]]` group. 
 
 ```{r block-connectivity, echo=FALSE,results='asis',warning=FALSE}
-get_flextable(R$sbm,R$upload$labels,type = "connectParam", caption = "Connectivity between blocks") %>% 
+get_flextable(R$sbm,R$upload$labels,type = "connectParam", settings = list(caption = "Connectivity between blocks")) %>% 
   fit_width_to_output()
 ```
 <br> 
