@@ -188,7 +188,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       example_connect <- round(data_sbm$connectParam$mean[1,1],2)
       law <- stringr::str_to_title(data_sbm$modelName)
       if(law == "Gaussian"){
-        example_param <- paste0("(mu = ",example_connect,", sigma² = ",round(data_sbm$connectParam$var,2),").")
+        example_param <- paste0("(mu = ",example_connect,", sigma","\uB2"," = ",round(data_sbm$connectParam$var,2),").")
       }else if(law == "Poisson"){
         example_param <- paste0("(lambda = ",example_connect,").")
       }else{
@@ -196,10 +196,10 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       }
 
       if(is.bipartite(data_sbm)){
-        example_prop <- round_prop(data_sbm$blockProp$row,2)[[1]]
+        example_prop <- round_proportion(data_sbm$blockProp$row,2)[[1]]
         connect_sentance <- paste0('a ',r$upload$labels()[["row"]], ' in block 1 and a ',r$upload$labels()[["col"]],' in block 1')
       }else{
-        example_prop <- round_prop(data_sbm$blockProp,2)[[1]]
+        example_prop <- round_proportion(data_sbm$blockProp,2)[[1]]
         connect_sentance <- 'two nodes in block 1'
       }
 
