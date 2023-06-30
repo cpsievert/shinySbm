@@ -15,10 +15,10 @@ mod_tab_report_ui <- function(id) {
       status = "info", collapsible = T,
       radioButtons(ns("language"), "Select your language:",
         choices = list(
-          "Francais" = "_fr.Rmd",
-          "English" = "_en.Rmd"
+          "English" = "_en.Rmd",
+          "Francais" = "_fr.Rmd"
         ),
-        selected = "_fr.Rmd",
+        selected = "_en.Rmd",
         inline = T
       ),
       textInput(ns("fileName"),

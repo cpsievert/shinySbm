@@ -42,22 +42,27 @@ if (R$sbm$ICL != max(R$sbm$storedModels$ICL)) {
   entrop_cur <- paste0(
     "Contre ", round(max(R$sbm$storedModels$ICL), 2),
     " pour le mod", "\ue8", "le le plus vraisemblant ", "\ue0 ",
-    nb_group_best, " groupes ", bip_best, "."
+    nb_group_best, " groupes ", bip_best
   )
 } else {
-  entrop_cur <- paste0("Sur tout les SBM observ", "\ue9", "s ce mod", "\ue8", "le ", "\ue0", " l'ICL la plus ", "\ue9", "l", "\ue9", "v", "\ue9", "e, c'est le plus vraisemblable.")
+  entrop_cur <- paste0("Sur tout les SBM observ", "\ue9", "s ce mod", "\ue8", "le ", "\ue0", " l'ICL la plus ", "\ue9", "l", "\ue9", "v", "\ue9", "e, c'est le plus vraisemblable")
 }
 ```
 
 
 Suite à l'application du modèle sbm (`r modelName`), `r nb_models` modèles ont été trouvés avec pour chacun un nombre de groupes différent allant de `r R$sbm$storedModels$nbBlocks[1]` `r bip_min` à `r R$sbm$storedModels$nbBlocks[nb_models]` groupes`r bip_max`. 
 
-Le modèle sélectionné dans ce document est à `r sum(R$sbm$nbBlocks)` groupes`r bip_cur`. L'ICL (Critère de vraisemblance intégrée sur données-complète) de ce modèle vaut `r R$sbm$ICL`. `r entrop_cur`
+Le modèle sélectionné dans ce document est à `r sum(R$sbm$nbBlocks)` groupes`r bip_cur`. L'ICL (Critère de vraisemblance intégrée sur données-complète) de ce modèle vaut `r R$sbm$ICL`. `r entrop_cur`.
+Dans cette table `r colorize("la ligne en rouge",'red')` est le meilleur modèle selon le critère d'ICL et `r colorize("la ligne en orange",'orange')` est le modèle séléctionné. 
 
+```{r all-sbm, echo=FALSE,results='asis',warning=FALSE}
+get_flextable(R$sbm,R$upload$labels,type = 'storedModels', caption = "All Stored Models") %>% 
+  fit_width_to_output()
+```
 
 ### Modèle sélectionné 
 
-```{r block-proportion, echo=FALSE, results='asis'}
+```{r block-proportion, echo=FALSE, results='asis',warning=FALSE}
 col_group_names <- paste0(
   R$upload$labels$col, "_",
   1:R$sbm$nbBlocks[[1 + is_bipartite]]
@@ -73,13 +78,15 @@ if (is_bipartite) {
   example_group <- round_proportion(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]] * 100
 }
 
-get_flextable(R$sbm,R$upload$labels,type = 'blockProp')
+get_flextable(R$sbm,R$upload$labels,type = 'blockProp', caption = "Proportion des blocs") %>% 
+  fit_width_to_output()
 ```
 <br>
 Ici par exemple `r example_group`\% des `r R$upload$labels$row` sont dans le groupe `r row_group_names[[R$sbm$nbBlocks[[1]]]]`. 
 
-```{r block-connectivity, echo=FALSE,results='asis'}
-get_flextable(R$sbm,R$upload$labels,type = "connectParam")
+```{r block-connectivity, echo=FALSE,results='asis',warning=FALSE}
+get_flextable(R$sbm,R$upload$labels,type = "connectParam", caption = paste0("Connectivit",'\ue9'," des blocs")) %>% 
+  fit_width_to_output()
 ```
 <br> 
 Les valeurs dans ce tableau sont les paramètres de connectivité du model sbm (`r modelName`). 

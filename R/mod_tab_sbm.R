@@ -235,7 +235,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
                    "All stored models are in Table 3, the",
                    HTML("<font color=red>red line</font>"),
                    "is the best model based on ICL criteria. The",
-                   HTML('<mark color=\"#FFA500\">orange line</mark>'),
+                   HTML('<mark color=orange>orange line</mark>'),
                    "is the selected model.",
                    tags$br(),
                    tags$br()

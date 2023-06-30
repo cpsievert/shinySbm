@@ -23,4 +23,22 @@ if (show_mat) {
 } else {
   is_bipartite <- F
 }
+
+colorize <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+
+fit_width_to_output <- function(x,max_pdf_with = 7.1, max_html_with = 12){
+  if (knitr::is_latex_output()) {
+    flextable::fit_to_width(x,max_width = max_pdf_with)
+  } else if (knitr::is_html_output()) {
+    flextable::fit_to_width(x,max_width = max_html_with)
+  } else x
+}
+
 ```
