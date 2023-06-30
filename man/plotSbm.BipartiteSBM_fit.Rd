@@ -37,6 +37,8 @@ The list of parameters \code{plotOptions} for the matrix plot is
  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+ \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
+ \item{"interactionName": }{Name of connection in legend default : "Connection"}
 }
 }
 \examples{

@@ -18,7 +18,10 @@
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
+#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
+#'
 #'
 #' @return a ggplot object corresponding to the plot
 #'
@@ -85,6 +88,8 @@ plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NU
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
+#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
 #'
 #' @return a ggplot object corresponding to the plot
@@ -225,6 +230,8 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
+#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
 #'
 #' @examples
@@ -352,6 +359,8 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
+#'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
+#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
 #'
 #' @examples
