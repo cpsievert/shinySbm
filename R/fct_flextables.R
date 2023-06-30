@@ -35,11 +35,18 @@ round_proportion <- function(x, digits = 2) {
 #'
 #' @noRd
 flexBlockProp <- function(sbm, labels,
-                          caption = "Table 1: Block proportions") {
+                          settings = list()) {
+  ## Default settings
+  currentSettings <- list(
+    caption = "Table 1: Block proportions",
+    digits = 2
+  )
+  currentSettings[names(settings)] <- settings
+
   ## Data
   if (is.bipartite(sbm)) {
-    row <- round_proportion(sbm$blockProp$row)
-    col <- round_proportion(sbm$blockProp$col)
+    row <- round_proportion(sbm$blockProp$row, digits = currentSettings$digits)
+    col <- round_proportion(sbm$blockProp$col, digits = currentSettings$digits)
     n <- max(length(row), length(col))
     length(row) <- n
     length(col) <- n
@@ -50,7 +57,7 @@ flexBlockProp <- function(sbm, labels,
     ) %>%
       setNames(c("Blocks", labels[["row"]], labels[["col"]]))
   } else {
-    nodes <- round_proportion(sbm$blockProp)
+    nodes <- round_proportion(sbm$blockProp, digits = currentSettings$digits)
     data_prop <- data.frame(
       Blocks = 1:length(nodes),
       nodes = nodes
@@ -59,7 +66,7 @@ flexBlockProp <- function(sbm, labels,
   }
   ## Build flextable
   ft <- flextable::flextable(data_prop) %>%
-    flextable::set_caption(caption = caption) %>%
+    flextable::set_caption(caption = currentSettings$caption) %>%
     flextable::theme_vanilla() %>%
     flextable::autofit()
   return(ft)
@@ -74,10 +81,19 @@ flexBlockProp <- function(sbm, labels,
 #'
 #' @noRd
 flexConnect <- function(sbm, labels,
-                        caption = "Table 2: Connectivity betweens blocks") {
+                        settings = list()) {
+
+    ## Default settings
+    currentSettings <- list(
+      caption = "Table 2: Connectivity betweens blocks",
+      digits = 2
+    )
+    currentSettings[names(settings)] <- settings
+
+
   ## Data
   data_connect <- as.data.frame(sbm$connectParam$mean) %>%
-    dplyr::mutate_all(~round(.x,2)) %>%
+    dplyr::mutate_all(~round(.x, digits = currentSettings$digits)) %>%
     setNames(1:length(.)) %>%
     dplyr::mutate(rowlabel = labels[["row"]], rowNb = 1:nrow(.), .before = 1)
 
@@ -96,7 +112,10 @@ flexConnect <- function(sbm, labels,
       colwidths <- c(2, 1, length(data_connect) - 3)
     }
     ft <- flextable::add_footer_row(ft,
-                                    values = c("Variance", round(sbm$connectParam$var[[1]], 3), ""),
+                                    values = c("Variance",
+                                               round(sbm$connectParam$var[[1]],
+                                                     digits = currentSettings$digits),
+                                               ""),
                                     colwidths = colwidths
     ) %>%
       flextable::bold(j = 1, part = "footer")
@@ -114,7 +133,7 @@ flexConnect <- function(sbm, labels,
     flextable::align(j = 1, align = "right", part = "footer") %>%
     flextable::border(i = 1,j=1:2,border = flextable::fp_border_default(width = 0),part = 'header') %>%
     flextable::border(i = 2,j=1:2,border.top = flextable::fp_border_default(width = 0),part = 'header') %>%
-    flextable::set_caption(caption = caption) %>%
+    flextable::set_caption(caption = currentSettings$caption) %>%
     flextable::autofit()
 
   return(ft)
@@ -128,17 +147,19 @@ flexConnect <- function(sbm, labels,
 #'
 #' @noRd
 flexStoredModels <- function(sbm, labels,
-                             caption = "Table 3: All explored models",
-                             colorParam = list()) {
-  ## Default colors
-  currentParam <- list(
-    selected_col = "orange",
-    best_col = "red"
-  )
-  currentParam[names(colorParam)] <- colorParam
+                             settings = list()) {
+
+    ## Default settings
+    currentSettings <- list(
+      caption = "Table 3: All explored models",
+      digits = 2,
+      selected_col = "orange",
+      best_col = "red"
+    )
+    currentSettings[names(settings)] <- settings
 
   ## Data
-  data_strored <- as.data.frame(round(sbm$storedModels, 2)) %>%
+  data_strored <- as.data.frame(round(sbm$storedModels, digits = currentSettings$digits)) %>%
     dplyr::select(-indexModel) %>%
     dplyr::relocate(nbParams, .after = everything())
 
@@ -165,13 +186,13 @@ flexStoredModels <- function(sbm, labels,
   ## Build Flextable
   ft <- flextable::flextable(data_strored) %>%
     flextable::theme_vanilla() %>%
-    flextable::color(i = best_line, color = currentParam$best_col) %>%
+    flextable::color(i = best_line, color = currentSettings$best_col) %>%
     flextable::bg(
       i = selected_line,
-      bg = currentParam$selected_col
+      bg = currentSettings$selected_col
     ) %>%
     flextable::align(align = "center", part = "header") %>%
-    flextable::set_caption(caption = caption) %>%
+    flextable::set_caption(caption = currentSettings$caption) %>%
     flextable::autofit()
 
   return(ft)
@@ -186,14 +207,24 @@ flexStoredModels <- function(sbm, labels,
 #' If it's simple sbm it should be a single character ("default" -> c("nodes")).
 #' If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
 #' @param type the type of table you want.
-#' 'blockProp' gives the block proportions.
-#' 'connectParam' gives the block connectivity.
-#' 'storedModels' gives the stored modems summary.
-#' @param visualSettings a lists of visual settings. selected_col is the color of the selected model line.
-#' best_col is the color of the best model line and .
-#' Default : list(selected_col = "orange", best_col = "red")
 #'
-#' @param caption caption of the table. "default" gives the default title for each type.
+#' @details Values of \code{type}
+#' \itemize{
+#'  \item{'blockProp': }{gives the block proportions.}
+#'  \item{'connectParam': }{gives the block connectivity.}
+#'  \item{'storedModels': }{gives the stored modems summary.}
+#' }
+#'
+#' @param settings a list of settings
+#'
+#' @details The list of parameters \code{settings} for the flextable
+#'
+#' \itemize{
+#'  \item{"caption": }{Caption is the flextable title (character)}
+#'  \item{"digits": }{nb of digits you want to be shown in the table}
+#'  \item{"selected_col": }{Color highlighting the selected model}
+#'  \item{"best_col": }{Color of text for the best model}
+#' }
 #'
 #' @return Return the selected flextable
 #'
@@ -202,21 +233,21 @@ flexStoredModels <- function(sbm, labels,
 #' my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
 #'
 #' get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
-#'  type = 'blockProp', caption = "default")
+#'  type = 'blockProp')
 #'
 #' get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
-#'  type = 'connectParam', caption = "default")
+#'  type = 'connectParam', settings = list(digits = 5))
 #'
 #' get_flextable(my_sbm, labels = 'default',
-#' type = 'storedModels', caption = "New Title")
+#' type = 'storedModels', settings = list(caption = "New Title"))
 #'
 #' @export
 #'
 get_flextable <- function(sbm,
                           labels = "default",
                           type = c('blockProp','connectParam','storedModels'),
-                          caption = "default",
-                          visualSettings = list()) {
+                          settings = list()) {
+
 
   ### Defaults parameters
   if(identical(labels,"default")){
@@ -229,31 +260,18 @@ get_flextable <- function(sbm,
     currents_labels <- labels
   }
 
-  if(identical(caption,"default")){
-    if(type[[1]] == 'blockProp'){
-      currents_caption <- "Table 1: Block proportions"
-    }else if(type[[1]] == 'connectParam'){
-      currents_caption <- "Table 2: Connectivity betweens blocks"
-    }else{
-      currents_caption <- "Table 3: All explored models"
-    }
-  }else{
-    currents_caption <- caption
-  }
-
   if(type[[1]] == 'blockProp'){
     ft <- flexBlockProp(sbm,
                   currents_labels,
-                  caption = currents_caption)
+                  settings = settings)
   }else if(type[[1]] == 'connectParam'){
     ft <- flexConnect(sbm,
                 currents_labels,
-                caption = currents_caption)
+                settings = settings)
   }else if(type[[1]] == 'storedModels'){
     ft <- flexStoredModels(sbm,
                      currents_labels,
-                     caption = currents_caption,
-                     colorParam = visualSettings)
+                     settings = settings)
   }else{
     stop("type should be 'blockProp','connectParam' or 'storedModels'")
   }

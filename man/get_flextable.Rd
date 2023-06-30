@@ -8,8 +8,7 @@ get_flextable(
   sbm,
   labels = "default",
   type = c("blockProp", "connectParam", "storedModels"),
-  caption = "default",
-  visualSettings = list()
+  settings = list()
 )
 }
 \arguments{
@@ -19,16 +18,9 @@ get_flextable(
 If it's simple sbm it should be a single character ("default" -> c("nodes")).
 If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
-\item{type}{the type of table you want.
-'blockProp' gives the block proportions.
-'connectParam' gives the block connectivity.
-'storedModels' gives the stored modems summary.}
+\item{type}{the type of table you want.}
 
-\item{caption}{caption of the table. "default" gives the default title for each type.}
-
-\item{visualSettings}{a lists of visual settings. selected_col is the color of the selected model line.
-best_col is the color of the best model line and .
-Default : list(selected_col = "orange", best_col = "red")}
+\item{settings}{a list of settings}
 }
 \value{
 Return the selected flextable
@@ -36,17 +28,34 @@ Return the selected flextable
 \description{
 A fct that build a flextable from an sbm object
 }
+\details{
+Values of \code{type}
+\itemize{
+ \item{'blockProp': }{gives the block proportions.}
+ \item{'connectParam': }{gives the block connectivity.}
+ \item{'storedModels': }{gives the stored modems summary.}
+}
+
+The list of parameters \code{settings} for the flextable
+
+\itemize{
+ \item{"caption": }{Caption is the flextable title (character)}
+ \item{"digits": }{nb of digits you want to be shown in the table}
+ \item{"selected_col": }{Color highlighting the selected model}
+ \item{"best_col": }{Color of text for the best model}
+}
+}
 \examples{
 
 my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
 
 get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
- type = 'blockProp', caption = "default")
+ type = 'blockProp')
 
 get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
- type = 'connectParam', caption = "default")
+ type = 'connectParam', settings = list(digits = 5))
 
 get_flextable(my_sbm, labels = 'default',
-type = 'storedModels', caption = "New Title")
+type = 'storedModels', settings = list(caption = "New Title"))
 
 }
