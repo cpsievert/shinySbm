@@ -1,11 +1,24 @@
-#' round_prop
+#' round_proportion
 #'
-#' @description A fct that round a proportion vector and keep sum at one
+#' @description A fct that apply round() to a proportion vector (between 0 and 1, and summing to 1). Round by digits, and adjust the last element to the summing to 1 condition
+#'
+#' @param x vector of proportions
+#' @param digits number of digits, will be evaluated by round
 #'
 #' @return the rounded vector
 #'
-#' @noRd
-round_prop <- function(x, digits = 2) {
+#' @examples
+#' options(digits = 5)
+#' vec <- c(0.5698,0.125,0.0556,0.0365,0.1778,0.0353)
+#' vec
+#' sum(vec)
+#'
+#' rounded_vec <- round_proportion(vec)
+#' rounded_vec
+#' sum(rounded_vec)
+#'
+#' @export
+round_proportion <- function(x, digits = 2) {
   if(length(x) == 1){
     return(1)
   }
@@ -25,8 +38,8 @@ flexBlockProp <- function(sbm, labels,
                           caption = "Table 1: Block proportions") {
   ## Data
   if (is.bipartite(sbm)) {
-    row <- round_prop(sbm$blockProp$row)
-    col <- round_prop(sbm$blockProp$col)
+    row <- round_proportion(sbm$blockProp$row)
+    col <- round_proportion(sbm$blockProp$col)
     n <- max(length(row), length(col))
     length(row) <- n
     length(col) <- n
@@ -37,7 +50,7 @@ flexBlockProp <- function(sbm, labels,
     ) %>%
       setNames(c("Blocks", labels[["row"]], labels[["col"]]))
   } else {
-    nodes <- round_prop(sbm$blockProp)
+    nodes <- round_proportion(sbm$blockProp)
     data_prop <- data.frame(
       Blocks = 1:length(nodes),
       nodes = nodes
@@ -111,7 +124,7 @@ flexConnect <- function(sbm, labels,
 #'
 #' @description A fct that gives a nice flextable for stored Models from the sbm param
 #'
-#' @return lextable for stored Models
+#' @return Flextable for stored Models
 #'
 #' @noRd
 flexStoredModels <- function(sbm, labels,
@@ -161,6 +174,89 @@ flexStoredModels <- function(sbm, labels,
     flextable::set_caption(caption = caption) %>%
     flextable::autofit()
 
+  return(ft)
+}
+
+#' get_flextable
+#'
+#' @description A fct that build a flextable from an sbm object
+#'
+#' @param sbm an sbm model product of {sbm} estimation (simple or bipartite)
+#' @param labels labels for nodes.
+#' If it's simple sbm it should be a single character ("default" -> c("nodes")).
+#' If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param type the type of table you want.
+#' 'blockProp' gives the block proportions.
+#' 'connectParam' gives the block connectivity.
+#' 'storedModels' gives the stored modems summary.
+#' @param visualSettings a lists of visual settings. selected_col is the color of the selected model line.
+#' best_col is the color of the best model line and .
+#' Default : list(selected_col = "orange", best_col = "red")
+#'
+#' @param caption caption of the table. "default" gives the default title for each type.
+#'
+#' @return Return the selected flextable
+#'
+#' @examples
+#'
+#' my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
+#'
+#' get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
+#'  type = 'blockProp', caption = "default")
+#'
+#' get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
+#'  type = 'connectParam', caption = "default")
+#'
+#' get_flextable(my_sbm, labels = 'default',
+#' type = 'storedModels', caption = "New Title")
+#'
+#' @export
+#'
+get_flextable <- function(sbm,
+                          labels = "default",
+                          type = c('blockProp','connectParam','storedModels'),
+                          caption = "default",
+                          visualSettings = list()) {
+
+  ### Defaults parameters
+  if(identical(labels,"default")){
+    if(is.bipartite(sbm)){
+      currents_labels <- c(row = 'row', col = 'col')
+    }else{
+      currents_labels <- c('nodes')
+    }
+  }else{
+    currents_labels <- labels
+  }
+
+  if(identical(caption,"default")){
+    if(type[[1]] == 'blockProp'){
+      currents_caption <- "Table 1: Block proportions"
+    }else if(type[[1]] == 'connectParam'){
+      currents_caption <- "Table 2: Connectivity betweens blocks"
+    }else{
+      currents_caption <- "Table 3: All explored models"
+    }
+  }else{
+    currents_caption <- caption
+  }
+
+  if(type[[1]] == 'blockProp'){
+    ft <- flexBlockProp(sbm,
+                  currents_labels,
+                  caption = currents_caption)
+  }else if(type[[1]] == 'connectParam'){
+    ft <- flexConnect(sbm,
+                currents_labels,
+                caption = currents_caption)
+  }else if(type[[1]] == 'storedModels'){
+    ft <- flexStoredModels(sbm,
+                     currents_labels,
+                     caption = currents_caption,
+                     colorParam = visualSettings)
+  }else{
+    stop("type should be 'blockProp','connectParam' or 'storedModels'")
+  }
   return(ft)
 }
 
