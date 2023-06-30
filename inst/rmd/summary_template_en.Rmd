@@ -20,7 +20,7 @@ if (show_mat) {
   imported_text <- knitr::knit_child("child_imported_en.Rmd", quiet = TRUE)
   cat(imported_text,'\n', sep = "\n")
 
-  cat("## Visuel de Matrice")
+  cat("## Matrix Visual")
 
   imported_vis <- knitr::knit_child("child_imported_visual.Rmd", quiet = TRUE)
   cat(imported_vis, sep = "\n")
