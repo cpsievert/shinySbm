@@ -179,13 +179,13 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
       low = "white", high = currentOptions$colValue
     ) +
     ggplot2::xlab(if (transpose) {
-      labels$row
+      labels[["row"]]
     } else {
-      labels$col
+      labels[["col"]]
     }) + ggplot2::ylab(if (transpose) {
-      labels$col
+      labels[["col"]]
     } else {
-      labels$row
+      labels[["row"]]
     }) +
     ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName), range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
@@ -317,7 +317,7 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
       low = "white", high = currentOptions$colValue,
       guide = "colourbar"
     ) +
-    ggplot2::ylab(labels$row) + ggplot2::xlab(labels$col) +
+    ggplot2::ylab(labels[["row"]]) + ggplot2::xlab(labels[["col"]]) +
     ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName), range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
@@ -404,14 +404,14 @@ plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NUL
       guide = "colourbar"
     ) +
     ggplot2::xlab(if (transpose) {
-      labels$row
+      labels[["row"]]
     } else {
-      labels$col
+      labels[["col"]]
     }) +
     ggplot2::ylab(if (transpose) {
-      labels$col
+      labels[["col"]]
     } else {
-      labels$row
+      labels[["row"]]
     }) +
     ggplot2::scale_alpha(range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
