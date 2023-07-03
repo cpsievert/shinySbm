@@ -180,6 +180,8 @@ golem::add_fct("getGroup")
 golem::add_fct("flextables")
 golem::add_fct("is_bipartite")
 golem::add_fct("plotSbm")
+golem::add_fct("plotNet")
+golem::add_fct("fct_adjacency_to_edges")
 
 a = sortable::rank_list(
   text = "Cliquer glisser dans l'ordre souhaité (plusieurs selection possible avec la touche CTRL)",

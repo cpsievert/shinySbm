@@ -33,7 +33,7 @@ mod_select_nb_groups_ui <- function(id, wind_width = 3) {
         ),
         conditionalPanel(
           condition = "input.showGraph % 2 == 0", ns = ns,
-          plotOutput(ns("showILC"),
+          plotOutput(ns("showICL"),
             click = ns("plotClick"),
             dblclick = ns("plotDblclick")
           )
@@ -104,7 +104,7 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, labels) {
       data_sbm_main <- my_sbm_main()$clone()
       data_sbm <- my_sbm()$clone()
       # not a realplot
-      edges <- ILC_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed, get_edges = T)
+      edges <- ICL_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed, get_edges = T)
       plot_shape <- function(x) {
         1.25 * x - 0.2
       }
@@ -128,14 +128,14 @@ mod_select_nb_groups_server <- function(id, my_sbm_main, labels) {
     })
 
 
-    plotILC <- eventReactive(c(input$Nbblocks, my_sbm_main(), input$plotDblclick,labels()), {
+    plotICL <- eventReactive(c(input$Nbblocks, my_sbm_main(), input$plotDblclick,labels()), {
       data_sbm <- my_sbm()$clone()
       data_sbm_main <- my_sbm_main()$clone()
-      ILC_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed, labels = as.vector(labels()))
+      ICL_plot(data_sbm, data_sbm_main, zoom = plot_info$is_zoomed, labels = as.vector(labels()))
     })
 
-    output$showILC <- renderPlot({
-      print(plotILC())
+    output$showICL <- renderPlot({
+      print(plotICL())
     })
 
     return(my_sbm)
