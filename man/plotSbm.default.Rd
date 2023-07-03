@@ -5,7 +5,7 @@
 \title{plotSbm.default Method}
 \usage{
 \method{plotSbm}{default}(
-  fit,
+  x,
   ordered = FALSE,
   transpose = FALSE,
   labels = NULL,
@@ -13,7 +13,7 @@
 )
 }
 \arguments{
-\item{fit}{: any object}
+\item{x}{: any object}
 
 \item{ordered}{: isn't used in default method}
 
@@ -23,7 +23,7 @@
 
 \item{plotOptions}{: isn't used in default method
 
- @return plot of fit}
+ @return plot of x}
 }
 \description{
 plotSbm method for unknown object

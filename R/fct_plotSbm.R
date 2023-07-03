@@ -2,10 +2,10 @@
 #'
 #' @description A fct that plot a beautiful matrix from an sbm object or a network matrix it does
 #' have suitable parameters to get the plots you want this is the generic function,
-#' it does have one method Bipartite and one for Simple Sbm. The `fit` object need
+#' it does have one method Bipartite and one for Simple Sbm. The `x` object need
 #' to be construct by one of the `estimate***SBM` function from the `sbm` package.
 #'
-#' @param fit  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
+#' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
 #' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
 #' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
 #' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
@@ -48,8 +48,8 @@
 #'   )
 #'
 #' @export
-plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
-  UseMethod("plotSbm", fit)
+plotSbm <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+  UseMethod("plotSbm", x)
 }
 
 
@@ -57,25 +57,25 @@ plotSbm <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plot
 #'
 #' @description plotSbm method for unknown object
 #'
-#' @param fit  : any object
+#' @param x  : any object
 #' @param ordered : isn't used in default method
 #' @param transpose : isn't used in default method
 #' @param labels : isn't used in default method
 #' @param plotOptions : isn't used in default method
 #'
-#'  @return plot of fit
+#'  @return plot of x
 #'
 #'
 #' @export
-plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
-  plot(fit)
+plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+  plot(x)
 }
 
 #' plotSbm.BipartiteSBM_fit Method
 #'
 #' @description plotSbm method for BipartiteSBM_fit object
 #'
-#' @param fit  : an Sbm model of class `"BipartiteSBM_fit"`
+#' @param x  : an Sbm model of class `"BipartiteSBM_fit"`
 #' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
 #' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
 #' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
@@ -103,7 +103,7 @@ plotSbm.default <- function(fit, ordered = FALSE, transpose = FALSE, labels = NU
 #' )
 #'
 #' @export
-plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
@@ -127,7 +127,7 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
   ################################################
 
 
-  clustering <- setNames(fit$memberships, c("row", "col"))
+  clustering <- setNames(x$memberships, c("row", "col"))
   if (ordered) {
     oRow <- order(clustering$row, decreasing = !transpose)
     oCol <- order(clustering$col, decreasing = transpose)
@@ -145,13 +145,13 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
       uRow
     }
     tRow <- tRow[length(tRow)] - tRow[-length(tRow)] + 0.5
-    mat_exp <- fit$connectParam$mean[clustering$row, clustering$col][oRow, oCol]
-    mat_pure <- fit$networkData[oRow, oCol]
+    mat_exp <- x$connectParam$mean[clustering$row, clustering$col][oRow, oCol]
+    mat_pure <- x$networkData[oRow, oCol]
   } else {
     tRow <- NULL
     tCol <- NULL
-    mat_exp <- fit$connectParam$mean[clustering$row, clustering$col]
-    mat_pure <- fit$networkData
+    mat_exp <- x$connectParam$mean[clustering$row, clustering$col]
+    mat_pure <- x$networkData
   }
 
   plot_net <- dplyr::mutate(reshape2::melt(mat_exp),base_value = reshape2::melt(mat_pure)$value)
@@ -217,7 +217,7 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
 #'
 #' @description plotSbm method for SimpleSBM_fit object
 #'
-#' @param fit  : an Sbm model of class `"SimpleSBM_fit"`
+#' @param x  : an Sbm model of class `"SimpleSBM_fit"`
 #' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
 #' @param transpose : isn't used in this method
 #' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
@@ -242,7 +242,7 @@ plotSbm.BipartiteSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, la
 #' )
 #'
 #' @export
-plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
@@ -268,20 +268,20 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
   ################################################
 
 
-  clustering <- list(row = fit$memberships, col = fit$memberships)
+  clustering <- list(row = x$memberships, col = x$memberships)
   if (ordered) {
     oRow <- order(clustering$row)
     uRow <- cumsum(table(clustering$row)) + 0.5
     uCol <- uRow[-length(uRow)]
     uRow <- uRow[length(uRow)] - uRow[-length(uRow)] + 0.5
-    mat_exp <- fit$connectParam$mean[clustering$row, clustering$col][oRow, oRow]
-    mat_pure <- fit$networkData[oRow, oRow]
+    mat_exp <- x$connectParam$mean[clustering$row, clustering$col][oRow, oRow]
+    mat_pure <- x$networkData[oRow, oRow]
   } else {
     text_net <- NULL
     uRow <- NULL
     uCol <- NULL
-    mat_exp <- fit$connectParam$mean[clustering$row, clustering$col]
-    mat_pure <- fit$networkData
+    mat_exp <- x$connectParam$mean[clustering$row, clustering$col]
+    mat_pure <- x$networkData
   }
   nb_rows <- dim(mat_pure)[1]
   mat_exp <- mat_exp[nb_rows:1, ]
@@ -346,7 +346,7 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
 #'
 #' @description plotSbm method for matrix object
 #'
-#' @param fit  : a numeric matrix
+#' @param x  : a numeric matrix
 #' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
 #' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
 #' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
@@ -373,7 +373,7 @@ plotSbm.SimpleSBM_fit <- function(fit, ordered = FALSE, transpose = FALSE, label
 #'  )
 #'
 #' @export
-plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
@@ -388,15 +388,15 @@ plotSbm.matrix <- function(fit, ordered = FALSE, transpose = FALSE, labels = NUL
   currentOptions[names(plotOptions)] <- plotOptions
   ################################################
 
-  nb_rows <- dim(fit)[1]
-  if (nb_rows == dim(fit)[2]) {
+  nb_rows <- dim(x)[1]
+  if (nb_rows == dim(x)[2]) {
     if (transpose) {
-      mat_exp <- fit[, nb_rows:1]
+      mat_exp <- x[, nb_rows:1]
     } else {
-      mat_exp <- fit[nb_rows:1, ]
+      mat_exp <- x[nb_rows:1, ]
     }
   } else {
-    mat_exp <- fit
+    mat_exp <- x
   }
 
   plot_net <- reshape2::melt(mat_exp)

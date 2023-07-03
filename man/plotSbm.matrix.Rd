@@ -5,7 +5,7 @@
 \title{plotSbm.matrix Method}
 \usage{
 \method{plotSbm}{matrix}(
-  fit,
+  x,
   ordered = FALSE,
   transpose = FALSE,
   labels = NULL,
@@ -13,7 +13,7 @@
 )
 }
 \arguments{
-\item{fit}{: a numeric matrix}
+\item{x}{: a numeric matrix}
 
 \item{ordered}{: Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})}
 

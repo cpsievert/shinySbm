@@ -5,7 +5,7 @@
 \title{plotSbm.SimpleSBM_fit Method}
 \usage{
 \method{plotSbm}{SimpleSBM_fit}(
-  fit,
+  x,
   ordered = FALSE,
   transpose = FALSE,
   labels = NULL,
@@ -13,7 +13,7 @@
 )
 }
 \arguments{
-\item{fit}{: an Sbm model of class `"SimpleSBM_fit"`}
+\item{x}{: an Sbm model of class `"SimpleSBM_fit"`}
 
 \item{ordered}{: Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})}
 

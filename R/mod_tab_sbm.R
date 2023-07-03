@@ -127,6 +127,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
         switch(r$upload$networkType(),
           "unipartite" = sbm::estimateSimpleSBM(
             netMat = as.matrix(Dataset()),
+            directed = r$upload$directed(),
             model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
           ),
           "bipartite" = sbm::estimateBipartiteSBM(

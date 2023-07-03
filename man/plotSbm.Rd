@@ -5,7 +5,7 @@
 \title{plotSbm}
 \usage{
 plotSbm(
-  fit,
+  x,
   ordered = FALSE,
   transpose = FALSE,
   labels = NULL,
@@ -13,7 +13,7 @@ plotSbm(
 )
 }
 \arguments{
-\item{fit}{: Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
+\item{x}{: Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
 
 \item{ordered}{: Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})}
 
@@ -29,7 +29,7 @@ a ggplot object corresponding to the plot
 \description{
 A fct that plot a beautiful matrix from an sbm object or a network matrix it does
 have suitable parameters to get the plots you want this is the generic function,
-it does have one method Bipartite and one for Simple Sbm. The `fit` object need
+it does have one method Bipartite and one for Simple Sbm. The `x` object need
 to be construct by one of the `estimate***SBM` function from the `sbm` package.
 }
 \details{
