@@ -34,7 +34,11 @@ prePlotNet <- function(matrix,
       currentLabels <- c(row = "nodes", col = "nodes")
     }
   }else{
-    currentLabels <- labels
+    if(is_bipartite){
+      currentLabels <- labels
+    }else{
+      currentLabels <- c(row = labels, col = labels)
+    }
   }
 
   # default directed
