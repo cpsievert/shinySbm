@@ -54,9 +54,11 @@ mod_tab_extraction_server <- function(id,r){
       r$upload$labels
     )
 
-    to_extract <- reactive({getGroups(my_sbm(),r$upload$Dataset(),
-                                      input$attribution,input$proportion,
-                                      r$upload$labels())})
+    to_extract <- reactive({getBlocks(x = my_sbm(),
+                                      node_names = r$upload$Dataset(),
+                                      labels = r$upload$labels(),
+                                      attribution = input$attribution,
+                                      proportion = input$proportion)})
 
 
     check_sbm <- reactiveValues(is_sbm = F)
@@ -73,7 +75,7 @@ mod_tab_extraction_server <- function(id,r){
                               collapsible = T,width = 6,
                               DT::dataTableOutput(ns("dataRow")),
                               tags$head(tags$style(css_big_table(ns("dataRow"))))),
-        shinydashboard::box(title = paste0(r$upload$labels()$col,":"),
+          shinydashboard::box(title = paste0(r$upload$labels()$col,":"),
                               solidHeader = T, status = "info",
                               collapsible = T,width = 6,
                               DT::dataTableOutput(ns("dataCol")),
