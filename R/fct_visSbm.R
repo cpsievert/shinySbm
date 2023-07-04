@@ -9,10 +9,24 @@ prePlotNet <- function(matrix,
                        labels,
                        directed,
                        settings){
+  # default directed
+  if(is.logical(directed)){
+    currentDirected <- directed
+  }else{
+    if(directed != "default"){
+      warning("directed should be a boolean or 'default'")
+    }
+    currentDirected <- isSymmetric(matrix)
+  }
+
   # Default settings
   currentSettings <- list(
-    arrow_start = "from",
-    arrow_color = "lightblue",
+    node_list = NULL,
+    edge_threshold = "default",
+    edge_color = "lightblue",
+    arrows = currentDirected,
+    arrow_thickness = 0.3,
+    arrow_start = 'row',
     node_color = if(is_bipartite){
       c(row = "orange",col = "blue")
     }else{
@@ -21,8 +35,9 @@ prePlotNet <- function(matrix,
     node_shape = if(is_bipartite){
       c(row = "triangle",col = "square")
     }else{
-      c("circle")
-    }
+      c("dot")
+    },
+    digits = 2
   )
   currentSettings[names(settings)] <- settings
 
@@ -41,12 +56,30 @@ prePlotNet <- function(matrix,
     }
   }
 
-  # default directed
-  if(is.logical(directed)){
-    currentDirected <- directed
+  # Arrows default
+  current_arrow <- list(enabled = TRUE,
+                        scaleFactor = currentSettings$arrow_thickness)
+  if(currentSettings$arrows){
+    if(!currentSettings$arrow_start %in% c('row','col')){
+      if(is_bipartite & currentSettings$arrow_start %in% currentLabels){
+        currentSettings$arrow_start <- names(which(currentLabels == currentSettings$arrow_start))
+      }else{
+        warning(paste0("settings[['arrow_start']] should be 'row' or 'col'",
+        ifelse(is_bipartite,"or any values of labels parameter","")))
+      }
+    }
+    if(currentSettings$arrow_start  == 'row'){
+      currentSettings$arrows <- list(from = current_arrow)
+    }else if(currentSettings$arrow_start  == 'col'){
+      currentSettings$arrows <- list(to = current_arrow)
+    }else{
+      currentSettings$arrows <- character()
+    }
   }else{
-    currentDirected <- isSymmetric(matrix)
+    currentSettings$arrows <- character()
   }
+
+
   return(
     c(currentSettings,
       list(labels = currentLabels, directed = currentDirected ))
@@ -66,7 +99,7 @@ prePlotNet <- function(matrix,
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
 #'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"arrow_color": }{character : color of arrows}
+#'  \item{"edge_color": }{character : color of arrows}
 #'  \item{"row_color": }{character : color for rows in case of bipartite}
 #'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
 #'  \item{"col_color": }{character : color for columns in case of bipartite}
@@ -108,7 +141,7 @@ visSbm <- function(x,
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
 #'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"arrow_color": }{character : color of arrows}
+#'  \item{"edge_color": }{character : color of arrows}
 #'  \item{"row_color": }{character : color for rows in case of bipartite}
 #'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
 #'  \item{"col_color": }{character : color for columns in case of bipartite}
@@ -141,7 +174,7 @@ visSbm.default <- function(x,
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
 #'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"arrow_color": }{character : color of arrows}
+#'  \item{"edge_color": }{character : color of arrows}
 #'  \item{"row_color": }{character : color for rows in case of bipartite}
 #'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
 #'  \item{"col_color": }{character : color for columns in case of bipartite}
@@ -173,21 +206,40 @@ visSbm.BipartiteSBM_fit <- function(x,
                             labels = labels,
                             directed = F,
                             settings = settings)
-  node_edges <- build_node_edge(x,preSettings$labels)
 
+  node_edges <- get_graph(x,preSettings$labels) %>%
+    graph_filter(preSettings$edge_threshold)
 
-  visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
-    visNetwork::visEdges(preSettings$arrow_start,
-                         color = preSettings$arrow_color) %>%
+  # Edges and Nodes Hoovering Sentence
+  node_edges$edges$title <- paste("connectivity =",round(node_edges$edges$value,preSettings$digits))
+  node_edges$nodes$title <- paste("proportion =",round_proportion(node_edges$nodes$value,preSettings$digits))
+
+  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
+    visNetwork::visEdges(arrows = preSettings$arrows,
+                         color = preSettings$edge_color,
+                         arrowStrikethrough = F) %>%
     # darkblue square with shadow for group "A"
     visNetwork::visGroups(groupname = "row",
-                          color = preSettings$node_color[["row"]],
+                          color = list(background = preSettings$node_color[["row"]],
+                                       highlight = list(border = "black",
+                                                     background = preSettings$node_color[["row"]])),
                           shape = preSettings$node_shape[["row"]]) %>%
     # red triangle for group "B"
     visNetwork::visGroups(groupname = "col",
-                          color = preSettings$node_color[["col"]],
+                          color = list(background = preSettings$node_color[["col"]],
+                                       highlight = list(border = "black",
+                                                     background = preSettings$node_color[["col"]])),
                           shape = preSettings$node_shape[["col"]]) %>%
-    visNetwork::visHierarchicalLayout()
+    visNetwork::visPhysics(solver = "forceAtlas2Based") %>%
+    visNetwork::visHierarchicalLayout() %>%
+    visNetwork::visInteraction(keyboard = TRUE)
+
+  if(!is.null(preSettings$node_list)){
+    visual <- visNetwork::visEvents(visual,selectNode = "function(properties) {
+      alert('selected nodes ' + this.body.data.nodes.get(properties.nodes[0]).title);}")
+  }
+ return(visual)
+
 }
 
 #' visSbm
@@ -202,7 +254,7 @@ visSbm.BipartiteSBM_fit <- function(x,
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
 #'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"arrow_color": }{character : color of arrows}
+#'  \item{"edge_color": }{character : color of arrows}
 #'  \item{"row_color": }{character : color for rows in case of bipartite}
 #'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
 #'  \item{"col_color": }{character : color for columns in case of bipartite}
@@ -230,8 +282,30 @@ visSbm.SimpleSBM_fit <- function(x,
                             labels = labels,
                             directed = directed,
                             settings = settings)
-  node_edges <- build_node_edge(x,preSettings$labels)
+  node_edges <- get_graph(x,preSettings$labels) %>%
+    graph_filter(preSettings$edge_threshold)
 
-  visNetwork::visNetwork(node_edges$nodes, node_edges$edges)
+  # Edges and Nodes Hoovering Sentence
+  node_edges$edges$title <- paste("connectivity =",round(node_edges$edges$value,preSettings$digits))
+  node_edges$nodes$title <- paste("proportion =",round_proportion(node_edges$nodes$value,preSettings$digits))
+
+
+  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
+  visNetwork::visEdges(arrows = preSettings$arrows,
+                       color = preSettings$edge_color,
+                       arrowStrikethrough = F) %>%
+  visNetwork::visNodes(title = ,
+                       color = list(background = preSettings$node_color,
+                                    highlight = list(border = "black",
+                                                  background = preSettings$node_color)),
+                       shape = preSettings$node_shape) %>%
+    visNetwork::visPhysics(solver = "forceAtlas2Based") %>%
+    visNetwork::visInteraction(keyboard = TRUE)
+
+  if(!is.null(preSettings$node_list)){
+    visual <- visNetwork::visEvents(visual,selectNode = "function(properties) {
+      alert('selected nodes ' + this.body.data.nodes.get(properties.nodes[0]).title);}")
+  }
+  return(visual)
 }
 
