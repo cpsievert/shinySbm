@@ -4,32 +4,50 @@
 \alias{visSbm.BipartiteSBM_fit}
 \title{visSbm}
 \usage{
-\method{visSbm}{BipartiteSBM_fit}(x, labels = "default", directed = "default", settings = list())
+\method{visSbm}{BipartiteSBM_fit}(
+  x,
+  labels = "default",
+  node_names = NULL,
+  directed = "default",
+  settings = list()
+)
 }
 \arguments{
 \item{x}{: Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
 
 \item{labels}{: labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
+\item{node_names}{: if NULL do nothing specific, but list of nodes are given
+the graph get interactive and you can see by clicking on a node what are the
+individuals selected. In bipartite case a named list :
+\itemize{
+ \item{"row": }{character : node names in rows}
+ \item{"col": }{character : node names in columns}
+ }
+ In unipartite case a single character vector containing the nodes names (Default = NULL).}
+
 \item{directed}{: Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.}
 
 \item{settings}{: list of settings}
 }
 \value{
-a visNetwork plot
+a visNetwork visual of the x object
 }
 \description{
 A fct that plot a {visNetwork} plot of a adjacency matrix or an Sbm fit from the {sbm} package.
 }
 \details{
-The list of parameters \code{plotOptions} for the matrix plot is
+List of parameters
 \itemize{
- \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
- \item{"arrows_color": }{character : color of arrows}
- \item{"row_color": }{character : color for rows in case of bipartite}
- \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
- \item{"col_color": }{character : color for columns in case of bipartite}
- \item{"col_shape": }{character : shape of columns according to vsiNetwork shape agrument ("triangle", "square", etc...)}
+ \item{"edge_threshold": }{"default" erases as many small edges as it can without isolating any nodes (no connection).
+ It can also be a numeric value between 0 and 1, relative (between min and max) filter for small edges value}
+ \item{"edge_color": }{character : color of edges (default: "lightblue")}
+ \item{"arrows": }{boolean : should edges be arrows}
+ \item{"arrow_thickness": }{numeric : arrows size}
+ \item{"arrow_start": }{character : "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
+ \item{"node_color": }{named character : Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
+ \item{"node_shape": }{named character : Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
+ \item{"digits": }{integer : number of digits to show when numbers are shown (default: 2)}
 }
 }
 \examples{
