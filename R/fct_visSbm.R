@@ -16,12 +16,11 @@ prePlotNet <- function(matrix,
     if(directed != "default"){
       warning("directed should be a boolean or 'default'")
     }
-    currentDirected <- isSymmetric(matrix)
+    currentDirected <- !isSymmetric(matrix)
   }
 
   # Default settings
   currentSettings <- list(
-    node_list = NULL,
     edge_threshold = "default",
     edge_color = "lightblue",
     arrows = currentDirected,
@@ -93,21 +92,31 @@ prePlotNet <- function(matrix,
 #'
 #' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
 #' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names : if NULL do nothing specific, but list of nodes are given
+#' the graph get interactive and you can see by clicking on a node what are the
+#' individuals selected. In bipartite case a named list :
+#' \itemize{
+#'  \item{"row": }{character : node names in rows}
+#'  \item{"col": }{character : node names in columns}
+#'  }
+#'  In unipartite case a single character vector containing the nodes names (Default = NULL).
 #' @param directed : Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.
 #' @param settings : list of settings
 #'
-#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' @details List of parameters
 #' \itemize{
-#'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"edge_color": }{character : color of arrows}
-#'  \item{"row_color": }{character : color for rows in case of bipartite}
-#'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
-#'  \item{"col_color": }{character : color for columns in case of bipartite}
-#'  \item{"col_shape": }{character : shape of columns according to vsiNetwork shape agrument ("triangle", "square", etc...)}
+#'  \item{"edge_threshold": }{"default" erases as many small edges as it can without isolating any nodes (no connection).
+#'  It can also be a numeric value between 0 and 1, relative (between min and max) filter for small edges value}
+#'  \item{"edge_color": }{character : color of edges (default: "lightblue")}
+#'  \item{"arrows": }{boolean : should edges be arrows}
+#'  \item{"arrow_thickness": }{numeric : arrows size}
+#'  \item{"arrow_start": }{character : "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
+#'  \item{"node_color": }{named character : Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
+#'  \item{"node_shape": }{named character : Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
+#'  \item{"digits": }{integer : number of digits to show when numbers are shown (default: 2)}
 #' }
 #'
-#'
-#' @return a visNetwork plot
+#' @return a visNetwork visual of the x object
 #'
 #' @examples
 #' data_bi <- sbm::fungusTreeNetwork$fungus_tree
@@ -124,6 +133,7 @@ prePlotNet <- function(matrix,
 #' @export
 visSbm <- function(x,
                    labels = "default",
+                   node_names = NULL,
                    directed = "default",
                    settings = list()) {
   UseMethod("visSbm", x)
@@ -135,28 +145,39 @@ visSbm <- function(x,
 #'
 #' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
 #' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names : if NULL do nothing specific, but list of nodes are given
+#' the graph get interactive and you can see by clicking on a node what are the
+#' individuals selected. In bipartite case a named list :
+#' \itemize{
+#'  \item{"row": }{character : node names in rows}
+#'  \item{"col": }{character : node names in columns}
+#'  }
+#'  In unipartite case a single character vector containing the nodes names (Default = NULL).
 #' @param directed : Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.
 #' @param settings : list of settings
 #'
-#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' @details List of parameters
 #' \itemize{
-#'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"edge_color": }{character : color of arrows}
-#'  \item{"row_color": }{character : color for rows in case of bipartite}
-#'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
-#'  \item{"col_color": }{character : color for columns in case of bipartite}
-#'  \item{"col_shape": }{character : shape of columns according to vsiNetwork shape agrument ("triangle", "square", etc...)}
+#'  \item{"edge_threshold": }{"default" erases as many small edges as it can without isolating any nodes (no connection).
+#'  It can also be a numeric value between 0 and 1, relative (between min and max) filter for small edges value}
+#'  \item{"edge_color": }{character : color of edges (default: "lightblue")}
+#'  \item{"arrows": }{boolean : should edges be arrows}
+#'  \item{"arrow_thickness": }{numeric : arrows size}
+#'  \item{"arrow_start": }{character : "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
+#'  \item{"node_color": }{named character : Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
+#'  \item{"node_shape": }{named character : Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
+#'  \item{"digits": }{integer : number of digits to show when numbers are shown (default: 2)}
 #' }
 #'
-#'
-#' @return a visNetwork plot
+#' @return a visNetwork visual of the x object
 #'
 #'
 #' @export
 visSbm.default <- function(x,
-                            labels = "default",
-                            directed = "default",
-                            settings = list()){
+                          labels = "default",
+                          node_names = NULL,
+                          directed = "default",
+                          settings = list()){
   stop('x should be  matrix of an sbm fit from {sbm} package')
 }
 
@@ -168,21 +189,31 @@ visSbm.default <- function(x,
 #'
 #' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
 #' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names : if NULL do nothing specific, but list of nodes are given
+#' the graph get interactive and you can see by clicking on a node what are the
+#' individuals selected. In bipartite case a named list :
+#' \itemize{
+#'  \item{"row": }{character : node names in rows}
+#'  \item{"col": }{character : node names in columns}
+#'  }
+#'  In unipartite case a single character vector containing the nodes names (Default = NULL).
 #' @param directed : Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.
 #' @param settings : list of settings
 #'
-#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' @details List of parameters
 #' \itemize{
-#'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"edge_color": }{character : color of arrows}
-#'  \item{"row_color": }{character : color for rows in case of bipartite}
-#'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
-#'  \item{"col_color": }{character : color for columns in case of bipartite}
-#'  \item{"col_shape": }{character : shape of columns according to vsiNetwork shape agrument ("triangle", "square", etc...)}
+#'  \item{"edge_threshold": }{"default" erases as many small edges as it can without isolating any nodes (no connection).
+#'  It can also be a numeric value between 0 and 1, relative (between min and max) filter for small edges value}
+#'  \item{"edge_color": }{character : color of edges (default: "lightblue")}
+#'  \item{"arrows": }{boolean : should edges be arrows}
+#'  \item{"arrow_thickness": }{numeric : arrows size}
+#'  \item{"arrow_start": }{character : "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
+#'  \item{"node_color": }{named character : Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
+#'  \item{"node_shape": }{named character : Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
+#'  \item{"digits": }{integer : number of digits to show when numbers are shown (default: 2)}
 #' }
 #'
-#'
-#' @return a visNetwork plot
+#' @return a visNetwork visual of the x object
 #'
 #' @examples
 #' data_bi <- sbm::fungusTreeNetwork$fungus_tree
@@ -196,6 +227,7 @@ visSbm.default <- function(x,
 #' @export
 visSbm.BipartiteSBM_fit <- function(x,
                            labels = "default",
+                           node_names = NULL,
                            directed = "default",
                            settings = list()){
 
@@ -207,7 +239,9 @@ visSbm.BipartiteSBM_fit <- function(x,
                             directed = F,
                             settings = settings)
 
-  node_edges <- get_graph(x,preSettings$labels) %>%
+  node_edges <- get_graph(x,
+                          labels = preSettings$labels,
+                          node_names = node_names) %>%
     graph_filter(preSettings$edge_threshold)
 
   # Edges and Nodes Hoovering Sentence
@@ -234,9 +268,12 @@ visSbm.BipartiteSBM_fit <- function(x,
     visNetwork::visHierarchicalLayout() %>%
     visNetwork::visInteraction(keyboard = TRUE)
 
-  if(!is.null(preSettings$node_list)){
-    visual <- visNetwork::visEvents(visual,selectNode = "function(properties) {
-      alert('selected nodes ' + this.body.data.nodes.get(properties.nodes[0]).title);}")
+  if(!is.null(node_names)){
+    js_code <-
+    "function(properties) {
+        alert('Block composition:' + this.body.data.nodes.get(properties.nodes[0]).text);
+      }"
+    visual <- visNetwork::visEvents(visual,selectNode = js_code)
   }
  return(visual)
 
@@ -248,21 +285,31 @@ visSbm.BipartiteSBM_fit <- function(x,
 #'
 #' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
 #' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names : if NULL do nothing specific, but list of nodes are given
+#' the graph get interactive and you can see by clicking on a node what are the
+#' individuals selected. In bipartite case a named list :
+#' \itemize{
+#'  \item{"row": }{character : node names in rows}
+#'  \item{"col": }{character : node names in columns}
+#'  }
+#'  In unipartite case a single character vector containing the nodes names (Default = NULL).
 #' @param directed : Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.
 #' @param settings : list of settings
 #'
-#' @details The list of parameters \code{plotOptions} for the matrix plot is
+#' @details List of parameters
 #' \itemize{
-#'  \item{"arrow_start": }{character : "from" the arrow strat from first column and "to" the arrow start from tahe second column}
-#'  \item{"edge_color": }{character : color of arrows}
-#'  \item{"row_color": }{character : color for rows in case of bipartite}
-#'  \item{"row_shape": }{character : shape of rows according to vsiNetwork shape agrument ("triangle", "square", etc...)}
-#'  \item{"col_color": }{character : color for columns in case of bipartite}
-#'  \item{"col_shape": }{character : shape of columns according to vsiNetwork shape agrument ("triangle", "square", etc...)}
+#'  \item{"edge_threshold": }{"default" erases as many small edges as it can without isolating any nodes (no connection).
+#'  It can also be a numeric value between 0 and 1, relative (between min and max) filter for small edges value}
+#'  \item{"edge_color": }{character : color of edges (default: "lightblue")}
+#'  \item{"arrows": }{boolean : should edges be arrows}
+#'  \item{"arrow_thickness": }{numeric : arrows size}
+#'  \item{"arrow_start": }{character : "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
+#'  \item{"node_color": }{named character : Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
+#'  \item{"node_shape": }{named character : Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
+#'  \item{"digits": }{integer : number of digits to show when numbers are shown (default: 2)}
 #' }
 #'
-#'
-#' @return a visNetwork plot
+#' @return a visNetwork visual of the x object
 #'
 #' @examples
 #'
@@ -273,7 +320,8 @@ visSbm.BipartiteSBM_fit <- function(x,
 #'
 #' @export
 visSbm.SimpleSBM_fit <- function(x,
-                                  labels = "default",
+                                 labels = "default",
+                                 node_names = NULL,
                                   directed = "default",
                                   settings = list()){
 
@@ -282,7 +330,10 @@ visSbm.SimpleSBM_fit <- function(x,
                             labels = labels,
                             directed = directed,
                             settings = settings)
-  node_edges <- get_graph(x,preSettings$labels) %>%
+  node_edges <- get_graph(x,
+                          labels = preSettings$labels,
+                          node_names = node_names,
+                          directed = preSettings$directed) %>%
     graph_filter(preSettings$edge_threshold)
 
   # Edges and Nodes Hoovering Sentence
@@ -302,9 +353,14 @@ visSbm.SimpleSBM_fit <- function(x,
     visNetwork::visPhysics(solver = "forceAtlas2Based") %>%
     visNetwork::visInteraction(keyboard = TRUE)
 
-  if(!is.null(preSettings$node_list)){
-    visual <- visNetwork::visEvents(visual,selectNode = "function(properties) {
-      alert('selected nodes ' + this.body.data.nodes.get(properties.nodes[0]).title);}")
+  if(!is.null(node_names)){
+    if(!is.null(node_names)){
+      js_code <-
+        "function(properties) {
+        alert('Block composition:' + this.body.data.nodes.get(properties.nodes[0]).text);
+      }"
+      visual <- visNetwork::visEvents(visual,selectNode = js_code)
+    }
   }
   return(visual)
 }

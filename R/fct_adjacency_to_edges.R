@@ -1,3 +1,29 @@
+#' characTable
+#'
+#' @description A fct that print a character vector into a table format
+#' @return the character into table format
+#'
+#' @noRd
+characTable <- function(x,nrow_max = 50, max_length_name = 20){
+  x <- stringr::str_sub(x,1,max_length_name)
+  n_col <- length(x) %/% nrow_max + 1
+  n_row <- if_else(n_col == 1,length(x),nrow_max)
+  x <- c(x,rep('',n_col * n_row - length(x)))
+  matrix <- matrix(x,nrow = n_row,ncol = n_col)
+  col_length <- apply(matrix, 2, function(col){
+    max(stringr::str_length(col))+2
+  })
+  apply(matrix, 1, function(row){
+    current_row <- paste('|',row)
+    current_row <- paste(current_row,
+                         purrr::map_chr(col_length - stringr::str_length(current_row),
+                                        ~paste0(rep(" ",.x),collapse = '')))
+    paste0(current_row,collapse = '') %>%
+      paste0("|")
+  }) %>%
+    paste0(collapse = '\n')
+}
+
 #' get_graph generic
 #'
 #' @description A fct that build a structure for network visualisation
@@ -14,15 +40,27 @@ get_graph <- function(x, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-get_graph.SimpleSBM_fit <- function(x, labels, directed = F, ...) {
+get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F,...) {
+
   nb_nodes <- x$nbBlocks
   id <- 1:nb_nodes
   # Build nodes tables
   nodes <- data.frame(
     id = id, # one id for each block
-    label = paste0(labels[["row"]], " block ", id), # Name of the block
+    label = paste0(labels[["row"]], " Block ", id), # Name of the block
     value = x$blockProp # block size
   )
+
+  if(!is.null(node_names)){
+    nodes <- dplyr::left_join(nodes,
+                       getBlocks(x,node_names = node_names,
+                                 labels = labels) %>%
+                         dplyr::mutate(label = paste(labels[['row']],gsub("_"," ",Blocks))) %>%
+                         dplyr::group_by(label) %>%
+                         dplyr::reframe(text = paste0('\n\n',characTable(Nodes_names))),
+                       by  = "label")
+  }
+
   connection_matrix <- x$connectParam$mean
   # I the matrix isn't symmetric or we want to force it to be treated as an directed matrix
   if (isSymmetric(connection_matrix) & !directed) {
@@ -60,7 +98,10 @@ get_graph.SimpleSBM_fit <- function(x, labels, directed = F, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-get_graph.BipartiteSBM_fit <- function(x, labels, ...) {
+get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
+
+
+
   nb_nodes <- x$nbBlocks %>%
     as.list() %>%
     setNames(c(labels[["row"]], labels[["col"]]))
@@ -85,6 +126,16 @@ get_graph.BipartiteSBM_fit <- function(x, labels, ...) {
     ) %>%
     dplyr::select(id, label, level, value, group)
 
+  if(!is.null(node_names)){
+    nodes <- dplyr::left_join(nodes,
+                       getBlocks(x,node_names = node_names,
+                                 labels = labels) %>%
+                         purrr::map_dfr(~dplyr::mutate(.x,label = gsub("_"," ",Blocks))) %>%
+                         dplyr::group_by(label) %>%
+                         dplyr::reframe(text = paste0('\n\n',characTable(Nodes_names))),
+                       by  = "label")
+  }
+
 
   connection_matrix <- x$connectParam$mean
 
@@ -104,11 +155,11 @@ get_graph.BipartiteSBM_fit <- function(x, labels, ...) {
 #'
 #' @noRd
 get_graph.matrix <- function(x,
-                                   nodes_names = list(
-                                     row = rownames(x),
-                                     col = colnames(x)
-                                   ),
-                                   type = "unipartite", directed = F, ...) {
+                             node_names = list(
+                               row = rownames(x),
+                               col = colnames(x)
+                               ),
+                             type = "unipartite", directed = F, ...) {
   ## Tests
   if (dim(x)[[1]] != length(nodes_names[["row"]]) | dim(x)[[2]] != length(nodes_names[["col"]])) {
     stop("x has different dimension than nodes_names")
@@ -190,7 +241,7 @@ get_graph.matrix <- function(x,
 #' graph_filter
 #'
 #' @description graph_filter
-#' @return list of dataframe for nodes and edges of the graphs
+#' @return graph object with filtered edges
 #'
 #' @noRd
 graph_filter <- function(graph,threshold = 'default',filter_type = 'relative'){
@@ -207,7 +258,7 @@ graph_filter <- function(graph,threshold = 'default',filter_type = 'relative'){
         }) %>% min()
       }else{
         value_threshold <- purrr::map_dfr(c('from','to'),function(col){
-          test$edges %>%
+          graph$edges %>%
             dplyr::select_at(c(col,'value')) %>%
             dplyr::rename_at(col,~'block')}) %>%
           dplyr::group_by(block) %>%
@@ -225,7 +276,6 @@ graph_filter <- function(graph,threshold = 'default',filter_type = 'relative'){
   }else{
     value_threshold <- threshold
   }
-
 
   graph$edges <- graph$edges %>%
     dplyr::filter(value >= value_threshold)
