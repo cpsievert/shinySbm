@@ -25,8 +25,8 @@ getBlocks.SimpleSBM_fit <- function(x, node_names, labels = NULL,
   }
   if(is.sbmMatrix(node_names)){
     res <- data.frame(Nodes_names = node_names$nodes_names$col)
-  }else if(is.character(node_names)){
-    res <- data.frame(Nodes_names = node_names)
+  }else if(is.character(node_names) | is.factor(node_names)){
+    res <- data.frame(Nodes_names = as.character(node_names))
   }else{
     stop("node_names should be a character containing nodes names or an 'sbmMatrix'")
   }
@@ -63,8 +63,8 @@ getBlocks.BipartiteSBM_fit <- function(x, node_names,
     res <- list(row = data.frame(Nodes_names = node_names$nodes_names$row),
                 col = data.frame(Nodes_names = node_names$nodes_names$col))
   }else if(is.list(node_names)){
-    res <- list(row = data.frame(Nodes_names = node_names$row),
-                col = data.frame(Nodes_names = node_names$col))
+    res <- list(row = data.frame(Nodes_names = as.character(node_names$row)),
+                col = data.frame(Nodes_names = as.character(node_names$col)))
   }else{
     stop("node_names should be a list of nodes names or an 'sbmMatrix'")
   }

@@ -227,10 +227,10 @@ visSbm.default <- function(x,
 #' data_bi <- sbm::fungusTreeNetwork$fungus_tree
 #' node_names <- list(row = sbm::fungusTreeNetwork$fungus_names,
 #'                    col = sbm::fungusTreeNetwork$tree_names)
-#' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi,node_names = node_names)
+#' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
 #'
 #'
-#' visSbm(my_sbm_bi)
+#' visSbm(my_sbm_bi,node_names = node_names)
 #'
 #' @export
 visSbm.BipartiteSBM_fit <- function(x,
