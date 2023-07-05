@@ -1,29 +1,3 @@
-#' characTable
-#'
-#' @description A fct that print a character vector into a table format
-#' @return the character into table format
-#'
-#' @noRd
-characTable <- function(x,nrow_max = 50, max_length_name = 20){
-  x <- stringr::str_sub(x,1,max_length_name)
-  n_col <- length(x) %/% nrow_max + 1
-  n_row <- if_else(n_col == 1,length(x),nrow_max)
-  x <- c(x,rep('',n_col * n_row - length(x)))
-  matrix <- matrix(x,nrow = n_row,ncol = n_col)
-  col_length <- apply(matrix, 2, function(col){
-    max(stringr::str_length(col))+2
-  })
-  apply(matrix, 1, function(row){
-    current_row <- paste('|',row)
-    current_row <- paste(current_row,
-                         purrr::map_chr(col_length - stringr::str_length(current_row),
-                                        ~paste0(rep(" ",.x),collapse = '')))
-    paste0(current_row,collapse = '') %>%
-      paste0("|")
-  }) %>%
-    paste0(collapse = '\n')
-}
-
 #' get_graph generic
 #'
 #' @description A fct that build a structure for network visualisation
@@ -40,8 +14,7 @@ get_graph <- function(x, ...) {
 #' @return list of dataframe for nodes and edges of the graphs
 #'
 #' @noRd
-get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F,...) {
-
+get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F, ...) {
   nb_nodes <- x$nbBlocks
   id <- 1:nb_nodes
   # Build nodes tables
@@ -51,14 +24,17 @@ get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F,.
     value = x$blockProp # block size
   )
 
-  if(!is.null(node_names)){
+  if (!is.null(node_names)) {
     nodes <- dplyr::left_join(nodes,
-                       getBlocks(x,node_names = node_names,
-                                 labels = labels) %>%
-                         dplyr::mutate(label = paste(labels[['row']],gsub("_"," ",Blocks))) %>%
-                         dplyr::group_by(label) %>%
-                         dplyr::reframe(text = paste0('\n\n',characTable(Nodes_names))),
-                       by  = "label")
+      getBlocks(x,
+        node_names = node_names,
+        labels = labels
+      ) %>%
+        dplyr::mutate(label = paste(labels[["row"]], gsub("_", " ", Blocks))) %>%
+        dplyr::group_by(label) %>%
+        dplyr::reframe(text = paste0(c(label[[1]], Nodes_names), collapse = "/newline/")),
+      by = "label"
+    )
   }
 
   connection_matrix <- x$connectParam$mean
@@ -99,9 +75,6 @@ get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F,.
 #'
 #' @noRd
 get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
-
-
-
   nb_nodes <- x$nbBlocks %>%
     as.list() %>%
     setNames(c(labels[["row"]], labels[["col"]]))
@@ -111,7 +84,7 @@ get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
 
   nodes <- data.frame(
     id = id %>%
-      purrr::map2(.x = names(.), .y = .,.f = ~paste(.x,.y)) %>%
+      purrr::map2(.x = names(.), .y = ., .f = ~ paste(.x, .y)) %>%
       unlist(),
     value = x$blockProp %>%
       unlist(),
@@ -126,22 +99,25 @@ get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
     ) %>%
     dplyr::select(id, label, level, value, group)
 
-  if(!is.null(node_names)){
+  if (!is.null(node_names)) {
     nodes <- dplyr::left_join(nodes,
-                       getBlocks(x,node_names = node_names,
-                                 labels = labels) %>%
-                         purrr::map_dfr(~dplyr::mutate(.x,label = gsub("_"," ",Blocks))) %>%
-                         dplyr::group_by(label) %>%
-                         dplyr::reframe(text = paste0('\n\n',characTable(Nodes_names))),
-                       by  = "label")
+      getBlocks(x,
+        node_names = node_names,
+        labels = labels
+      ) %>%
+        purrr::map_dfr(~ dplyr::mutate(.x, label = gsub("_", " ", Blocks))) %>%
+        dplyr::group_by(label) %>%
+        dplyr::reframe(text = paste0(c(label[[1]], Nodes_names), collapse = "/newline/")),
+      by = "label"
+    )
   }
 
 
   connection_matrix <- x$connectParam$mean
 
   edges <- data.frame(
-    from = paste0(labels[["col"]],' ', rep(id[[labels[["col"]]]], each = nb_nodes[[labels[["row"]]]])),
-    to = paste0(labels[["row"]],' ', rep(id[[labels[["row"]]]], nb_nodes[[labels[["col"]]]])),
+    from = paste0(labels[["col"]], " ", rep(id[[labels[["col"]]]], each = nb_nodes[[labels[["row"]]]])),
+    to = paste0(labels[["row"]], " ", rep(id[[labels[["row"]]]], nb_nodes[[labels[["col"]]]])),
     value = as.vector(connection_matrix)
   )
 
@@ -158,7 +134,7 @@ get_graph.matrix <- function(x,
                              node_names = list(
                                row = rownames(x),
                                col = colnames(x)
-                               ),
+                             ),
                              type = "unipartite", directed = F, ...) {
   ## Tests
   if (dim(x)[[1]] != length(nodes_names[["row"]]) | dim(x)[[2]] != length(nodes_names[["col"]])) {
@@ -237,6 +213,34 @@ get_graph.matrix <- function(x,
   return(list(nodes = nodes, edges = edges, type = type))
 }
 
+#' default_threshold
+#'
+#' @description default_threshold calculation
+#' @return default_threshold
+#'
+#' @noRd
+default_threshold <- function(graph) {
+  if (graph$type == "bipartite") {
+    value_threshold <- purrr::map_dbl(c("from", "to"), function(col) {
+      graph$edges %>%
+        dplyr::group_by_at(col) %>%
+        dplyr::reframe(max = max(value)) %>%
+        dplyr::pull(max) %>%
+        min()
+    }) %>% min()
+  } else {
+    value_threshold <- purrr::map_dfr(c("from", "to"), function(col) {
+      graph$edges %>%
+        dplyr::select_at(c(col, "value")) %>%
+        dplyr::rename_at(col, ~"block")
+    }) %>%
+      dplyr::group_by(block) %>%
+      dplyr::reframe(max = max(value)) %>%
+      dplyr::pull(max) %>%
+      min()
+  }
+  return(value_threshold)
+}
 
 #' graph_filter
 #'
@@ -244,42 +248,44 @@ get_graph.matrix <- function(x,
 #' @return graph object with filtered edges
 #'
 #' @noRd
-graph_filter <- function(graph,threshold = 'default',filter_type = 'relative'){
-
-  if(filter_type == 'relative'){
-    if(threshold == 'default'){
-      if(graph$type == 'bipartite'){
-        value_threshold <- purrr::map_dbl(c('from','to'),function(col){
-          graph$edges %>%
-            dplyr::group_by_at(col) %>%
-            dplyr::reframe(max = max(value)) %>%
-            dplyr::pull(max) %>%
-            min()
-        }) %>% min()
-      }else{
-        value_threshold <- purrr::map_dfr(c('from','to'),function(col){
-          graph$edges %>%
-            dplyr::select_at(c(col,'value')) %>%
-            dplyr::rename_at(col,~'block')}) %>%
-          dplyr::group_by(block) %>%
-          dplyr::reframe(max = max(value)) %>%
-          dplyr::pull(max) %>%
-          min()
-      }
-    }else{
-      value_threshold <- (max(graph$edges$value) - min(graph$edges$value)) *
-        threshold + min(graph$edges$value)
-      if(!(is.numeric(threshold) && 0 <= threshold && 1 >= threshold)){
-        warning("threshold should be set as 'default' or a numeric value between 0 and 1")
-      }
-    }
-  }else{
+graph_filter <- function(graph, threshold = "default") {
+  if (threshold == "default") {
+    value_threshold <- default_threshold(graph)
+  } else {
     value_threshold <- threshold
+    if (!(is.numeric(threshold))) {
+      warning("threshold should be set as 'default' or a numeric value")
+    }
   }
-
+  value_threshold <- min(max(graph$edges$value),value_threshold)
   graph$edges <- graph$edges %>%
     dplyr::filter(value >= value_threshold)
 
   return(graph)
 }
 
+#' #' characTable
+#' #'
+#' #' @description A fct that print a character vector into a table format
+#' #' @return the character into table format
+#' #'
+#' #' @noRd
+#' characTable <- function(x,nrow_max = 50, max_length_name = 20){
+#'   x <- stringr::str_sub(x,1,max_length_name)
+#'   n_col <- length(x) %/% nrow_max + 1
+#'   n_row <- ifelse(n_col == 1,length(x),nrow_max)
+#'   x <- c(x,rep('',n_col * n_row - length(x)))
+#'   matrix <- matrix(x,nrow = n_row,ncol = n_col)
+#'   col_length <- apply(matrix, 2, function(col){
+#'     max(stringr::str_length(col))+2
+#'   })
+#'   apply(matrix, 1, function(row){
+#'     current_row <- paste('|',row)
+#'     current_row <- paste(current_row,
+#'                          purrr::map_chr(col_length - stringr::str_length(current_row),
+#'                                         ~paste0(rep(" ",.x),collapse = '')))
+#'     paste0(current_row,collapse = '') %>%
+#'       paste0("|")
+#'   }) %>%
+#'     paste0(collapse = '\n')
+#' }

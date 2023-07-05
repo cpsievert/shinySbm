@@ -58,8 +58,7 @@ my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
 visSbm(my_sbm_bi)
 
 data_uni <- sbm::fungusTreeNetwork$tree_tree
-my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+my_sbm_uni <- sbm::estimateSimpleSBM(data_uni, model = "poisson")
 visSbm(my_sbm_uni)
-
 
 }

@@ -53,8 +53,7 @@ List of parameters
 \examples{
 
 data_uni <- sbm::fungusTreeNetwork$tree_tree
-my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+my_sbm_uni <- sbm::estimateSimpleSBM(data_uni, model = "poisson")
 visSbm(my_sbm_uni)
-
 
 }

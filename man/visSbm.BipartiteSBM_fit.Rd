@@ -57,6 +57,4 @@ my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
 
 visSbm(my_sbm_bi)
 
-
-
 }

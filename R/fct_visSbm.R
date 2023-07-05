@@ -8,12 +8,12 @@ prePlotNet <- function(matrix,
                        is_bipartite,
                        labels,
                        directed,
-                       settings){
+                       settings) {
   # default directed
-  if(is.logical(directed)){
+  if (is.logical(directed)) {
     currentDirected <- directed
-  }else{
-    if(directed != "default"){
+  } else {
+    if (directed != "default") {
       warning("directed should be a boolean or 'default'")
     }
     currentDirected <- !isSymmetric(matrix)
@@ -25,15 +25,15 @@ prePlotNet <- function(matrix,
     edge_color = "lightblue",
     arrows = currentDirected,
     arrow_thickness = 0.3,
-    arrow_start = 'row',
-    node_color = if(is_bipartite){
-      c(row = "orange",col = "blue")
-    }else{
+    arrow_start = "row",
+    node_color = if (is_bipartite) {
+      c(row = "orange", col = "blue")
+    } else {
       c("blue")
     },
-    node_shape = if(is_bipartite){
-      c(row = "triangle",col = "square")
-    }else{
+    node_shape = if (is_bipartite) {
+      c(row = "triangle", col = "square")
+    } else {
       c("dot")
     },
     digits = 2
@@ -41,48 +41,54 @@ prePlotNet <- function(matrix,
   currentSettings[names(settings)] <- settings
 
   # Default labels
-  if (identical(labels,"default")) {
-    if(is_bipartite){
+  if (identical(labels, "default")) {
+    if (is_bipartite) {
       currentLabels <- c(row = "row", col = "col")
-    }else{
+    } else {
       currentLabels <- c(row = "nodes", col = "nodes")
     }
-  }else{
-    if(is_bipartite){
+  } else {
+    if (is_bipartite) {
       currentLabels <- labels
-    }else{
+    } else {
       currentLabels <- c(row = labels, col = labels)
     }
   }
 
   # Arrows default
-  current_arrow <- list(enabled = TRUE,
-                        scaleFactor = currentSettings$arrow_thickness)
-  if(currentSettings$arrows){
-    if(!currentSettings$arrow_start %in% c('row','col')){
-      if(is_bipartite & currentSettings$arrow_start %in% currentLabels){
+  current_arrow <- list(
+    enabled = TRUE,
+    scaleFactor = currentSettings$arrow_thickness
+  )
+  if (currentSettings$arrows) {
+    if (!currentSettings$arrow_start %in% c("row", "col")) {
+      if (is_bipartite & currentSettings$arrow_start %in% currentLabels) {
         currentSettings$arrow_start <- names(which(currentLabels == currentSettings$arrow_start))
-      }else{
-        warning(paste0("settings[['arrow_start']] should be 'row' or 'col'",
-        ifelse(is_bipartite,"or any values of labels parameter","")))
+      } else {
+        warning(paste0(
+          "settings[['arrow_start']] should be 'row' or 'col'",
+          ifelse(is_bipartite, "or any values of labels parameter", "")
+        ))
       }
     }
-    if(currentSettings$arrow_start  == 'row'){
+    if (currentSettings$arrow_start == "row") {
       currentSettings$arrows <- list(from = current_arrow)
-    }else if(currentSettings$arrow_start  == 'col'){
+    } else if (currentSettings$arrow_start == "col") {
       currentSettings$arrows <- list(to = current_arrow)
-    }else{
+    } else {
       currentSettings$arrows <- character()
     }
-  }else{
+  } else {
     currentSettings$arrows <- character()
   }
 
 
   return(
-    c(currentSettings,
-      list(labels = currentLabels, directed = currentDirected ))
+    c(
+      currentSettings,
+      list(labels = currentLabels, directed = currentDirected)
     )
+  )
 }
 
 
@@ -126,9 +132,8 @@ prePlotNet <- function(matrix,
 #' visSbm(my_sbm_bi)
 #'
 #' data_uni <- sbm::fungusTreeNetwork$tree_tree
-#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni, model = "poisson")
 #' visSbm(my_sbm_uni)
-#'
 #'
 #' @export
 visSbm <- function(x,
@@ -174,11 +179,11 @@ visSbm <- function(x,
 #'
 #' @export
 visSbm.default <- function(x,
-                          labels = "default",
-                          node_names = NULL,
-                          directed = "default",
-                          settings = list()){
-  stop('x should be  matrix of an sbm fit from {sbm} package')
+                           labels = "default",
+                           node_names = NULL,
+                           directed = "default",
+                           settings = list()) {
+  stop("x should be  matrix of an sbm fit from {sbm} package")
 }
 
 
@@ -222,61 +227,66 @@ visSbm.default <- function(x,
 #'
 #' visSbm(my_sbm_bi)
 #'
-#'
-#'
 #' @export
 visSbm.BipartiteSBM_fit <- function(x,
-                           labels = "default",
-                           node_names = NULL,
-                           directed = "default",
-                           settings = list()){
-
-
-
-  preSettings <- prePlotNet(matrix = x$networkData,
-                            is_bipartite = T,
-                            labels = labels,
-                            directed = F,
-                            settings = settings)
+                                    labels = "default",
+                                    node_names = NULL,
+                                    directed = "default",
+                                    settings = list()) {
+  preSettings <- prePlotNet(
+    matrix = x$networkData,
+    is_bipartite = T,
+    labels = labels,
+    directed = F,
+    settings = settings
+  )
 
   node_edges <- get_graph(x,
-                          labels = preSettings$labels,
-                          node_names = node_names) %>%
+    labels = preSettings$labels,
+    node_names = node_names
+  ) %>%
     graph_filter(preSettings$edge_threshold)
 
   # Edges and Nodes Hoovering Sentence
-  node_edges$edges$title <- paste("connectivity =",round(node_edges$edges$value,preSettings$digits))
-  node_edges$nodes$title <- paste("proportion =",round_proportion(node_edges$nodes$value,preSettings$digits))
+  node_edges$edges$title <- paste("connectivity =", round(node_edges$edges$value, preSettings$digits))
+  node_edges$nodes <- dplyr::group_by(node_edges$nodes,level) %>%
+    dplyr::mutate(title = paste("proportion =", round_proportion(value, preSettings$digits))) %>%
+    dplyr::ungroup()
 
   visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
-    visNetwork::visEdges(arrows = preSettings$arrows,
-                         color = preSettings$edge_color,
-                         arrowStrikethrough = F) %>%
+    visNetwork::visEdges(
+      arrows = preSettings$arrows,
+      color = preSettings$edge_color,
+      arrowStrikethrough = F
+    ) %>%
     # darkblue square with shadow for group "A"
-    visNetwork::visGroups(groupname = "row",
-                          color = list(background = preSettings$node_color[["row"]],
-                                       highlight = list(border = "black",
-                                                     background = preSettings$node_color[["row"]])),
-                          shape = preSettings$node_shape[["row"]]) %>%
+    visNetwork::visGroups(
+      groupname = "row",
+      color = list(
+        background = preSettings$node_color[["row"]],
+        highlight = list(
+          border = "black",
+          background = preSettings$node_color[["row"]]
+        )
+      ),
+      shape = preSettings$node_shape[["row"]]
+    ) %>%
     # red triangle for group "B"
-    visNetwork::visGroups(groupname = "col",
-                          color = list(background = preSettings$node_color[["col"]],
-                                       highlight = list(border = "black",
-                                                     background = preSettings$node_color[["col"]])),
-                          shape = preSettings$node_shape[["col"]]) %>%
+    visNetwork::visGroups(
+      groupname = "col",
+      color = list(
+        background = preSettings$node_color[["col"]],
+        highlight = list(
+          border = "black",
+          background = preSettings$node_color[["col"]]
+        )
+      ),
+      shape = preSettings$node_shape[["col"]]
+    ) %>%
     visNetwork::visPhysics(solver = "forceAtlas2Based") %>%
     visNetwork::visHierarchicalLayout() %>%
     visNetwork::visInteraction(keyboard = TRUE)
-
-  if(!is.null(node_names)){
-    js_code <-
-    "function(properties) {
-        alert('Block composition:' + this.body.data.nodes.get(properties.nodes[0]).text);
-      }"
-    visual <- visNetwork::visEvents(visual,selectNode = js_code)
-  }
- return(visual)
-
+  return(visual)
 }
 
 #' visSbm
@@ -314,54 +324,52 @@ visSbm.BipartiteSBM_fit <- function(x,
 #' @examples
 #'
 #' data_uni <- sbm::fungusTreeNetwork$tree_tree
-#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni, model = "poisson")
 #' visSbm(my_sbm_uni)
-#'
 #'
 #' @export
 visSbm.SimpleSBM_fit <- function(x,
                                  labels = "default",
                                  node_names = NULL,
-                                  directed = "default",
-                                  settings = list()){
-
-  preSettings <- prePlotNet(matrix = x$networkData,
-                            is_bipartite = F,
-                            labels = labels,
-                            directed = directed,
-                            settings = settings)
+                                 directed = "default",
+                                 settings = list()) {
+  preSettings <- prePlotNet(
+    matrix = x$networkData,
+    is_bipartite = F,
+    labels = labels,
+    directed = directed,
+    settings = settings
+  )
   node_edges <- get_graph(x,
-                          labels = preSettings$labels,
-                          node_names = node_names,
-                          directed = preSettings$directed) %>%
+    labels = preSettings$labels,
+    node_names = node_names,
+    directed = preSettings$directed
+  ) %>%
     graph_filter(preSettings$edge_threshold)
 
   # Edges and Nodes Hoovering Sentence
-  node_edges$edges$title <- paste("connectivity =",round(node_edges$edges$value,preSettings$digits))
-  node_edges$nodes$title <- paste("proportion =",round_proportion(node_edges$nodes$value,preSettings$digits))
+  node_edges$edges$title <- paste("connectivity =", round(node_edges$edges$value, preSettings$digits))
+  node_edges$nodes$title <- paste("proportion =", round_proportion(node_edges$nodes$value, preSettings$digits))
 
 
   visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
-  visNetwork::visEdges(arrows = preSettings$arrows,
-                       color = preSettings$edge_color,
-                       arrowStrikethrough = F) %>%
-  visNetwork::visNodes(title = ,
-                       color = list(background = preSettings$node_color,
-                                    highlight = list(border = "black",
-                                                  background = preSettings$node_color)),
-                       shape = preSettings$node_shape) %>%
+    visNetwork::visEdges(
+      arrows = preSettings$arrows,
+      color = preSettings$edge_color,
+      arrowStrikethrough = F
+    ) %>%
+    visNetwork::visNodes(
+      title = ,
+      color = list(
+        background = preSettings$node_color,
+        highlight = list(
+          border = "black",
+          background = preSettings$node_color
+        )
+      ),
+      shape = preSettings$node_shape
+    ) %>%
     visNetwork::visPhysics(solver = "forceAtlas2Based") %>%
     visNetwork::visInteraction(keyboard = TRUE)
-
-  if(!is.null(node_names)){
-    if(!is.null(node_names)){
-      js_code <-
-        "function(properties) {
-        alert('Block composition:' + this.body.data.nodes.get(properties.nodes[0]).text);
-      }"
-      visual <- visNetwork::visEvents(visual,selectNode = js_code)
-    }
-  }
   return(visual)
 }
-

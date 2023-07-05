@@ -68,8 +68,8 @@ mod_tab_sbm_ui <- function(id) {
             uiOutput(ns("ftsummary"))
           )
         )
-      )
     )
+  )
 }
 
 #' tab_sbm Server Functions
@@ -100,19 +100,19 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     output$sbmCode <- renderText({
       importSbm <- switch(r$upload$networkType(),
-        "unipartite" = paste0(
-          "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
-          Dataset()$law, ", estimOptions = list(verbosity = 1))"
-        ),
-        "bipartite" = paste0(
-          "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
-          Dataset()$law, "', estimOptions = list(verbosity = 1))"
-        )
+                          "unipartite" = paste0(
+                            "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
+                            Dataset()$law, ", estimOptions = list(verbosity = 1))"
+                          ),
+                          "bipartite" = paste0(
+                            "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
+                            Dataset()$law, "', estimOptions = list(verbosity = 1))"
+                          )
       )
       if(sum(my_sbm_main()$nbBlocks) != sum(my_sbm()$nbBlocks)){
         changeGroup <- paste0("\nindex <- which(mySbmModel$storedModels['nbBlocks'] == ",
-               sum(my_sbm()$nbBlocks),")\n",
-               "mySbmModel$setModel(index)")
+                              sum(my_sbm()$nbBlocks),")\n",
+                              "mySbmModel$setModel(index)")
       }else{
         changeGroup <- ''
       }
@@ -125,15 +125,15 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       session$userData$vars$sbm$runSbm <- input$runSbm
       data_res <- withProgress(message = "SBM is Running", {
         switch(r$upload$networkType(),
-          "unipartite" = sbm::estimateSimpleSBM(
-            netMat = as.matrix(Dataset()),
-            directed = r$upload$directed(),
-            model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
-          ),
-          "bipartite" = sbm::estimateBipartiteSBM(
-            netMat = as.matrix(Dataset()),
-            model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
-          )
+               "unipartite" = sbm::estimateSimpleSBM(
+                 netMat = as.matrix(Dataset()),
+                 directed = r$upload$directed(),
+                 model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
+               ),
+               "bipartite" = sbm::estimateBipartiteSBM(
+                 netMat = as.matrix(Dataset()),
+                 model = Dataset()$law, estimOptions = list(verbosity = 3, plot = F)
+               )
         )
       })
       shinyalert::shinyalert(
@@ -151,21 +151,21 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     observeEvent(my_sbm_main(), {
       updateRadioButtons(parent_session, "tab_show_1-whichMatrix",
-        "Select Ploted Matrix",
-        choices = list(
-          "Raw Matrix" = "raw",
-          "Reordered Matrix" = "ordered",
-          "Expected Matrix" = "expected"
-        ),
-        selected = "ordered"
+                         "Select Ploted Matrix",
+                         choices = list(
+                           "Raw Matrix" = "raw",
+                           "Reordered Matrix" = "ordered",
+                           "Expected Matrix" = "expected"
+                         ),
+                         selected = "ordered"
       )
       updateRadioButtons(parent_session, "tab_network_1-whichNetwork",
-        "Select Ploted Network",
-        choices = list(
-          "Raw Network" = "raw",
-          "Grouped Network" = "grouped"
-        ),
-        selected = "grouped"
+                         "Select Ploted Network",
+                         choices = list(
+                           "Raw Network" = "raw",
+                           "Grouped Network" = "grouped"
+                         ),
+                         selected = "grouped"
       )
     })
 
@@ -182,8 +182,8 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
       ## Exemples values
       first_par <- paste0("Tables 1 & 2 are the block description for the selected SBM. This model has an Entropy of ",
-                        round(data_sbm$entropy,2),
-                        ". The higher is the entropy, the less there is confusion inblock attribution.")
+                          round(data_sbm$entropy,2),
+                          ". The higher is the entropy, the less there is confusion inblock attribution.")
 
       example_lab <- r$upload$labels()[["row"]]
       example_connect <- round(data_sbm$connectParam$mean[1,1],2)
@@ -218,11 +218,11 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       output$ftsummary <- renderUI({
         tagList(
           tags$div(tags$br(),
-            first_par,
-            second_par,
-            third_par,
-            tags$br(),
-            tags$br()
+                   first_par,
+                   second_par,
+                   third_par,
+                   tags$br(),
+                   tags$br()
           ),
           fluidRow(
             column(4,
@@ -231,7 +231,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
             column(8,
                    flexConnect(data_sbm,r$upload$labels()) %>%
                      flextable::htmltools_value())
-            ),
+          ),
           tags$div(tags$br(),
                    "All stored models are in Table 3, the",
                    HTML("<font color=red>red line</font>"),
@@ -250,7 +250,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     output$downloadTable <- downloadHandler(
       filename = eventReactive(c(my_sbm(),input$whichTable),{
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
+        add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
         return(paste0(input$whichTable,add_group,'.png'))
       }),
       content = function(file){
@@ -265,10 +265,6 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
         flextable::save_as_image(ft,path = file)
       }
     )
-
-
-
-
 
 
     return(list(
