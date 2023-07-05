@@ -27,8 +27,10 @@ getBlocks.SimpleSBM_fit <- function(x, node_names, labels = NULL,
     res <- data.frame(Nodes_names = node_names$nodes_names$col)
   }else if(is.character(node_names) | is.factor(node_names)){
     res <- data.frame(Nodes_names = as.character(node_names))
+  }else if(is.list(node_names) && (is.character(node_names[[1]]) | is.factor(node_names[[1]]))){
+    res <- data.frame(Nodes_names = as.character(node_names[[1]]))
   }else{
-    stop("node_names should be a character containing nodes names or an 'sbmMatrix'")
+    stop("node_names should be a character containing nodes names or a list containing it or an 'sbmMatrix'")
   }
 
   if (attribution) {
