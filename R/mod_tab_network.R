@@ -239,7 +239,7 @@ mod_tab_network_server <- function(id, r) {
             node_color = node_colors(),
             node_shape = node_shapes()
           )) %>%
-            visNetwork::visSave(file)
+          visNetwork::visSave(file)
       }
     )
 

@@ -52,7 +52,9 @@ List of parameters
 }
 \examples{
 data_bi <- sbm::fungusTreeNetwork$fungus_tree
-my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+node_names <- list(row = sbm::fungusTreeNetwork$fungus_names,
+                   col = sbm::fungusTreeNetwork$tree_names)
+my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi,node_names = node_names)
 
 
 visSbm(my_sbm_bi)
