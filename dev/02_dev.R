@@ -102,10 +102,6 @@ usethis::use_gitlab_ci()
 # go to dev/03_deploy.R
 rstudioapi::navigateToFile("dev/03_deploy.R")
 
-# verbatimTextOutput("summary")
-# blockmodeling::plotMat(UniTable$matrix)
-# x <- igraph::graph.adjacency(adjmatrix = UniTable$matrix, add.rownames = TRUE)
-# igraph::plot.igraph(x)
 
 
 # je suppose que c'est une interface de chargement

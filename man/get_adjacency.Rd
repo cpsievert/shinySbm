@@ -7,8 +7,7 @@
 get_adjacency(edges, type = c("unipartite", "bipartite"), directed = F)
 }
 \arguments{
-\item{edges}{Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
-Or an igraph object}
+\item{edges}{Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.}
 
 \item{type}{network type can be `'bipartite'` or `'unipartite'`}
 
@@ -18,7 +17,7 @@ Or an igraph object}
 an adjacency/incidence matrix (data.frame) representing the network
 }
 \description{
-A fct that build an adjacency matrix from a list of edges or an igraph object
+A fct that build an adjacency matrix from a list of edges.
 }
 \examples{
 # For unipartite network
@@ -45,12 +44,5 @@ binary_net <- FungusTreeNetwork$fungus_tree$edges[,-3]
 
 my_mat <- get_adjacency(binary_net, type = data_bi$type)
 
-# For igraph object the usage is the same
-
-require("igraphdata")
-data("karate",package = "igraphdata")
-class(karate)
-
-get_adjacency(karate)
 
 }

@@ -1,9 +1,8 @@
 #' get_adjacency
 #'
-#' @description A fct that build an adjacency matrix from a list of edges or an igraph object
+#' @description A fct that build an adjacency matrix from a list of edges.
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
-#'  Or an igraph object
 #' @param type network type can be `'bipartite'` or `'unipartite'`
 #' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
 #'
@@ -35,13 +34,6 @@
 #'
 #' my_mat <- get_adjacency(binary_net, type = data_bi$type)
 #'
-#' # For igraph object the usage is the same
-#'
-#' require("igraphdata")
-#' data("karate",package = "igraphdata")
-#' class(karate)
-#'
-#' get_adjacency(karate)
 #'
 #' @export
 get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = F){
@@ -92,33 +84,33 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 }
 
 
-#' get_adjacency.igraph
-#'
-#' @description An igraph object
-#'
-#' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
-#'  Or an igraph object
-#' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
-#'
-#'
-#' @return an adjacency/incidence matrix (data.frame) representing the network
-#'
-#' @examples
-#'
-#' # For igraph object the usage is the same
-#'
-#' require("igraphdata")
-#' data("karate",package = "igraphdata")
-#' class(karate)
-#'
-#' get_adjacency(karate)
-#'
-#' @export
-get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), directed = F){
-  edges <- igraph::get.edgelist(edges)
-  return(edges_to_adjacency(edges,type,directed))
-}
+# #' get_adjacency.igraph
+# #'
+# #' @description An igraph object
+# #'
+# #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
+# #'  Or an igraph object
+# #' @param type network type can be `'bipartite'` or `'unipartite'`
+# #' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
+# #'
+# #'
+# #' @return an adjacency/incidence matrix (data.frame) representing the network
+# #'
+# #' @examples
+# #'
+# #' # For igraph object the usage is the same
+# #'
+# #' require("igraphdata")
+# #' data("karate",package = "igraphdata")
+# #' class(karate)
+# #'
+# #' get_adjacency(karate)
+# #'
+# #' @export
+# get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), directed = F){
+#   edges <- igraph::get.edgelist(edges)
+#   return(edges_to_adjacency(edges,type,directed))
+# }
 
 
 #' edges_to_adjacency
