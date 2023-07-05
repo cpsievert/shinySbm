@@ -51,17 +51,36 @@ List of parameters
 }
 }
 \examples{
-data_bi <- sbm::fungusTreeNetwork$fungus_tree
-node_names <- list(row = sbm::fungusTreeNetwork$fungus_names,
+
+# my_sbm_bi <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#                                        model = 'bernoulli')
+my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
+
+node_names_bi <- list(row = sbm::fungusTreeNetwork$fungus_names,
                    col = sbm::fungusTreeNetwork$tree_names)
 
-my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+visSbm(my_sbm_bi,
+       labels = c(row = "Fungus", col = "Tree"),
+       node_names = node_names_bi,
+       settings = list(arrows = T,
+                       arrow_start = "Fungus",
+                       node_color = c(row = "pink",col = 'green'),
+                       node_shape = c(row = "dot",col = 'square'))
+       )
 
-visSbm(my_sbm_bi,node_names = node_names)
 
-data_uni <- sbm::fungusTreeNetwork$tree_tree
-my_sbm_uni <- sbm::estimateSimpleSBM(data_uni, model = "poisson")
+#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#                                      model = "poisson")
+my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 
-visSbm(my_sbm_uni,node_names = node_names$col)
+node_names_uni <- list(sbm::fungusTreeNetwork$tree_names)
+
+visSbm(my_sbm_uni,
+       labels = c("Tree"),
+       node_names = node_names_uni,
+       settings = list(edge_threshold = 0.01,
+                       edge_color = "grey",
+                       node_color = c("violet"))
+       )
 
 }

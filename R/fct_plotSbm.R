@@ -26,15 +26,22 @@
 #' @return a ggplot object corresponding to the plot
 #'
 #' @examples
-#' data_bi <- sbm::fungusTreeNetwork$fungus_tree
-#' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+#'
+#'
+#' # my_sbm_bi <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#' #                                        model = 'bernoulli')
+#' my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
+#'
 #' plotSbm(my_sbm_bi,
 #'   ordered = TRUE, transpose = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
 #'
-#' data_uni <- sbm::fungusTreeNetwork$tree_tree
-#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+#'
+#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#' #                                      model = "poisson")
+#' my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
+#'
 #' plotSbm(my_sbm_uni, ordered = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
@@ -95,12 +102,16 @@ plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL
 #' @return a ggplot object corresponding to the plot
 #'
 #' @examples
-#' data_bi <- sbm::fungusTreeNetwork$fungus_tree
-#' my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+#'
+#' # my_sbm_bi <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#' #                                        model = 'bernoulli')
+#' my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
+#'
 #' plotSbm(my_sbm_bi,
 #'   ordered = TRUE, transpose = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
+#'
 #'
 #' @export
 plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
@@ -235,8 +246,11 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labe
 #' }
 #'
 #' @examples
-#' data_uni <- sbm::fungusTreeNetwork$tree_tree
-#' my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+#'
+#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#' #                                      model = "poisson")
+#' my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
+#'
 #' plotSbm(my_sbm_uni, ordered = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )

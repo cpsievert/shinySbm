@@ -21,7 +21,7 @@ A fct that build an adjacency matrix from a list of edges
 }
 \examples{
 # For unipartite network
-data_uni <- FungusTreeNetwork$tree_tree
+data_uni <- FungusTreeNetwork$networks$tree_tree
 
 # If your network is symmetric :
 my_mat <- get_adjacency(data_uni$edges,
@@ -35,7 +35,7 @@ my_mat <- get_adjacency(data_uni$edges,
 )
 
 # For bipartite network
-data_bi <- FungusTreeNetwork$fungus_tree
+data_bi <- FungusTreeNetwork$networks$fungus_tree
 
 my_mat <- get_adjacency(data_bi$edges, type = data_bi$type)
 

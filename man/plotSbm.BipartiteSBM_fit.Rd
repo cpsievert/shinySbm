@@ -42,11 +42,15 @@ The list of parameters \code{plotOptions} for the matrix plot is
 }
 }
 \examples{
-data_bi <- sbm::fungusTreeNetwork$fungus_tree
-my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
+
+# my_sbm_bi <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#                                        model = 'bernoulli')
+my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
+
 plotSbm(my_sbm_bi,
   ordered = TRUE, transpose = TRUE,
   plotOptions = list(title = "An example Matrix")
 )
+
 
 }

@@ -75,7 +75,10 @@ is.bipartite.list <- function(object) {
 #'
 #' @examples
 #'
-#' my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
+#' # my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#' #                                     model = 'bernoulli')
+#' my_sbm <- FungusTreeNetwork$sbmResults$fungus_tree
+#'
 #' is.bipartite(my_sbm)
 #'
 #' @export

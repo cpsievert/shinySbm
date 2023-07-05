@@ -52,9 +52,18 @@ List of parameters
 }
 \examples{
 
-data_uni <- sbm::fungusTreeNetwork$tree_tree
-node_names <- sbm::fungusTreeNetwork$tree_names
-my_sbm_uni <- sbm::estimateSimpleSBM(data_uni, model = "poisson")
-visSbm(my_sbm_uni, node_names = node_names)
+#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#                                      model = "poisson")
+my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
+
+node_names_uni <- list(sbm::fungusTreeNetwork$tree_names)
+
+visSbm(my_sbm_uni,
+       labels = c("Tree"),
+       node_names = node_names_uni,
+       settings = list(edge_threshold = 0.01,
+                       edge_color = "grey",
+                       node_color = c("violet"))
+       )
 
 }

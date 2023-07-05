@@ -8,20 +8,28 @@
 A list of the following entries :
 
 \describe{
-  \item{tree_tree}{
-  \enumerate{
-     \item{nodes : data.frame describing nodes of tree_tree network}
-     \item{edges : data.frame describing edges of tree_tree network}
-     \item{type : this network is "unipartite"}
+ \item{networks}{
+   \item{tree_tree}{
+     \enumerate{
+       \item{nodes : data.frame describing nodes of tree_tree network}
+       \item{edges : data.frame describing edges of tree_tree network}
+       \item{type : this network is "unipartite"}
+     }
    }
-  }
-  \item{fungus_tree}{
-  \enumerate{
-     \item{nodes : data.frame describing nodes of fungus_tree network}
-     \item{edges : data.frame describing edges of fungus_tree network}
-     \item{type : this network is "bipartite"}
+   \item{fungus_tree}{
+     \enumerate{
+       \item{nodes : data.frame describing nodes of fungus_tree network}
+       \item{edges : data.frame describing edges of fungus_tree network}
+       \item{type : this network is "bipartite"}
+     }
    }
-  }
+ }
+ \item{sbmResults}{
+   \item{tree_tree}{Results of \code{estimateSimpleSBM} for {sbm}
+   applied on tree_tree data with a Poisson model.}
+   \item{fungus_tree}{Results of \code{estimateBipartiteSBM} for {sbm}
+   applied on fungus_tree data with a Bernoulli model.}
+ }
 }
 }
 \source{

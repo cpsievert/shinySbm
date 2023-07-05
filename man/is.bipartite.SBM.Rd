@@ -17,7 +17,10 @@ it's a function that says if your sbm is bipartite or not
 }
 \examples{
 
-my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
+# my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#                                     model = 'bernoulli')
+my_sbm <- FungusTreeNetwork$sbmResults$fungus_tree
+
 is.bipartite(my_sbm)
 
 }

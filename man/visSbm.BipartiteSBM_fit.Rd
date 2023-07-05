@@ -51,12 +51,21 @@ List of parameters
 }
 }
 \examples{
-data_bi <- sbm::fungusTreeNetwork$fungus_tree
-node_names <- list(row = sbm::fungusTreeNetwork$fungus_names,
+
+# my_sbm_bi <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,
+#                                        model = 'bernoulli')
+my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
+
+node_names_bi <- list(row = sbm::fungusTreeNetwork$fungus_names,
                    col = sbm::fungusTreeNetwork$tree_names)
-my_sbm_bi <- sbm::estimateBipartiteSBM(data_bi)
 
-
-visSbm(my_sbm_bi,node_names = node_names)
+visSbm(my_sbm_bi,
+       labels = c(row = "Fungus", col = "Tree"),
+       node_names = node_names_bi,
+       settings = list(arrows = T,
+                       arrow_start = "Fungus",
+                       node_color = c(row = "pink",col = 'green'),
+                       node_shape = c(row = "dot",col = 'square'))
+       )
 
 }

@@ -39,8 +39,11 @@ The list of parameters \code{plotOptions} for the matrix plot is
 }
 }
 \examples{
-data_uni <- sbm::fungusTreeNetwork$tree_tree
-my_sbm_uni <- sbm::estimateSimpleSBM(data_uni,model = "poisson")
+
+# my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#                                      model = "poisson")
+my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
+
 plotSbm(my_sbm_uni, ordered = TRUE,
   plotOptions = list(title = "An example Matrix")
 )
