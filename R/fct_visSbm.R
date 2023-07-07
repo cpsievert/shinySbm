@@ -61,6 +61,9 @@ prePlotNet <- function(matrix,
     scaleFactor = currentSettings$arrow_thickness
   )
   if (currentSettings$arrows) {
+    if(is.null(currentSettings$arrow_start)){
+      currentSettings$arrow_start <- 'row'
+    }
     if (!currentSettings$arrow_start %in% c("row", "col")) {
       if (is_bipartite & currentSettings$arrow_start %in% currentLabels) {
         currentSettings$arrow_start <- names(which(currentLabels == currentSettings$arrow_start))
@@ -143,7 +146,7 @@ prePlotNet <- function(matrix,
 #'        )
 #'
 #'
-#' #' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
 #' #                                      model = "poisson")
 #' my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 #'
@@ -356,7 +359,7 @@ visSbm.BipartiteSBM_fit <- function(x,
 #'
 #' @examples
 #'
-#' #' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
 #' #                                      model = "poisson")
 #' my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 #'

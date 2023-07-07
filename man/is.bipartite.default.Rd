@@ -17,6 +17,12 @@ it's a function that says if your object (graph, sbm like or pre-sbm) is a bipar
 }
 \examples{
 
+my_net1 <- list(pop = 8, networktype = "bipartite")
+is.bipartite(my_net1)
+
+my_net2 <- list(pop = 8, networktype = "unipartite")
+is.bipartite(my_net2)
+
 is.bipartite(1)
 
 }

@@ -69,7 +69,7 @@ visSbm(my_sbm_bi,
        )
 
 
-#' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
+# my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
 #                                      model = "poisson")
 my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 

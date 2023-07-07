@@ -58,6 +58,7 @@ mod_tab_network_server <- function(id, r) {
       r$upload$labels
     )
 
+
     observeEvent(my_sbm(), {
       current_graph <- get_graph(my_sbm(),
         labels = r$upload$labels(),
@@ -75,7 +76,8 @@ mod_tab_network_server <- function(id, r) {
       if (input$arrows) {
         radioButtons(ns("arrow_start"),
           label = "Arrow start from", inline = T,
-          choices = list("Rows" = "row", "Column" = "col")
+          choices = list("Rows" = "row", "Column" = "col"),
+          selected = "row"
         )
       }
     })
@@ -91,10 +93,6 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
-    arrow_start <- reactiveVal("row")
-    observe({
-      arrow_start(input$arrow_start)
-    })
 
     observeEvent(c(r$upload$networkType(), r$upload$directed()), {
       output$selectEdge <- renderUI({
@@ -177,25 +175,40 @@ mod_tab_network_server <- function(id, r) {
     })
 
 
-
-
     output$node_names <- DT::renderDataTable({
-      get_selected <- stringr::str_split(input$unique_id, pattern = "/newline/")
-      if (!identical(get_selected, list())) {
-        as.data.frame(get_selected[[1]][-1]) %>%
-          setNames(get_selected[[1]][[1]]) %>%
-          DT::datatable(
-            extensions = c("FixedHeader", "KeyTable"),
-            option = list(
-              fixedHeader = TRUE,
-              fixedColumns = list(leftColumns = 1),
-              scrollX = T,
-              keys = TRUE,
-              paging = F
-            )
-          ) %>%
-          DT::formatStyle(c(1:dim(r$upload$Dataset())[2]), border = "1px solid #ddd")
+      if(is.null(input$unique_id)){
+        keyboard <- c(
+          paste0("\u2190",", \u2191",", \u2192",", \u2193 or mouse"),
+          "+/- or scroller",
+          "Hover nodes/edges",
+          "Click on a node"
+        )
+        Actions <- c(
+          "Move the network",
+          "Zoom In/Out",
+          "See block proportion/edge connectivity",
+          "See block composition"
+        )
+        my_data_table <- data.frame(keyboard,Actions)
+
+
+      }else{
+        get_selected <- stringr::str_split(input$unique_id, pattern = "/newline/")
+        my_data_table <- as.data.frame(get_selected[[1]][-1]) %>%
+          setNames(get_selected[[1]][[1]])
       }
+      my_data_table %>%
+        DT::datatable(
+          extensions = c("FixedHeader", "KeyTable"),
+          option = list(
+            fixedHeader = TRUE,
+            fixedColumns = list(leftColumns = 1),
+            scrollX = T,
+            keys = TRUE,
+            paging = F
+          )
+        ) %>%
+        DT::formatStyle(c(1:2), border = "1px solid #ddd")
     })
 
 
@@ -210,7 +223,7 @@ mod_tab_network_server <- function(id, r) {
           edge_threshold = input$edge_threshold,
           edge_color = input$edge_color,
           arrows = input$arrows,
-          arrow_start = arrow_start(),
+          arrow_start = input$arrow_start,
           node_color = node_colors(),
           node_shape = node_shapes()
         )
@@ -235,7 +248,7 @@ mod_tab_network_server <- function(id, r) {
             edge_threshold = input$edge_threshold,
             edge_color = input$edge_color,
             arrows = input$arrows,
-            arrow_start = arrow_start(),
+            arrow_start = input$arrow_start,
             node_color = node_colors(),
             node_shape = node_shapes()
           )) %>%
