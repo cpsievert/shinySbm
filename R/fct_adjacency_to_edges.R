@@ -257,7 +257,7 @@ graph_filter <- function(graph, threshold = "default") {
       warning("threshold should be set as 'default' or a numeric value")
     }
   }
-  value_threshold <- min(max(graph$edges$value),value_threshold)
+  value_threshold <- min(max(graph$edges$value), value_threshold)
   graph$edges <- graph$edges %>%
     dplyr::filter(value >= value_threshold)
 

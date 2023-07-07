@@ -1,6 +1,6 @@
 ### diapo
 
-- citation("sbm")
+[test CRAN](https://cran.r-project.org/web/packages/submission_checklist.html)
 
 
 ### Ouverture déploiment
