@@ -119,6 +119,7 @@ mod_tab_show_ui <- function(id) {
 
 #' tab_show Server Functions
 #'
+#'
 #' @noRd
 mod_tab_show_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {

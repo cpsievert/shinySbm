@@ -155,8 +155,8 @@ edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), direc
   colnames(mat) <- name_col
   # Changing from and to colums with positions into the matrix
   edges <- as.matrix(dplyr::mutate(edges,
-                                     from = match(from, name_row),
-                                     to = match(to, name_col)
+                                     from = match(.data$from, name_row),
+                                     to = match(.data$to, name_col)
   ))
   # Set values in right positions
   mat[edges[, 1:2]] <- ifelse(rep(dim(edges)[2] == 2, dim(edges)[1]),

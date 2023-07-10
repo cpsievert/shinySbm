@@ -82,7 +82,7 @@ flexBlockProp <- function(sbm, labels,
 #' @noRd
 flexConnect <- function(sbm, labels,
                         settings = list()) {
-
+    . <- NULL
     ## Default settings
     currentSettings <- list(
       caption = "Table 2: Connectivity betweens blocks",
@@ -148,7 +148,7 @@ flexConnect <- function(sbm, labels,
 #' @noRd
 flexStoredModels <- function(sbm, labels,
                              settings = list()) {
-
+  indexModel <- nbParams <- NULL
     ## Default settings
     currentSettings <- list(
       caption = "Table 3: All explored models",
@@ -161,7 +161,7 @@ flexStoredModels <- function(sbm, labels,
   ## Data
   data_strored <- as.data.frame(round(sbm$storedModels, digits = currentSettings$digits)) %>%
     dplyr::select(-indexModel) %>%
-    dplyr::relocate(nbParams, .after = everything())
+    dplyr::relocate(nbParams, .after = dplyr::everything())
 
   ## Additional info
   is_bip <- is.bipartite(sbm)

@@ -1,8 +1,16 @@
 #' The application server-side
-#'
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom rlang .data
+#' @importFrom stats setNames
+#' @importFrom stats var
+#' @importFrom utils read.table
+#' @importFrom utils write.csv2
+#' @importFrom grDevices dev.off
+#' @importFrom grDevices jpeg
+#' @importFrom grDevices png
+#' @importFrom grDevices svg
 #' @noRd
 app_server <- function(input, output, session) {
   options(shiny.maxRequestSize = 50*1024^2) # can upload 50MB files

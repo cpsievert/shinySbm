@@ -15,6 +15,7 @@ get_graph <- function(x, ...) {
 #'
 #' @noRd
 get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F, ...) {
+  . <- Blocks <- Nodes_names <- label <-  NULL
   nb_nodes <- x$nbBlocks
   id <- 1:nb_nodes
   # Build nodes tables
@@ -75,6 +76,7 @@ get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F, 
 #'
 #' @noRd
 get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
+  . <- id <- label <- level <- value <- group <- Nodes_names <- NULL
   nb_nodes <- x$nbBlocks %>%
     as.list() %>%
     setNames(c(labels[["row"]], labels[["col"]]))
@@ -136,9 +138,10 @@ get_graph.matrix <- function(x,
                                col = colnames(x)
                              ),
                              type = "unipartite", directed = F, ...) {
+  . <-
   ## Tests
-  if (dim(x)[[1]] != length(nodes_names[["row"]]) | dim(x)[[2]] != length(nodes_names[["col"]])) {
-    stop("x has different dimension than nodes_names")
+  if (dim(x)[[1]] != length(node_names[["row"]]) | dim(x)[[2]] != length(node_names[["col"]])) {
+    stop("x has different dimension than node_names")
   }
   if (var(dim(x)) != 0 & type == "unipartite") {
     stop("x has different number of raws and columns, it can't be unipartite")
@@ -146,8 +149,8 @@ get_graph.matrix <- function(x,
   if (var(dim(x)) == 0 & type == "bipartite") {
     message("x has same number of raws and columns are you sure this network is bipartite ?")
   }
-  if ((length(nodes_names[["row"]]) != length(nodes_names[["col"]]) || any(nodes_names[["row"]] != nodes_names[["col"]])) & type == "unipartite") {
-    warnings("nodes_names has two differents types are you sur the network is unipartite")
+  if ((length(node_names[["row"]]) != length(node_names[["col"]]) || any(node_names[["row"]] != node_names[["col"]])) & type == "unipartite") {
+    warnings("node_names has two differents types are you sur the network is unipartite")
   }
   if (isSymmetric(x) & directed) {
     warnings("x is symmetric are you sure it is directed")
@@ -157,12 +160,12 @@ get_graph.matrix <- function(x,
   }
 
   if (type == "unipartite") {
-    labs <- data.frame(label = nodes_names[["col"]])
+    labs <- data.frame(label = node_names[["col"]])
   } else {
     labs <- dplyr::bind_rows(purrr::map(
       c("row", "col"),
       ~ setNames(
-        data.frame(nodes_names[.x], .x),
+        data.frame(node_names[.x], .x),
         c("label", "lab_type")
       )
     ))
@@ -220,12 +223,13 @@ get_graph.matrix <- function(x,
 #'
 #' @noRd
 default_threshold <- function(graph) {
+  from <- to <- NULL
   if (graph$type == "bipartite") {
     value_threshold <- purrr::map_dbl(c("from", "to"), function(col) {
       graph$edges %>%
         dplyr::group_by_at(col) %>%
-        dplyr::reframe(max = max(value)) %>%
-        dplyr::pull(max) %>%
+        dplyr::reframe(max = max(.data$value)) %>%
+        dplyr::pull(.data$max) %>%
         min()
     }) %>% min()
   } else {
@@ -234,8 +238,8 @@ default_threshold <- function(graph) {
         dplyr::select_at(c(col, "value")) %>%
         dplyr::rename_at(col, ~"block")
     }) %>%
-      dplyr::group_by(block) %>%
-      dplyr::reframe(max = max(value)) %>%
+      dplyr::group_by(.data$block) %>%
+      dplyr::reframe(max = max(.data$value)) %>%
       dplyr::pull(max) %>%
       min()
   }
@@ -249,6 +253,7 @@ default_threshold <- function(graph) {
 #'
 #' @noRd
 graph_filter <- function(graph, threshold = "default") {
+  value <- NULL
   if (threshold == "default") {
     value_threshold <- default_threshold(graph)
   } else {

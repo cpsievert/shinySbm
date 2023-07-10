@@ -23,6 +23,7 @@ Imports:
     magrittr,
     patchwork,
     purrr,
+    rlang,
     rmarkdown,
     sbm,
     shiny (>= 1.7.2),
