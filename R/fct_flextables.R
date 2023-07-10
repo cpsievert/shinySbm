@@ -17,7 +17,7 @@
 #' rounded_vec
 #' sum(rounded_vec)
 #'
-#' @export
+#' @noRd
 round_proportion <- function(x, digits = 2) {
   if(length(x) == 1){
     return(1)

@@ -70,9 +70,9 @@ row_group_names <- paste0(
 )
 
 if (is_bipartite) {
-  example_group <- round_proportion(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]] * 100
+  example_group <- shinySbm:::round_proportion(R$sbm$blockProp$row)[[R$sbm$nbBlocks[[1]]]] * 100
 } else {
-  example_group <- round_proportion(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]] * 100
+  example_group <- shinySbm:::round_proportion(R$sbm$blockProp)[[R$sbm$nbBlocks[[1]]]] * 100
 }
 
 get_flextable(R$sbm,R$upload$labels,type = 'blockProp', settings = list(caption = "Block proportion")) %>% 

@@ -16,7 +16,7 @@
 #' my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
 #' is.bipartite(my_sbm)
 #'
-#' @export
+#' @noRd
 #'
 is.bipartite <- function(object) {
   UseMethod("is.bipartite", object)
@@ -41,7 +41,7 @@ is.bipartite <- function(object) {
 #'
 #' is.bipartite(1)
 #'
-#' @export
+#' @noRd
 #'
 is.bipartite.default <- function(object) {
   if(is.list(object)){
@@ -68,7 +68,7 @@ is.bipartite.default <- function(object) {
 #'
 #' is.bipartite(my_sbm)
 #'
-#' @export
+#' @noRd
 #'
 is.bipartite.SBM <- function(object){
   if("BipartiteSBM" %in% class(object)){
