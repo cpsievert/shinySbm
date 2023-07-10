@@ -339,6 +339,13 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       session$userData$vars$sbm$runSbm <- 0
     })
 
+
+    observeEvent(datasetSelected(), {
+      updateActionButton(parent_session, "tab_sbm_1-runSbm")
+      # global variable reset the runsbm variable to 0
+      session$userData$vars$sbm$runSbm <- 0
+    })
+
     ## For mod importation error to get parameters
     inputs <- reactiveValues(
       matrixBuilder = NULL,
