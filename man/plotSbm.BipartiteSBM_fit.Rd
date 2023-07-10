@@ -52,5 +52,4 @@ plotSbm(my_sbm_bi,
   plotOptions = list(title = "An example Matrix")
 )
 
-
 }

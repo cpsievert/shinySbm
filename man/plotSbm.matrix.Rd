@@ -41,10 +41,11 @@ The list of parameters \code{plotOptions} for the matrix plot is
 \examples{
 n_col <- 100
 n_row <- 90
-mat <- matrix(sample(0:10,n_col*n_row,replace = TRUE),n_col,n_row)
-plotSbm(mat, transpose = TRUE ,
-  labels = list(col = "Columns",row = 'Rows'),
-  plotOptions = list(colValue = 'blue')
- )
+mat <- matrix(sample(0:10, n_col * n_row, replace = TRUE), n_col, n_row)
+plotSbm(mat,
+  transpose = TRUE,
+  labels = list(col = "Columns", row = "Rows"),
+  plotOptions = list(colValue = "blue")
+)
 
 }

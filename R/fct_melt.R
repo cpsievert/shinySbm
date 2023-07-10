@@ -6,6 +6,7 @@
 #'
 #' @noRd
 melt_matrix <- function(data){
+  . <- NULL
   if(is.null(rownames(data))){
     row_names <- 1:nrow(data)
   }else{

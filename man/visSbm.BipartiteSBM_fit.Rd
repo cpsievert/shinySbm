@@ -56,16 +56,20 @@ List of parameters
 #                                        model = 'bernoulli')
 my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
 
-node_names_bi <- list(row = sbm::fungusTreeNetwork$fungus_names,
-                   col = sbm::fungusTreeNetwork$tree_names)
+node_names_bi <- list(
+  row = sbm::fungusTreeNetwork$fungus_names,
+  col = sbm::fungusTreeNetwork$tree_names
+)
 
 visSbm(my_sbm_bi,
-       labels = c(row = "Fungus", col = "Tree"),
-       node_names = node_names_bi,
-       settings = list(arrows = TRUE,
-                       arrow_start = "Fungus",
-                       node_color = c(row = "pink",col = 'green'),
-                       node_shape = c(row = "dot",col = 'square'))
-       )
+  labels = c(row = "Fungus", col = "Tree"),
+  node_names = node_names_bi,
+  settings = list(
+    arrows = TRUE,
+    arrow_start = "Fungus",
+    node_color = c(row = "pink", col = "green"),
+    node_shape = c(row = "dot", col = "square")
+  )
+)
 
 }

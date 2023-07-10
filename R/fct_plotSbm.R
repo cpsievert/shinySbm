@@ -42,20 +42,23 @@
 #' #                                      model = "poisson")
 #' my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 #'
-#' plotSbm(my_sbm_uni, ordered = TRUE,
+#' plotSbm(my_sbm_uni,
+#'   ordered = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
 #'
 #' n_col <- 100
 #' n_row <- 90
-#' mat <- matrix(sample(0:10,n_col*n_row,replace = TRUE),n_col,n_row)
-#' plotSbm(mat, transpose = TRUE ,
-#'   labels = list(col = "Columns",row = 'Rows'),
-#'   plotOptions = list(colValue = 'blue')
-#'   )
+#' mat <- matrix(sample(0:10, n_col * n_row, replace = TRUE), n_col, n_row)
+#' plotSbm(mat,
+#'   transpose = TRUE,
+#'   labels = list(col = "Columns", row = "Rows"),
+#'   plotOptions = list(colValue = "blue")
+#' )
 #'
 #' @export
-plotSbm <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
+                    plotOptions = list()) {
   UseMethod("plotSbm", x)
 }
 
@@ -74,7 +77,8 @@ plotSbm <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOp
 #'
 #'
 #' @export
-plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE,
+                            labels = NULL, plotOptions = list()) {
   plot(x)
 }
 
@@ -112,9 +116,10 @@ plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL
 #'   plotOptions = list(title = "An example Matrix")
 #' )
 #'
-#'
 #' @export
-plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
+                                     transpose = FALSE, labels = NULL,
+                                     plotOptions = list()) {
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
@@ -165,17 +170,29 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labe
     mat_pure <- x$networkData
   }
 
-  plot_net <- dplyr::mutate(melt_matrix(mat_exp),base_value = melt_matrix(mat_pure)$value)
+  plot_net <- dplyr::mutate(melt_matrix(mat_exp),
+    base_value = melt_matrix(mat_pure)$value
+  )
 
   if (transpose) {
     names(plot_net)[c(1, 2)] <- c("Var2", "Var1")
   }
 
-  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = base_value, alpha = base_value))
+  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(
+    x = .data$Var2,
+    y = .data$Var1,
+    fill = .data$base_value,
+    alpha = .data$base_value
+  ))
   if (currentOptions$showPredictions) {
     plt <- plt +
-      ggplot2::geom_tile(ggplot2::aes(x = Var2, y = Var1, alpha = value),
-        fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend
+      ggplot2::geom_tile(
+        ggplot2::aes(
+          x = .data$Var2, y = .data$Var1,
+          alpha = .data$value
+        ),
+        fill = currentOptions$colPred, size = 0,
+        show.legend = currentOptions$showLegend
       )
   }
   if (currentOptions$showValues) {
@@ -203,7 +220,9 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labe
     } else {
       labels[["row"]]
     }) +
-    ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName), range = c(0, 1)) +
+    ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName),
+      range = c(0, 1)
+    ) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
     ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
     ggplot2::guides(alpha = if (currentOptions$showPredictions) {
@@ -212,15 +231,23 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labe
       "none"
     }) +
     ggplot2::coord_equal(expand = FALSE) +
-    ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
+    ggplot2::theme_bw(
+      base_size = 20, base_rect_size = 1,
+      base_line_size = 1
+    ) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2))) +
-    ggplot2::theme(legend.key.size = ggplot2::unit(0.5, 'cm'), #change legend key size
-                   legend.key.height = ggplot2::unit(0.5, 'cm'), #change legend key height
-                   legend.key.width = ggplot2::unit(0.5, 'cm'), #change legend key width
-                   legend.title = ggplot2::element_text(size=12), #change legend title font size
-                   legend.text = ggplot2::element_text(size=8)) #change legend text font size
+    ggplot2::theme(plot.caption = ggplot2::element_text(
+      hjust = 0.5,
+      size = ggplot2::rel(1.2)
+    )) +
+    ggplot2::theme(
+      legend.key.size = ggplot2::unit(0.5, "cm"), # change legend key size
+      legend.key.height = ggplot2::unit(0.5, "cm"), # change legend key height
+      legend.key.width = ggplot2::unit(0.5, "cm"), # change legend key width
+      legend.title = ggplot2::element_text(size = 12), # change legend title font size
+      legend.text = ggplot2::element_text(size = 8)
+    ) # change legend text font size
   plot(plt)
 }
 
@@ -251,12 +278,14 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labe
 #' #                                      model = "poisson")
 #' my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 #'
-#' plotSbm(my_sbm_uni, ordered = TRUE,
+#' plotSbm(my_sbm_uni,
+#'   ordered = TRUE,
 #'   plotOptions = list(title = "An example Matrix")
 #' )
 #'
 #' @export
-plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE,
+                                  labels = NULL, plotOptions = list()) {
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
@@ -301,7 +330,9 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels 
   mat_exp <- mat_exp[nb_rows:1, ]
   mat_pure <- mat_pure[nb_rows:1, ]
 
-  plot_net <-  dplyr::mutate(melt_matrix(mat_exp),base_value = melt_matrix(mat_pure)$value)
+  plot_net <- dplyr::mutate(melt_matrix(mat_exp),
+    base_value = melt_matrix(mat_pure)$value
+  )
   ## Test
 
 
@@ -309,8 +340,13 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels 
 
   if (currentOptions$showPredictions) {
     plt <- plt +
-      ggplot2::geom_tile(ggplot2::aes(x = plot_net$Var2, y = plot_net$Var1, alpha = plot_net$value),
-        fill = currentOptions$colPred, size = 0, show.legend = currentOptions$showLegend
+      ggplot2::geom_tile(
+        ggplot2::aes(
+          x = plot_net$Var2, y = plot_net$Var1,
+          alpha = plot_net$value
+        ),
+        fill = currentOptions$colPred, size = 0,
+        show.legend = currentOptions$showLegend
       )
   }
 
@@ -339,19 +375,33 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels 
       guide = "colourbar"
     ) +
     ggplot2::ylab(labels[["row"]]) + ggplot2::xlab(labels[["col"]]) +
-    ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName), range = c(0, 1)) +
+    ggplot2::scale_alpha_continuous(
+      paste(
+        "Groups",
+        currentOptions$interactionName
+      ),
+      range = c(0, 1)
+    ) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
-    ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
+    ggplot2::scale_y_discrete(
+      breaks = "",
+      guide = ggplot2::guide_axis(angle = 0)
+    ) +
     ggplot2::coord_equal(expand = FALSE) +
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2))) +
-    ggplot2::theme(legend.key.size = ggplot2::unit(0.5, 'cm'), #change legend key size
-                   legend.key.height = ggplot2::unit(0.5, 'cm'), #change legend key height
-                   legend.key.width = ggplot2::unit(0.5, 'cm'), #change legend key width
-                   legend.title = ggplot2::element_text(size=12), #change legend title font size
-                   legend.text = ggplot2::element_text(size=8)) #change legend text font size
+    ggplot2::theme(plot.caption = ggplot2::element_text(
+      hjust = 0.5,
+      size = ggplot2::rel(1.2)
+    )) +
+    ggplot2::theme(
+      legend.key.size = ggplot2::unit(0.5, "cm"), # change legend key size
+      legend.key.height = ggplot2::unit(0.5, "cm"), # change legend key height
+      legend.key.width = ggplot2::unit(0.5, "cm"), # change legend key width
+      legend.title = ggplot2::element_text(size = 12), # change legend title font size
+      legend.text = ggplot2::element_text(size = 8)
+    ) # change legend text font size
   plot(plt)
 }
 
@@ -380,14 +430,16 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels 
 #' @examples
 #' n_col <- 100
 #' n_row <- 90
-#' mat <- matrix(sample(0:10,n_col*n_row,replace = TRUE),n_col,n_row)
-#' plotSbm(mat, transpose = TRUE ,
-#'   labels = list(col = "Columns",row = 'Rows'),
-#'   plotOptions = list(colValue = 'blue')
-#'  )
+#' mat <- matrix(sample(0:10, n_col * n_row, replace = TRUE), n_col, n_row)
+#' plotSbm(mat,
+#'   transpose = TRUE,
+#'   labels = list(col = "Columns", row = "Rows"),
+#'   plotOptions = list(colValue = "blue")
+#' )
 #'
 #' @export
-plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL, plotOptions = list()) {
+plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
+                           plotOptions = list()) {
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
@@ -420,7 +472,10 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
   }
 
 
-  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(x = Var2, y = Var1, fill = value)) +
+  plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(
+    x = .data$Var2,
+    y = .data$Var1, fill = .data$value
+  )) +
     ggplot2::geom_tile(show.legend = currentOptions$showLegend) +
     ggplot2::scale_fill_gradient(paste("Indiv.", currentOptions$interactionName),
       low = "white", high = currentOptions$colValue,
@@ -438,16 +493,24 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
     }) +
     ggplot2::scale_alpha(range = c(0, 1)) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
-    ggplot2::scale_y_discrete(breaks = "", guide = ggplot2::guide_axis(angle = 0)) +
+    ggplot2::scale_y_discrete(
+      breaks = "",
+      guide = ggplot2::guide_axis(angle = 0)
+    ) +
     ggplot2::coord_equal(expand = FALSE) +
     ggplot2::theme_bw(base_size = 20, base_rect_size = 1, base_line_size = 1) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank()) +
     ggplot2::labs(caption = currentOptions$title) +
-    ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0.5, size = ggplot2::rel(1.2))) +
-    ggplot2::theme(legend.key.size = ggplot2::unit(0.5, 'cm'), #change legend key size
-                   legend.key.height = ggplot2::unit(0.5, 'cm'), #change legend key height
-                   legend.key.width = ggplot2::unit(0.5, 'cm'), #change legend key width
-                   legend.title = ggplot2::element_text(size=12), #change legend title font size
-                   legend.text = ggplot2::element_text(size=8)) #change legend text font size
+    ggplot2::theme(plot.caption = ggplot2::element_text(
+      hjust = 0.5,
+      size = ggplot2::rel(1.2)
+    )) +
+    ggplot2::theme(
+      legend.key.size = ggplot2::unit(0.5, "cm"), # change legend key size
+      legend.key.height = ggplot2::unit(0.5, "cm"), # change legend key height
+      legend.key.width = ggplot2::unit(0.5, "cm"), # change legend key width
+      legend.title = ggplot2::element_text(size = 12), # change legend title font size
+      legend.text = ggplot2::element_text(size = 8)
+    ) # change legend text font size
   plot(plt)
 }

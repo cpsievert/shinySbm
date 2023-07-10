@@ -61,12 +61,14 @@ prePlotNet <- function(matrix,
     scaleFactor = currentSettings$arrow_thickness
   )
   if (currentSettings$arrows) {
-    if(is.null(currentSettings$arrow_start)){
-      currentSettings$arrow_start <- 'row'
+    if (is.null(currentSettings$arrow_start)) {
+      currentSettings$arrow_start <- "row"
     }
     if (!currentSettings$arrow_start %in% c("row", "col")) {
       if (is_bipartite & currentSettings$arrow_start %in% currentLabels) {
-        currentSettings$arrow_start <- names(which(currentLabels == currentSettings$arrow_start))
+        currentSettings$arrow_start <- names(which(
+          currentLabels == currentSettings$arrow_start
+        ))
       } else {
         warning(paste0(
           "settings[['arrow_start']] should be 'row' or 'col'",
@@ -133,17 +135,21 @@ prePlotNet <- function(matrix,
 #' #                                        model = 'bernoulli')
 #' my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
 #'
-#' node_names_bi <- list(row = sbm::fungusTreeNetwork$fungus_names,
-#'                    col = sbm::fungusTreeNetwork$tree_names)
+#' node_names_bi <- list(
+#'   row = sbm::fungusTreeNetwork$fungus_names,
+#'   col = sbm::fungusTreeNetwork$tree_names
+#' )
 #'
 #' visSbm(my_sbm_bi,
-#'        labels = c(row = "Fungus", col = "Tree"),
-#'        node_names = node_names_bi,
-#'        settings = list(arrows = TRUE,
-#'                        arrow_start = "Fungus",
-#'                        node_color = c(row = "pink",col = 'green'),
-#'                        node_shape = c(row = "dot",col = 'square'))
-#'        )
+#'   labels = c(row = "Fungus", col = "Tree"),
+#'   node_names = node_names_bi,
+#'   settings = list(
+#'     arrows = TRUE,
+#'     arrow_start = "Fungus",
+#'     node_color = c(row = "pink", col = "green"),
+#'     node_shape = c(row = "dot", col = "square")
+#'   )
+#' )
 #'
 #'
 #' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
@@ -153,12 +159,14 @@ prePlotNet <- function(matrix,
 #' node_names_uni <- list(sbm::fungusTreeNetwork$tree_names)
 #'
 #' visSbm(my_sbm_uni,
-#'        labels = c("Tree"),
-#'        node_names = node_names_uni,
-#'        settings = list(edge_threshold = 0.01,
-#'                        edge_color = "grey",
-#'                        node_color = c("violet"))
-#'        )
+#'   labels = c("Tree"),
+#'   node_names = node_names_uni,
+#'   settings = list(
+#'     edge_threshold = 0.01,
+#'     edge_color = "grey",
+#'     node_color = c("violet")
+#'   )
+#' )
 #'
 #' @export
 visSbm <- function(x,
@@ -251,17 +259,21 @@ visSbm.default <- function(x,
 #' #                                        model = 'bernoulli')
 #' my_sbm_bi <- FungusTreeNetwork$sbmResults$fungus_tree
 #'
-#' node_names_bi <- list(row = sbm::fungusTreeNetwork$fungus_names,
-#'                    col = sbm::fungusTreeNetwork$tree_names)
+#' node_names_bi <- list(
+#'   row = sbm::fungusTreeNetwork$fungus_names,
+#'   col = sbm::fungusTreeNetwork$tree_names
+#' )
 #'
 #' visSbm(my_sbm_bi,
-#'        labels = c(row = "Fungus", col = "Tree"),
-#'        node_names = node_names_bi,
-#'        settings = list(arrows = TRUE,
-#'                        arrow_start = "Fungus",
-#'                        node_color = c(row = "pink",col = 'green'),
-#'                        node_shape = c(row = "dot",col = 'square'))
-#'        )
+#'   labels = c(row = "Fungus", col = "Tree"),
+#'   node_names = node_names_bi,
+#'   settings = list(
+#'     arrows = TRUE,
+#'     arrow_start = "Fungus",
+#'     node_color = c(row = "pink", col = "green"),
+#'     node_shape = c(row = "dot", col = "square")
+#'   )
+#' )
 #'
 #' @export
 visSbm.BipartiteSBM_fit <- function(x,
@@ -269,6 +281,7 @@ visSbm.BipartiteSBM_fit <- function(x,
                                     node_names = NULL,
                                     directed = "default",
                                     settings = list()) {
+  level <- value <- NULL
   preSettings <- prePlotNet(
     matrix = x$networkData,
     is_bipartite = T,
@@ -284,9 +297,21 @@ visSbm.BipartiteSBM_fit <- function(x,
     graph_filter(preSettings$edge_threshold)
 
   # Edges and Nodes Hoovering Sentence
-  node_edges$edges$title <- paste("connectivity =", round(node_edges$edges$value, preSettings$digits))
-  node_edges$nodes <- dplyr::group_by(node_edges$nodes,level) %>%
-    dplyr::mutate(title = paste("proportion =", round_proportion(value, preSettings$digits))) %>%
+  node_edges$edges$title <- paste(
+    "connectivity =",
+    round(
+      node_edges$edges$value,
+      preSettings$digits
+    )
+  )
+  node_edges$nodes <- dplyr::group_by(node_edges$nodes, level) %>%
+    dplyr::mutate(title = paste(
+      "proportion =",
+      round_proportion(
+        value,
+        preSettings$digits
+      )
+    )) %>%
     dplyr::ungroup()
 
   visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
@@ -366,12 +391,14 @@ visSbm.BipartiteSBM_fit <- function(x,
 #' node_names_uni <- list(sbm::fungusTreeNetwork$tree_names)
 #'
 #' visSbm(my_sbm_uni,
-#'        labels = c("Tree"),
-#'        node_names = node_names_uni,
-#'        settings = list(edge_threshold = 0.01,
-#'                        edge_color = "grey",
-#'                        node_color = c("violet"))
-#'        )
+#'   labels = c("Tree"),
+#'   node_names = node_names_uni,
+#'   settings = list(
+#'     edge_threshold = 0.01,
+#'     edge_color = "grey",
+#'     node_color = c("violet")
+#'   )
+#' )
 #'
 #' @export
 visSbm.SimpleSBM_fit <- function(x,
@@ -394,8 +421,20 @@ visSbm.SimpleSBM_fit <- function(x,
     graph_filter(preSettings$edge_threshold)
 
   # Edges and Nodes Hoovering Sentence
-  node_edges$edges$title <- paste("connectivity =", round(node_edges$edges$value, preSettings$digits))
-  node_edges$nodes$title <- paste("proportion =", round_proportion(node_edges$nodes$value, preSettings$digits))
+  node_edges$edges$title <- paste(
+    "connectivity =",
+    round(
+      node_edges$edges$value,
+      preSettings$digits
+    )
+  )
+  node_edges$nodes$title <- paste(
+    "proportion =",
+    round_proportion(
+      node_edges$nodes$value,
+      preSettings$digits
+    )
+  )
 
 
   visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
