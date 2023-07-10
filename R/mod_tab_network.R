@@ -175,8 +175,19 @@ mod_tab_network_server <- function(id, r) {
     })
 
 
+    graph_has_changed <- reactiveVal(T)
+
+    observeEvent(my_sbm(),{
+      graph_has_changed(T)
+    })
+
+    observeEvent(input$unique_id,{
+      graph_has_changed(F)
+    })
+
+
     output$node_names <- DT::renderDataTable({
-      if(is.null(input$unique_id)){
+      if(graph_has_changed() || is.null(input$unique_id)){
         keyboard <- c(
           paste0("\u2190",", \u2191",", \u2192",", \u2193 or mouse"),
           "+/- or scroller",
@@ -190,6 +201,7 @@ mod_tab_network_server <- function(id, r) {
           "See block composition"
         )
         my_data_table <- data.frame(keyboard,Actions)
+        graph_has_changed(T)
 
 
       }else{
@@ -230,6 +242,9 @@ mod_tab_network_server <- function(id, r) {
       ) %>%
         visNetwork::visEvents(selectNode = paste0('function(nodes) {
                 Shiny.onInputChange("', ns("unique_id"), '", this.body.data.nodes.get(nodes.nodes[0]).text);
+                ;}'),
+                              deselectNode = paste0('function(nodes) {
+                Shiny.onInputChange("', ns("unique_id"), '", null);
                 ;}'))
     })
 
