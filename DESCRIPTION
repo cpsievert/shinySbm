@@ -23,7 +23,6 @@ Imports:
     magrittr,
     patchwork,
     purrr,
-    reshape2,
     rmarkdown,
     sbm,
     shiny (>= 1.7.2),

@@ -165,7 +165,7 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labe
     mat_pure <- x$networkData
   }
 
-  plot_net <- dplyr::mutate(reshape2::melt(mat_exp),base_value = reshape2::melt(mat_pure)$value)
+  plot_net <- dplyr::mutate(melt_matrix(mat_exp),base_value = melt_matrix(mat_pure)$value)
 
   if (transpose) {
     names(plot_net)[c(1, 2)] <- c("Var2", "Var1")
@@ -301,7 +301,7 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE, labels 
   mat_exp <- mat_exp[nb_rows:1, ]
   mat_pure <- mat_pure[nb_rows:1, ]
 
-  plot_net <-  dplyr::mutate(reshape2::melt(mat_exp),base_value = reshape2::melt(mat_pure)$value)
+  plot_net <-  dplyr::mutate(melt_matrix(mat_exp),base_value = melt_matrix(mat_pure)$value)
   ## Test
 
 
@@ -413,10 +413,10 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
     mat_exp <- x
   }
 
-  plot_net <- reshape2::melt(mat_exp)
+  plot_net <- melt_matrix(mat_exp)
 
   if (transpose) {
-    names(plot_net)[c(1, 2)] <- c("Var2", "Var1")
+    names(plot_net)[c(1, 2)] <- names(plot_net)[c(2, 1)]
   }
 
 
