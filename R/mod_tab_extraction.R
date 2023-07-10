@@ -47,6 +47,9 @@ mod_tab_extraction_ui <- function(id){
 mod_tab_extraction_server <- function(id,r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    ns_tab_upload <- function(id) {
+      paste0("tab_upload_1-", id)
+    }
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_5",
@@ -70,26 +73,32 @@ mod_tab_extraction_server <- function(id,r){
     output$watchRes <- renderUI({
       if(r$upload$networkType() == 'bipartite'){
         tagList(
-          shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
-                              solidHeader = T, status = "info",
-                              collapsible = T,width = 6,
-                              DT::dataTableOutput(ns("dataRow")),
-                              tags$head(tags$style(css_big_table(ns("dataRow"))))),
-          shinydashboard::box(title = paste0(r$upload$labels()$col,":"),
-                              solidHeader = T, status = "info",
-                              collapsible = T,width = 6,
-                              DT::dataTableOutput(ns("dataCol")),
-                              tags$head(tags$style(css_big_table(ns("dataCol")))))
+          conditionalPanel(
+            condition = "output.sbmRan == 'YES'",
+            ns = ns_tab_upload,
+            shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
+                                solidHeader = T, status = "info",
+                                collapsible = T,width = 6,
+                                DT::dataTableOutput(ns("dataRow")),
+                                tags$head(tags$style(css_big_table(ns("dataRow"))))),
+            shinydashboard::box(title = paste0(r$upload$labels()$col,":"),
+                                solidHeader = T, status = "info",
+                                collapsible = T,width = 6,
+                                DT::dataTableOutput(ns("dataCol")),
+                                tags$head(tags$style(css_big_table(ns("dataCol")))))
+            )
         )
       }else{
         tagList(
-          shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
-                              solidHeader = T, status = "info",
-                              collapsible = T,width = 6,
-                              DT::dataTableOutput(ns("data")),
-                              tags$head(tags$style(css_big_table(ns("data")))))
-
-
+          conditionalPanel(
+            condition = "output.sbmRan == 'YES'",
+            ns = ns_tab_upload,
+            shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
+                                solidHeader = T, status = "info",
+                                collapsible = T,width = 6,
+                                DT::dataTableOutput(ns("data")),
+                                tags$head(tags$style(css_big_table(ns("data")))))
+            )
         )
       }
     })
