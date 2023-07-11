@@ -14,6 +14,8 @@
 #' \describe{
 #'  \item{networks}{
 #'    \itemize{
+#'      \item{tree_names : (character) tree names}
+#'      \item{fungus_names : (character) fungus names}
 #'      \item{tree_tree}{
 #'        \enumerate{
 #'          \item{nodes : data.frame describing nodes of tree_tree network}

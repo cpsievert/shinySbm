@@ -14,3 +14,4 @@ $run_dev.*
 todo.md
 .gitlab-ci.yml
 docker*
+build_data/build_FungusTreeNetwork.R

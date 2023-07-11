@@ -138,7 +138,7 @@ get_graph.matrix <- function(x,
                                col = colnames(x)
                              ),
                              type = "unipartite", directed = F, ...) {
-  . <-
+  . <- NULL
     ## Tests
     if (dim(x)[[1]] != length(node_names[["row"]]) | dim(x)[[2]] != length(node_names[["col"]])) {
       stop("x has different dimension than node_names")
