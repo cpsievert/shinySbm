@@ -7,45 +7,51 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_tab_extraction_ui <- function(id){
+mod_tab_extraction_ui <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
       shinydashboard::box(
-      title = "Parameters", solidHeader = T,
-      status = "info", collapsible = T,
-      strong("Select the informations you want:"),
-      fluidRow(
-        column(width = 6,
-               checkboxInput(ns("attribution"),label = "Group membership",value = T)),
-        column(width = 6,
-               checkboxInput(ns("proportion"),label = "Probability of group membership",value = F))
+        title = "Parameters", solidHeader = T,
+        status = "info", collapsible = T,
+        strong("Select the informations you want:"),
+        fluidRow(
+          column(
+            width = 6,
+            checkboxInput(ns("attribution"), label = "Block membership", value = T)
+          ),
+          column(
+            width = 6,
+            checkboxInput(ns("proportion"), label = "Probability of Block membership", value = F)
+          )
+        ),
+        hr(),
+        textInput(ns("fileName"),
+          label = "File Name",
+          value = "Block_list"
+        ),
+        radioButtons(ns("fileType"), "Select file type:",
+          choices = list(
+            "csv" = "csv",
+            "xls" = "xls",
+            "txt" = "txt"
+          ),
+          selected = "csv",
+          inline = T
+        ),
+        uiOutput(ns("downButtons"))
       ),
-      hr(),
-      textInput(ns("fileName"),
-                label = "File Name",
-                value = "Group_list"
-      ),
-      radioButtons(ns("fileType"), "Select file type:",
-                   choices = list(
-                     "csv" = "csv",
-                     "xls" = "xls",
-                     "txt" = "txt"
-                   ),
-                   selected = "csv",
-                   inline = T
-      ),
-      uiOutput(ns("downButtons"))
+      mod_select_nb_groups_ui(ns("select_nb_groups_5"))
     ),
-    mod_select_nb_groups_ui(ns("select_nb_groups_5"))),
-    uiOutput(ns("watchRes")))
+    uiOutput(ns("watchRes"))
+  )
 }
 
 #' tab_extraction Server Functions
 #'
 #' @noRd
-mod_tab_extraction_server <- function(id,r){
-  moduleServer( id, function(input, output, session){
+mod_tab_extraction_server <- function(id, r) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
     ns_tab_upload <- function(id) {
       paste0("tab_upload_1-", id)
@@ -57,48 +63,58 @@ mod_tab_extraction_server <- function(id,r){
       r$upload$labels
     )
 
-    to_extract <- reactive({getBlocks(x = my_sbm(),
-                                      node_names = r$upload$Dataset(),
-                                      labels = r$upload$labels(),
-                                      attribution = input$attribution,
-                                      proportion = input$proportion)})
+    to_extract <- reactive({
+      get_block(
+        x = my_sbm(),
+        node_names = r$upload$Dataset(),
+        labels = r$upload$labels(),
+        attribution = input$attribution,
+        proportion = input$proportion
+      )
+    })
 
 
     check_sbm <- reactiveValues(is_sbm = F)
-    observeEvent(my_sbm(),{
+    observeEvent(my_sbm(), {
       check_sbm$is_sbm <- T
     })
 
 
     output$watchRes <- renderUI({
-      if(r$upload$networkType() == 'bipartite'){
+      if (r$upload$networkType() == "bipartite") {
         tagList(
           conditionalPanel(
             condition = "output.sbmRan == 'YES'",
             ns = ns_tab_upload,
-            shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
-                                solidHeader = T, status = "info",
-                                collapsible = T,width = 6,
-                                DT::dataTableOutput(ns("dataRow")),
-                                tags$head(tags$style(css_big_table(ns("dataRow"))))),
-            shinydashboard::box(title = paste0(r$upload$labels()$col,":"),
-                                solidHeader = T, status = "info",
-                                collapsible = T,width = 6,
-                                DT::dataTableOutput(ns("dataCol")),
-                                tags$head(tags$style(css_big_table(ns("dataCol")))))
+            shinydashboard::box(
+              title = paste0(r$upload$labels()$row, ":"),
+              solidHeader = T, status = "info",
+              collapsible = T, width = 6,
+              DT::dataTableOutput(ns("dataRow")),
+              tags$head(tags$style(css_big_table(ns("dataRow"))))
+            ),
+            shinydashboard::box(
+              title = paste0(r$upload$labels()$col, ":"),
+              solidHeader = T, status = "info",
+              collapsible = T, width = 6,
+              DT::dataTableOutput(ns("dataCol")),
+              tags$head(tags$style(css_big_table(ns("dataCol"))))
             )
+          )
         )
-      }else{
+      } else {
         tagList(
           conditionalPanel(
             condition = "output.sbmRan == 'YES'",
             ns = ns_tab_upload,
-            shinydashboard::box(title = paste0(r$upload$labels()$row,":"),
-                                solidHeader = T, status = "info",
-                                collapsible = T,width = 6,
-                                DT::dataTableOutput(ns("data")),
-                                tags$head(tags$style(css_big_table(ns("data")))))
+            shinydashboard::box(
+              title = paste0(r$upload$labels()$row, ":"),
+              solidHeader = T, status = "info",
+              collapsible = T, width = 6,
+              DT::dataTableOutput(ns("data")),
+              tags$head(tags$style(css_big_table(ns("data"))))
             )
+          )
         )
       }
     })
@@ -156,56 +172,55 @@ mod_tab_extraction_server <- function(id,r){
 
 
     output$downButtons <- renderUI({
-      if(r$upload$networkType() == 'bipartite'){
+      if (r$upload$networkType() == "bipartite") {
         tagList(
-          downloadButton(ns("downDataRow"),label = paste('Extract',r$upload$labels()$row,'Data')),
-          downloadButton(ns("downDataCol"),label = paste('Extract',r$upload$labels()$col,'Data'))
+          downloadButton(ns("downDataRow"), label = paste("Extract", r$upload$labels()$row, "Data")),
+          downloadButton(ns("downDataCol"), label = paste("Extract", r$upload$labels()$col, "Data"))
         )
-      }else{
-        downloadButton(ns("downData"),label = 'Extract Data')
+      } else {
+        downloadButton(ns("downData"), label = "Extract Data")
       }
     })
 
     output$downData <- downloadHandler(
-      filename = eventReactive(c(my_sbm(),input$fileType,input$fileName),{
-        if(check_sbm$is_sbm){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
-        }else{
-          add_group <- ''
+      filename = eventReactive(c(my_sbm(), input$fileType, input$fileName), {
+        if (check_sbm$is_sbm) {
+          add_block <- paste0("_", sum(my_sbm()$nbBlocks), "_blocks")
+        } else {
+          add_block <- ""
         }
-        return(paste0(input$fileName,add_group,'.',input$fileType))
+        return(paste0(input$fileName, add_block, ".", input$fileType))
       }),
-      content = function(file){
-        write.csv2(to_extract(), file,row.names=F)
+      content = function(file) {
+        write.csv2(to_extract(), file, row.names = F)
       }
     )
     output$downDataRow <- downloadHandler(
-      filename = eventReactive(c(my_sbm(),input$fileType,input$fileName),{
-        if(check_sbm$is_sbm){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
-        }else{
-          add_group <- ''
+      filename = eventReactive(c(my_sbm(), input$fileType, input$fileName), {
+        if (check_sbm$is_sbm) {
+          add_block <- paste0("_", sum(my_sbm()$nbBlocks), "_blocks")
+        } else {
+          add_block <- ""
         }
-        return(paste0(input$fileName,'_',r$upload$labels()$row,add_group,'.',input$fileType))
+        return(paste0(input$fileName, "_", r$upload$labels()$row, add_block, ".", input$fileType))
       }),
-      content = function(file){
-        write.csv2(to_extract()$row, file,row.names=F)
+      content = function(file) {
+        write.csv2(to_extract()$row, file, row.names = F)
       }
     )
     output$downDataCol <- downloadHandler(
-      filename = eventReactive(c(my_sbm(),input$fileType,input$fileName),{
-        if(check_sbm$is_sbm){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
-        }else{
-          add_group <- ''
+      filename = eventReactive(c(my_sbm(), input$fileType, input$fileName), {
+        if (check_sbm$is_sbm) {
+          add_block <- paste0("_", sum(my_sbm()$nbBlocks), "_blocks")
+        } else {
+          add_block <- ""
         }
-        return(paste0(input$fileName,'_',r$upload$labels()$col,add_group,'.',input$fileType))
+        return(paste0(input$fileName, "_", r$upload$labels()$col, add_block, ".", input$fileType))
       }),
-      content = function(file){
-        write.csv2(to_extract()$col, file,row.names=F)
+      content = function(file) {
+        write.csv2(to_extract()$col, file, row.names = F)
       }
     )
-
   })
 }
 

@@ -221,7 +221,7 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
     } else {
       labels[["row"]]
     }) +
-    ggplot2::scale_alpha_continuous(paste("Groups", currentOptions$interactionName),
+    ggplot2::scale_alpha_continuous(paste("Blocks", currentOptions$interactionName),
       range = c(0, 1)
     ) +
     ggplot2::scale_x_discrete(breaks = "", position = "top") +
@@ -378,7 +378,7 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE,
     ggplot2::ylab(labels[["row"]]) + ggplot2::xlab(labels[["col"]]) +
     ggplot2::scale_alpha_continuous(
       paste(
-        "Groups",
+        "Blocks",
         currentOptions$interactionName
       ),
       range = c(0, 1)

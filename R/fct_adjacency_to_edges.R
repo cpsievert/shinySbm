@@ -15,23 +15,23 @@ get_graph <- function(x, ...) {
 #'
 #' @noRd
 get_graph.SimpleSBM_fit <- function(x, labels, node_names = NULL, directed = F, ...) {
-  . <- Blocks <- Nodes_names <- label <-  NULL
+  . <- Blocks <- Nodes_names <- label <- NULL
   nb_nodes <- x$nbBlocks
   id <- 1:nb_nodes
   # Build nodes tables
   nodes <- data.frame(
     id = id, # one id for each block
-    label = paste0(labels[["row"]], " Block ", id), # Name of the block
+    label = paste0(labels[["row"]], "_B", id), # Name of the block
     value = x$blockProp # block size
   )
 
   if (!is.null(node_names)) {
     nodes <- dplyr::left_join(nodes,
-      getBlocks(x,
-        node_names = node_names,
-        labels = labels
+      get_block(x,
+        labels = labels,
+        node_names = node_names
       ) %>%
-        dplyr::mutate(label = paste(labels[["row"]], gsub("_", " ", Blocks))) %>%
+        dplyr::mutate(label = paste0(Blocks)) %>%
         dplyr::group_by(label) %>%
         dplyr::reframe(text = paste0(c(label[[1]], Nodes_names), collapse = "/newline/")),
       by = "label"
@@ -86,7 +86,7 @@ get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
 
   nodes <- data.frame(
     id = id %>%
-      purrr::map2(.x = names(.), .y = ., .f = ~ paste(.x, .y)) %>%
+      purrr::map2(.x = names(.), .y = ., .f = ~ paste0(.x, "_B", .y)) %>%
       unlist(),
     value = x$blockProp %>%
       unlist(),
@@ -95,7 +95,7 @@ get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
     }) %>% unlist()
   ) %>%
     dplyr::mutate(
-      label = paste("Block", id),
+      label = id,
       level = ifelse(group == "row", 1, 2),
       shape = ifelse(group == "row", "triangle", "square")
     ) %>%
@@ -103,11 +103,11 @@ get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
 
   if (!is.null(node_names)) {
     nodes <- dplyr::left_join(nodes,
-      getBlocks(x,
-        node_names = node_names,
-        labels = labels
+      get_block(x,
+        labels = labels,
+        node_names = node_names
       ) %>%
-        purrr::map_dfr(~ dplyr::mutate(.x, label = gsub("_", " ", Blocks))) %>%
+        purrr::map_dfr(~ dplyr::mutate(.x, label = Blocks)) %>%
         dplyr::group_by(label) %>%
         dplyr::reframe(text = paste0(c(label[[1]], Nodes_names), collapse = "/newline/")),
       by = "label"
@@ -118,8 +118,8 @@ get_graph.BipartiteSBM_fit <- function(x, labels, node_names = NULL, ...) {
   connection_matrix <- x$connectParam$mean
 
   edges <- data.frame(
-    from = paste0(labels[["col"]], " ", rep(id[[labels[["col"]]]], each = nb_nodes[[labels[["row"]]]])),
-    to = paste0(labels[["row"]], " ", rep(id[[labels[["row"]]]], nb_nodes[[labels[["col"]]]])),
+    from = paste0(labels[["col"]], "_B", rep(id[[labels[["col"]]]], each = nb_nodes[[labels[["row"]]]])),
+    to = paste0(labels[["row"]], "_B", rep(id[[labels[["row"]]]], nb_nodes[[labels[["col"]]]])),
     value = as.vector(connection_matrix)
   )
 
@@ -139,10 +139,10 @@ get_graph.matrix <- function(x,
                              ),
                              type = "unipartite", directed = F, ...) {
   . <-
-  ## Tests
-  if (dim(x)[[1]] != length(node_names[["row"]]) | dim(x)[[2]] != length(node_names[["col"]])) {
-    stop("x has different dimension than node_names")
-  }
+    ## Tests
+    if (dim(x)[[1]] != length(node_names[["row"]]) | dim(x)[[2]] != length(node_names[["col"]])) {
+      stop("x has different dimension than node_names")
+    }
   if (var(dim(x)) != 0 & type == "unipartite") {
     stop("x has different number of raws and columns, it can't be unipartite")
   }
@@ -223,13 +223,13 @@ get_graph.matrix <- function(x,
 #'
 #' @noRd
 default_threshold <- function(graph) {
-  from <- to <- NULL
+  from <- to <- max <- value <- block <- NULL
   if (graph$type == "bipartite") {
     value_threshold <- purrr::map_dbl(c("from", "to"), function(col) {
       graph$edges %>%
         dplyr::group_by_at(col) %>%
-        dplyr::reframe(max = max(.data$value)) %>%
-        dplyr::pull(.data$max) %>%
+        dplyr::reframe(max = max(value)) %>%
+        dplyr::pull(max) %>%
         min()
     }) %>% min()
   } else {
@@ -238,8 +238,8 @@ default_threshold <- function(graph) {
         dplyr::select_at(c(col, "value")) %>%
         dplyr::rename_at(col, ~"block")
     }) %>%
-      dplyr::group_by(.data$block) %>%
-      dplyr::reframe(max = max(.data$value)) %>%
+      dplyr::group_by(block) %>%
+      dplyr::reframe(max = max(value)) %>%
       dplyr::pull(max) %>%
       min()
   }

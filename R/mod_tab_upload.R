@@ -206,8 +206,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
                             "unipartite" = list(row = input$nodLabel, col = input$nodLabel)
       )
       list(
-        row = ifelse(labels_sets$row == "", "row", labels_sets$row),
-        col = ifelse(labels_sets$col == "", "col", labels_sets$col)
+        row = ifelse(labels_sets$row == "",
+                     ifelse(input$networkType == "bipartite","row","nodes"),
+                     labels_sets$row),
+        col = ifelse(labels_sets$col == "",
+                     ifelse(input$networkType == "bipartite","col","nodes"),
+                     labels_sets$col)
       )
     })
 

@@ -49,9 +49,22 @@ prePlotNet <- function(matrix,
     }
   } else {
     if (is_bipartite) {
-      currentLabels <- labels
+      if(length(labels) == 2 && all(names(labels) %in% c('row','col'))){
+        currentLabels <- labels
+      }else{
+        warning("Wrong format for labels")
+        currentLabels <- c(row = "row", col = "col")
+      }
     } else {
-      currentLabels <- c(row = labels, col = labels)
+      if(length(labels) == 2 && all(names(labels) %in% c('row','col')) &&
+         labels[["row"]] == labels[["col"]]){
+        currentLabels <- labels
+      }else if(length(labels)==1){
+        currentLabels <- c(row = labels, col = labels)
+      }else{
+        warning("Wrong format for labels")
+        currentLabels <- c(row = 'nodes', col = 'nodes')
+      }
     }
   }
 
@@ -314,7 +327,7 @@ visSbm.BipartiteSBM_fit <- function(x,
     )) %>%
     dplyr::ungroup()
 
-  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
+  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges, height = 800) %>%
     visNetwork::visEdges(
       arrows = preSettings$arrows,
       color = preSettings$edge_color,
@@ -437,14 +450,13 @@ visSbm.SimpleSBM_fit <- function(x,
   )
 
 
-  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges) %>%
+  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges, height = 800) %>%
     visNetwork::visEdges(
       arrows = preSettings$arrows,
       color = preSettings$edge_color,
       arrowStrikethrough = F
     ) %>%
     visNetwork::visNodes(
-      title = ,
       color = list(
         background = preSettings$node_color,
         highlight = list(
