@@ -37,8 +37,7 @@ mod_tab_network_ui <- function(id) {
       shinydashboard::box(
         title = "Network Visual", solidHeader = T,
         status = "info", width = 12,
-        verbatimTextOutput(ns("test")),
-        column(8, visNetwork::visNetworkOutput(ns("networkPlot"))),
+        column(8, visNetwork::visNetworkOutput(ns("networkPlot"),height = "700px")),
         column(4, DT::dataTableOutput(ns("node_names")))
       )
     )
@@ -51,6 +50,9 @@ mod_tab_network_ui <- function(id) {
 mod_tab_network_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+
+
+
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_3",
@@ -128,13 +130,13 @@ mod_tab_network_server <- function(id, r) {
             selectInput(ns("shape_row"),
               width = "100%",
               label = paste("Select", r$upload$labels()$row, "shape"),
-              choices = list("\u25CF" = "dot", "\u25A0" = "square", "\u25B2" = "triangle"),
+              choices = shapes_list(),
               selected = "triangle"
             ),
             selectInput(ns("shape_col"),
               width = "100%",
               label = paste("Select", r$upload$labels()$col, "shape"),
-              choices = list("\u25CF" = "dot", "\u25A0" = "square", "\u25B2" = "triangle"),
+              choices = shapes_list(),
               selected = "square"
             )
           )
@@ -150,7 +152,7 @@ mod_tab_network_server <- function(id, r) {
             selectInput(ns("shape_uni"),
               width = "100%",
               label = paste("Select node shape"),
-              choices = list("\u25CF" = "dot", "\u25A0" = "square", "\u25B2" = "triangle"),
+              choices = shapes_list(),
               selected = "dot"
             )
           )
@@ -158,7 +160,7 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
-    node_shapes <- eventReactive(c(input$shape_uni, input$shape_row, input$shape_col), {
+    node_shapes <- eventReactive(c(r$upload$networkType(),input$shape_uni, input$shape_row, input$shape_col), {
       if (r$upload$networkType() == "bipartite") {
         list(row = input$shape_row, col = input$shape_col)
       } else {
@@ -166,7 +168,7 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
-    node_colors <- eventReactive(c(input$color_uni, input$color_row, input$color_col), {
+    node_colors <- eventReactive(c(r$upload$networkType(),input$color_uni, input$color_row, input$color_col), {
       if (r$upload$networkType() == "bipartite") {
         list(row = input$color_row, col = input$color_col)
       } else {
@@ -222,7 +224,6 @@ mod_tab_network_server <- function(id, r) {
         ) %>%
         DT::formatStyle(c(1:2), border = "1px solid #ddd")
     })
-
 
 
     output$networkPlot <- visNetwork::renderVisNetwork({
