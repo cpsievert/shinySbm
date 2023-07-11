@@ -178,18 +178,19 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
     names(plot_net)[c(1, 2)] <- c("Var2", "Var1")
   }
 
+  Var2 <- Var1 <- base_value <- value <- NULL
   plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(
-    x = .data$Var2,
-    y = .data$Var1,
-    fill = .data$base_value,
-    alpha = .data$base_value
+    x = Var2,
+    y = Var1,
+    fill = base_value,
+    alpha = base_value
   ))
   if (currentOptions$showPredictions) {
     plt <- plt +
       ggplot2::geom_tile(
         ggplot2::aes(
-          x = .data$Var2, y = .data$Var1,
-          alpha = .data$value
+          x = Var2, y = Var1,
+          alpha = value
         ),
         fill = currentOptions$colPred, size = 0,
         show.legend = currentOptions$showLegend
@@ -471,10 +472,10 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
     names(plot_net)[c(1, 2)] <- names(plot_net)[c(2, 1)]
   }
 
-
+  Var1 <- Var2 <- value <- NULL
   plt <- ggplot2::ggplot(data = plot_net, ggplot2::aes(
-    x = .data$Var2,
-    y = .data$Var1, fill = .data$value
+    x = Var2,
+    y = Var1, fill = value
   )) +
     ggplot2::geom_tile(show.legend = currentOptions$showLegend) +
     ggplot2::scale_fill_gradient(paste("Indiv.", currentOptions$interactionName),

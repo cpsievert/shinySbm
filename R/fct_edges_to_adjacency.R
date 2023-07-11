@@ -126,6 +126,7 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 #'
 #' @noRd
 edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = F) {
+  from <- to <- NULL
   edges <- as.data.frame(edges)
   ## Rename columns of the pair of node list by 'from', 'to' and 'value' (if needed)
   if (dim(edges)[2] == 2) {
@@ -155,8 +156,8 @@ edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), direc
   colnames(mat) <- name_col
   # Changing from and to colums with positions into the matrix
   edges <- as.matrix(dplyr::mutate(edges,
-                                     from = match(.data$from, name_row),
-                                     to = match(.data$to, name_col)
+                                   from = match(from, name_row),
+                                   to = match(to, name_col)
   ))
   # Set values in right positions
   mat[edges[, 1:2]] <- ifelse(rep(dim(edges)[2] == 2, dim(edges)[1]),

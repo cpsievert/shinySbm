@@ -6,10 +6,12 @@
 #'
 #' @noRd
 ICL_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_edges = F, labels = c(row = 'row', col = 'col')) {
+  nbBlocks <- ICL <- loglik <- NULL
   if (zoom) {
     xmin <- min(sum(selected_sbm$nbBlocks), sum(comparison_sbm$nbBlocks)) - 1
     xmax <- max(sum(selected_sbm$nbBlocks), sum(comparison_sbm$nbBlocks)) + 1
-    plot_table <- dplyr::filter(selected_sbm$storedModels, .data$nbBlocks <= xmax & .data$nbBlocks >= xmin)
+    plot_table <- dplyr::filter(selected_sbm$storedModels,
+                                nbBlocks <= xmax & nbBlocks >= xmin)
   } else {
     xmin <- min(selected_sbm$storedModels$nbBlocks)
     xmax <- max(selected_sbm$storedModels$nbBlocks)
@@ -24,10 +26,10 @@ ICL_plot <- function(selected_sbm, comparison_sbm = selected_sbm, zoom = T, get_
 
   my_plot <- ggplot2::ggplot(plot_table) +
     ggplot2::xlim(xmin, xmax) +
-    ggplot2::aes(x = .data$nbBlocks, y = .data$ICL, linetype = "ICL") +
+    ggplot2::aes(x = nbBlocks, y = ICL, linetype = "ICL") +
     ggplot2::geom_line() +
     ggplot2::geom_point(alpha = 0.5) +
-    ggplot2::geom_line(ggplot2::aes(x = .data$nbBlocks, y = .data$loglik, linetype = "Log Likelihood")) +
+    ggplot2::geom_line(ggplot2::aes(x = nbBlocks, y = loglik, linetype = "Log Likelihood")) +
     ggplot2::geom_point(ggplot2::aes(x = sum(selected_sbm$nbBlocks), y = selected_sbm$ICL, colour = "Selected Block Nb"), size = 4, show.legend = F) +
     ggplot2::geom_point(ggplot2::aes(x = sum(comparison_sbm$nbBlocks), y = comparison_sbm$ICL, colour = "Best Block Nb"), size = 4, shape = 10, show.legend = F) +
     ggplot2::labs(linetype = "Curves", colour = "Number of Blocks") +

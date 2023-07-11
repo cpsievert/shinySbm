@@ -2,7 +2,6 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @importFrom rlang .data
 #' @importFrom stats setNames
 #' @importFrom stats var
 #' @importFrom utils read.table
