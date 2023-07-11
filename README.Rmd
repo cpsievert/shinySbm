@@ -35,14 +35,14 @@ knitr::opts_chunk$set(
 
 Stochastic block models (SBMs) are probabilistic models in statistical analysis of graphs or networks, that can be used to discover or understand the (hidden/latent) structure of a network, as well as for clustering purposes. 
 
-Stochastic Block Models are applied on network to simplify the information they gather, and help visualize the main behaviours/categories/relationships present in your network. It's a latent model which identify significant groups of nodes with similar connectivity patterns. This could help you to know if your network: hides closed sub-communities, is hierarchical, or has another specific structure. 
+Stochastic Block Models are applied on network to simplify the information they gather, and help visualize the main behaviours/categories/relationships present in your network. It's a latent model which identify significant blocks (groups) of nodes with similar connectivity patterns. This could help you to know if your network: hides closed sub-communities, is hierarchical, or has another specific structure. 
 
 With `shinySbm` you should also be able to : 
 
- - Easily run a Stochastic Block Model (set your model, infer associated parameters and choose the number of groups)
- - Get some nice outputs as matrix and network plots organised by groups
+ - Easily run a Stochastic Block Model (set your model, infer associated parameters and choose the number of blocks)
+ - Get some nice outputs as matrix and network plots organised by blocks
  - Get a summary of the modelling
- - Extract lists of nodes associated with their groups
+ - Extract lists of nodes associated with their blocks
 
 
 ## How to use the Application

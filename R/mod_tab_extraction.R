@@ -22,7 +22,7 @@ mod_tab_extraction_ui <- function(id) {
           ),
           column(
             width = 6,
-            checkboxInput(ns("proportion"), label = "Probability of Block membership", value = F)
+            checkboxInput(ns("proportion"), label = "Probability of block membership", value = F)
           )
         ),
         hr(),
