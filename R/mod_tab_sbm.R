@@ -40,7 +40,7 @@ mod_tab_sbm_ui <- function(id) {
             condition = 'input.whichLaw == "bernoulli"', ns = ns,
             tags$div(
               tags$strong("Bernoulli distribution:"),tags$br(),
-              " - It's a discrete probability distribution of a random variable which takes the value ",tags$strong("1 with probability p")," and the value ",tags$strong("0 with probability 1-p"),".",tags$br(),
+              " - It's a discrete probability distribution of a random variable which takes the value ",tags$strong("1")," with probability ",tags$strong("p")," and the value ",tags$strong("0")," with probability ",tags$strong("(1-p)"),".",tags$br(),
               " - Less formally, the connection between two nodes can only be 0 (not-connected) or 1 (connected).",tags$br()
             )),
           conditionalPanel(

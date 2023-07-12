@@ -17,3 +17,11 @@ css_big_table <- function(id, ns = identity) {
     )
   )
 }
+
+black_icon <- function(id,icon, ns = identity) {
+  HTML(
+    paste0(
+      "#", ns(id), " > .fa-",icon," {color: black;}"
+      )
+  )
+}

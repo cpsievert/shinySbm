@@ -28,6 +28,9 @@ built_theme <- fresh::create_theme(
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css",href = "style.css")
+  )
   tagList(
     # Do not move this line
     golem_add_external_resources(),
