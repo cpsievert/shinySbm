@@ -19,13 +19,44 @@ mod_tab_sbm_ui <- function(id) {
         title = "SBM settings", solidHeader = T,
         status = "info", width = 12,
         selectInput(ns("whichLaw"),
-          label = "What is the density expected upon dataset ?",
+          label = HTML(
+            "Expected distribution &nbsp;",
+            as.character(
+              actionLink(ns("showLaws"),
+                         label = icon("circle-question")
+              )
+            )
+          ),
           choices = list(
             "Bernoulli" = "bernoulli",
             "Poisson" = "poisson",
             "Gaussian" = "gaussian"
           ),
           selected = NULL
+        ),
+        conditionalPanel(
+          condition = "input.showLaws % 2 == 1", ns = ns,
+          conditionalPanel(
+            condition = 'input.whichLaw == "bernoulli"', ns = ns,
+            tags$div(
+              tags$strong("Bernoulli distribution:"),tags$br(),
+              " - It's a discrete probability distribution of a random variable which takes the value ",tags$strong("1 with probability p")," and the value ",tags$strong("0 with probability 1-p"),".",tags$br(),
+              " - Less formally, the connection between two nodes can only be 0 (not-connected) or 1 (connected).",tags$br()
+            )),
+          conditionalPanel(
+            condition = 'input.whichLaw == "poisson"', ns = ns,
+            tags$div(
+              tags$strong("Poisson distribution:"),tags$br(),
+              " - Poisson distribution is a discrete probability distribution that expresses the probability of a given ",tags$strong("number of events")," occurring in a fixed interval of time or space.",tags$br(),
+              " - Less formally, the connection between two nodes can ",tags$strong("only be integers")," (like count data).",tags$br()
+            )),
+          conditionalPanel(
+            condition = 'input.whichLaw == "gaussian"', ns = ns,
+            tags$div(
+              tags$strong("Gaussian distribution:"),tags$br(),
+              " - The normal distribution or Gaussian distribution is a type of continuous probability distribution for a ",tags$strong("real-valued")," random variable.",tags$br(),
+              " - Less formally, the connection between nodes can be ",tags$strong("continuous measurements"),".",tags$br()
+            ))
         ),
         uiOutput(ns("sbmButton"))
       ),

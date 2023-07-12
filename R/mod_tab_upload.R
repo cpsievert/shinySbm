@@ -47,16 +47,23 @@ mod_tab_upload_ui <- function(id) {
             condition = "input.whichData == 'importData'", ns = ns,
             hr(),
             fileInput(ns("mainDataFile"),
-                      label = "Choose the file containing your data",
+                      label = HTML(
+                        "Choose a file &nbsp;",
+                        as.character(
+                          actionLink(ns("showInfo"),
+                                     label = icon("circle-question")
+                          )
+                        )
+                      ),
                       buttonLabel = "Browse...",
                       placeholder = "No file selected",
                       multiple = F,
                       accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
             ),
-            checkboxInput(ns("showInfo"), "More Information ?"),
             conditionalPanel(
-              condition = "input.dataType == 'matrix' & input.showInfo", ns = ns,
+              condition = "input.dataType == 'matrix' & input.showInfo % 2 == 1", ns = ns,
               tags$div(
+                tags$strong("About the file:"),tags$br(),
                 " - It should be a ", tags$strong("adjacency or incidence"), " matrix", tags$br(),
                 " - ", tags$strong("Bipartite network :"), " nodes in rows and columns can be differents", tags$br(),
                 " - ", tags$strong("Unipartite network :"), " nodes in rows and columns are the same (order and names)", tags$br(),
@@ -65,7 +72,7 @@ mod_tab_upload_ui <- function(id) {
               )
             ),
             conditionalPanel(
-              condition = "input.dataType == 'list' & input.showInfo", ns = ns,
+              condition = "input.dataType == 'list' & input.showInfo % 2 == 1", ns = ns,
               tags$div(
                 " - It should be a table of ", tags$strong("two columns"), " each row specify two nodes that are connected", tags$br(),
                 " - If connections are quantified a ", tags$strong("third column (numerical)"), " can be associated", tags$br(),
@@ -187,7 +194,6 @@ mod_tab_upload_ui <- function(id) {
 mod_tab_upload_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
     ## will be used in other modules inside conditionnal panels that should only be shown when the sbm has been run
     # reset when loading a new matrix
     output$sbmRan <- renderText({
@@ -322,12 +328,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     #  update buttons when upload a new sbmMatrix
     observeEvent(datasetUploaded(), {
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
-                        label = "What is the density expected upon dataset ?",
-                        choices = list(
-                          "Bernoulli" = "bernoulli",
-                          "Poisson" = "poisson",
-                          "Gaussian" = "gaussian"
-                        ),
                         selected = datasetUploaded()$law
       )
       updateRadioButtons(parent_session, "tab_show_1-whichMatrix",

@@ -17,18 +17,50 @@ mod_tab_network_ui <- function(id) {
       title = "Network Visual Settings", solidHeader = T,
       status = "info", collapsible = T, width = 6,
       fluidRow(
-        column(6,
+        column(
+          6,
           uiOutput(ns("selectNode"))
         ),
-        column(6,
+        column(
+          6,
+          tags$div(
+            style = "display:inline-block; float:left; width:100%",
+            HTML(
+              '<strong>Edges filter</strong> &nbsp;',
+              as.character(
+                actionLink(ns("helpThreshold"),
+                           label = icon("circle-question")
+                )
+              ),
+              '<span style="float:right;">',
+              as.character(
+                actionLink(ns("resetThreshold"),
+                           label = NULL,
+                           icon = icon("rotate-right")
+                )
+              ),
+              '</span>'
+              )
+            ),
+          tags$br(),
           sliderInput(ns("edge_threshold"),
-            label = "Edges filter",
+            label = NULL,
             min = 0, max = 1, value = 0.5, step = 0.005
+          ),
+          conditionalPanel(
+            condition = "input.helpThreshold%2 == 1", ns = ns,
+            tags$div(
+              tags$strong("Threshold details:"), tags$br(),
+              " - This ", tags$strong("threshold")," controls which edges appears into the network. If an edges has a connectivity ", tags$strong("lower")," than the threshold then it disapear.", tags$br(),
+              " - The default value is the highest ", tags$strong("threshold")," for which every nodes have ", tags$strong("at least one edge connected"),". This way the graph is as light as possible whithout isolating nodes",
+              tags$br(), tags$br()
+            )
           ),
           uiOutput(ns("selectEdge"))
         )
       ),
-      downloadButton(ns("downloadVis"),label = 'Download Graph')
+      downloadButton(ns("downloadVis"), label = "Download Graph"),
+      verbatimTextOutput(ns("test"))
     ),
     mod_select_nb_groups_ui(ns("select_nb_groups_3")),
     conditionalPanel(
@@ -37,7 +69,7 @@ mod_tab_network_ui <- function(id) {
       shinydashboard::box(
         title = "Network Visual", solidHeader = T,
         status = "info", width = 12,
-        column(8, visNetwork::visNetworkOutput(ns("networkPlot"),height = "700px")),
+        column(8, visNetwork::visNetworkOutput(ns("networkPlot"), height = "700px")),
         column(4, DT::dataTableOutput(ns("node_names")))
       )
     )
@@ -53,7 +85,6 @@ mod_tab_network_server <- function(id, r) {
 
 
 
-
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_3",
       r$sbm$main_sbm,
@@ -61,17 +92,18 @@ mod_tab_network_server <- function(id, r) {
     )
 
 
-    observeEvent(my_sbm(), {
+    observeEvent(c(my_sbm(), input$resetThreshold), {
       current_graph <- get_graph(my_sbm(),
         labels = r$upload$labels(),
         directed = r$upload$directed()
       )
       min <- floor(min(current_graph$edges$value))
-      max <- floor(max(current_graph$edges$value))+1
+      max <- floor(max(current_graph$edges$value)) + 1
       updateSliderInput(session, "edge_threshold",
-                        min = min,
-                        max = max,
-                        value = default_threshold(current_graph) - 0.05)
+        min = min,
+        max = max,
+        value = default_threshold(current_graph) - 0.05
+      )
     })
 
     output$arrow_start_ui <- renderUI({
@@ -160,7 +192,7 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
-    node_shapes <- eventReactive(c(r$upload$networkType(),input$shape_uni, input$shape_row, input$shape_col), {
+    node_shapes <- eventReactive(c(r$upload$networkType(), input$shape_uni, input$shape_row, input$shape_col), {
       if (r$upload$networkType() == "bipartite") {
         list(row = input$shape_row, col = input$shape_col)
       } else {
@@ -168,7 +200,7 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
-    node_colors <- eventReactive(c(r$upload$networkType(),input$color_uni, input$color_row, input$color_col), {
+    node_colors <- eventReactive(c(r$upload$networkType(), input$color_uni, input$color_row, input$color_col), {
       if (r$upload$networkType() == "bipartite") {
         list(row = input$color_row, col = input$color_col)
       } else {
@@ -179,19 +211,19 @@ mod_tab_network_server <- function(id, r) {
 
     graph_has_changed <- reactiveVal(T)
 
-    observeEvent(my_sbm(),{
+    observeEvent(my_sbm(), {
       graph_has_changed(T)
     })
 
-    observeEvent(input$unique_id,{
+    observeEvent(input$unique_id, {
       graph_has_changed(F)
     })
 
 
     output$node_names <- DT::renderDataTable({
-      if(graph_has_changed() || is.null(input$unique_id)){
+      if (graph_has_changed() || is.null(input$unique_id)) {
         keyboard <- c(
-          paste0("\u2190",", \u2191",", \u2192",", \u2193 or mouse"),
+          paste0("\u2190", ", \u2191", ", \u2192", ", \u2193 or mouse"),
           "+/- or scroller",
           "Hover nodes/edges",
           "Click on a node"
@@ -202,11 +234,9 @@ mod_tab_network_server <- function(id, r) {
           "See block proportion/edge connectivity",
           "See block composition"
         )
-        my_data_table <- data.frame(keyboard,Actions)
+        my_data_table <- data.frame(keyboard, Actions)
         graph_has_changed(T)
-
-
-      }else{
+      } else {
         get_selected <- stringr::str_split(input$unique_id, pattern = "/newline/")
         my_data_table <- as.data.frame(get_selected[[1]][-1]) %>%
           setNames(get_selected[[1]][[1]])
@@ -241,20 +271,22 @@ mod_tab_network_server <- function(id, r) {
           node_shape = node_shapes()
         )
       ) %>%
-        visNetwork::visEvents(selectNode = paste0('function(nodes) {
+        visNetwork::visEvents(
+          selectNode = paste0('function(nodes) {
                 Shiny.onInputChange("', ns("unique_id"), '", this.body.data.nodes.get(nodes.nodes[0]).text);
                 ;}'),
-                              deselectNode = paste0('function(nodes) {
+          deselectNode = paste0('function(nodes) {
                 Shiny.onInputChange("', ns("unique_id"), '", null);
-                ;}'))
+                ;}')
+        )
     })
 
     output$downloadVis <- downloadHandler(
-      filename = eventReactive(c(my_sbm()),{
-        add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
-        return(paste0("visual_Sbm",add_group,'.html'))
+      filename = eventReactive(c(my_sbm()), {
+        add_group <- paste0("_", sum(my_sbm()$nbBlocks), "_blocks")
+        return(paste0("visual_Sbm", add_group, ".html"))
       }),
-      content = function(file){
+      content = function(file) {
         visSbm(
           x = my_sbm(),
           labels = r$upload$labels(),
@@ -267,11 +299,11 @@ mod_tab_network_server <- function(id, r) {
             arrow_start = input$arrow_start,
             node_color = node_colors(),
             node_shape = node_shapes()
-          )) %>%
+          )
+        ) %>%
           visNetwork::visSave(file)
       }
     )
-
   })
 }
 
