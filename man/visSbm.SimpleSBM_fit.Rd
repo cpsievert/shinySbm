@@ -56,7 +56,7 @@ List of parameters
 #                                      model = "poisson")
 my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 
-node_names_uni <- list(sbm::fungusTreeNetwork$tree_names)
+node_names_uni <- list(FungusTreeNetwork$networks$tree_names)
 
 visSbm(my_sbm_uni,
   labels = c("Tree"),

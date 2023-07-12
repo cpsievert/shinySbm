@@ -8,10 +8,6 @@
 A list of the following entries :
 
 \describe{
- \item{node_names}{
-   \itemize{
-   }
- }
  \item{networks}{
    \itemize{
      \item{tree_names : (character) tree names}

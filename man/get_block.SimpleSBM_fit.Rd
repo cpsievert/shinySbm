@@ -36,7 +36,7 @@ A fct that return blocks attribution or probabilities dor each nodes in a Sbm fi
 #                                      model = "poisson")
 my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 
-node_names_uni <- list(sbm::fungusTreeNetwork$tree_names)
+node_names_uni <- list(FungusTreeNetwork$networks$tree_names)
 
 my_blocks_uni <- get_block(my_sbm_uni,
                          labels = c('Tree'),

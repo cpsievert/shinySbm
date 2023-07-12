@@ -3,7 +3,13 @@ require(sbm)
 require(magrittr)
 require(shinySbm)
 
-### --------- Renv -------------------------------------------------------------
+### --------- Saving SBM changes -----------------------------------------------
+
+sbm_version <- as.data.frame(installed.packages()) %>%
+  dplyr::filter(Package == "sbm") %>%
+  dplyr::pull(Version)
+
+do_new_compilation != readRDS("build_data/sbm_version.RDS")
 
 
 ### --------- Nodes Names ------------------------------------------------------
@@ -103,4 +109,8 @@ FungusTreeNetwork <- list(
   )
 )
 
-save(FungusTreeNetwork,file = "data/FungusTreeNetwork.rda")
+if(do_new_compilation){
+  saveRDS(sbm_version,file = "build_data/sbm_version.RDS")
+  save(FungusTreeNetwork,file = "data/FungusTreeNetwork.rda")
+}
+
