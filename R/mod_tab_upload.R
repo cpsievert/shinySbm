@@ -224,6 +224,15 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+
+    directed <- eventReactive(c(input$orientation,datasetUploaded()),{
+      if(input$dataType == 'list'){
+        input$orientation
+      }else{
+        !isSymmetric(as.matrix(datasetUploaded()))
+      }
+    })
+
     # reactive decimal pointer for reading
     dec <- reactive({
       if (input$whichDec == "others") {
@@ -459,9 +468,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       dataType = reactive({
         input$dataType
       }),
-      directed = reactive({
-        as.logical(input$orientation)
-      }),
+      directed = directed,
       labels = labels,
       Dataset = datasetUploaded,
       networkType = reactive({
