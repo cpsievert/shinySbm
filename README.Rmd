@@ -58,7 +58,8 @@ I you want to use ShinySBM without having to code a single line, the app is acce
 You can install the development version of shinySbm like so:
 
 ``` r
-remotes::install_github("Jo-Theo/shinySbm")
+remotes::install_gitlab("theodore.vanrenterghem/shinysbm",
+                        host = "forgemia.inra.fr")
 ```
 
 The shinySbm package should be installed. 

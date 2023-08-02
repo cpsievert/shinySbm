@@ -51,7 +51,8 @@ is accesible on [Migale](https://shiny.migale.inrae.fr/app/ShinySBM).
 
 You can install the development version of shinySbm like so:
 
-    remotes::install_github("Jo-Theo/shinySbm")
+    remotes::install_gitlab("theodore.vanrenterghem/shinysbm",
+                            host = "forgemia.inra.fr")
 
 The shinySbm package should be installed.
 
