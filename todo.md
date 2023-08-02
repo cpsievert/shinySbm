@@ -3,29 +3,17 @@
 [test CRAN](https://cran.r-project.org/web/packages/submission_checklist.html)
 
 
-### Ouverture déploiment
-
-- IC + finir deploiment
 
 ### Developpement essentiels
 
 1 - Résumé complet de modélisation 
 - Compléter les téléchargement
 - Permettre de récupérer le code du sbm (shinymeta::outputCodeButton associée à shinymeta::metaRender2)
-- Ajouter des références (important)
-- information sur les modèles
 
 
 ### Dev visualisation
 
-- Visualisation : Tableau & Réseau + Extraction de groupe
-- visu graph sans sbm
-- est-ce possible de zoomer sur certains graphiques ?
-
-### Données en entrée
-
-- Permettre la simulation d'un jeu de données d'entrées ?
-- Dataseq voir comment traiter avec sbm
+- Visualisation : Tableau
 
 ### Typos ou mise en forme/harmonisation
 - Attention parfois des majuscules pour les noms commusn, parfois que ds minuscules
