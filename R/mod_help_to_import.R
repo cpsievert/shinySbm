@@ -124,7 +124,9 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
     })
 
     output$messageDataImport <- renderPrint({
-      print_messages(messages = warn_list$messages)
+      if(is.null(input_upload) || input_upload$whichData == "importData"){
+        print_messages(messages = warn_list$messages)
+      }
     })
     output$warningDataImport <- renderPrint({
       print_messages(warnings = warn_list$warnings)

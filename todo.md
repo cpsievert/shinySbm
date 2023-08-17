@@ -4,13 +4,9 @@
 
 ### Developpement essentiels
 
-- Compléter les téléchargement
-- Permettre de récupérer le code du sbm (shinymeta::outputCodeButton associée à shinymeta::metaRender2)
+- Permettre de récupérer le code du sbm (avec aussi un fichier r complet)
+- Tableau organisé comme matrice 
 
-
-### Dev visualisation
-
-- Visualisation : Tableau
 
 ### Typos ou mise en forme/harmonisation
 

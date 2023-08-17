@@ -174,7 +174,6 @@ mod_tab_upload_ui <- function(id) {
           shinydashboard::box(
             title = "Importation Guide", solidHeader = T,
             status = "info", width = 12,
-            # strong("Help:"),
             mod_help_to_import_ui(ns("help_to_import_1")),
             strong("Importation code:"),
             verbatimTextOutput(ns("uploadCode"))
