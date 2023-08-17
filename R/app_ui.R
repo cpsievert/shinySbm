@@ -29,7 +29,7 @@ built_theme <- fresh::create_theme(
 #' @noRd
 app_ui <- function(request) {
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css",href = "style.css")
+    tags$link(rel = "stylesheet", type = "text/css",href = "www/style.css")
   )
   tagList(
     # Do not move this line

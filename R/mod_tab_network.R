@@ -26,22 +26,22 @@ mod_tab_network_ui <- function(id) {
           tags$div(
             style = "display:inline-block; float:left; width:100%",
             HTML(
-              '<strong>Edges filter</strong> &nbsp;',
+              "<strong>Edges filter</strong> &nbsp;",
               as.character(
                 actionLink(ns("helpThreshold"),
-                           label = icon("circle-question")
+                  label = icon("circle-question")
                 )
               ),
               '<span style="float:right;">',
               as.character(
                 actionLink(ns("resetThreshold"),
-                           label = NULL,
-                           icon = icon("rotate-right")
+                  label = NULL,
+                  icon = icon("rotate-right")
                 )
               ),
-              '</span>'
-              )
-            ),
+              "</span>"
+            )
+          ),
           tags$br(),
           sliderInput(ns("edge_threshold"),
             label = NULL,
@@ -51,8 +51,8 @@ mod_tab_network_ui <- function(id) {
             condition = "input.helpThreshold%2 == 1", ns = ns,
             tags$div(
               tags$strong("Threshold details:"), tags$br(),
-              " - This ", tags$strong("threshold")," controls which edges appears into the network. If an edges has a connectivity ", tags$strong("lower")," than the threshold then it disapear.", tags$br(),
-              " - The default value is the highest ", tags$strong("threshold")," for which every nodes have ", tags$strong("at least one edge connected"),". This way the graph is as light as possible whithout isolating nodes",
+              " - This ", tags$strong("threshold"), " controls which edges appears into the network. If an edges has a connectivity ", tags$strong("lower"), " than the threshold then it disapear.", tags$br(),
+              " - The default value is the highest ", tags$strong("threshold"), " for which every nodes have ", tags$strong("at least one edge connected"), ". This way the graph is as light as possible whithout isolating nodes",
               tags$br(), tags$br()
             )
           ),
@@ -105,21 +105,16 @@ mod_tab_network_server <- function(id, r) {
 
     output$arrow_start_ui <- renderUI({
       if (input$arrows) {
+        if(is.bipartite(my_sbm())){
+          choices <- list("row","col")
+          names(choices) <- r$upload$labels()[unlist(choices)]
+        }else{
+          choices <- list("Rows" = "row", "Columns" = "col")
+        }
         radioButtons(ns("arrow_start"),
           label = "Arrow start from", inline = T,
-          choices = list("Rows" = "row", "Column" = "col"),
+          choices = choices,
           selected = "row"
-        )
-      }
-    })
-
-    observeEvent(c(r$upload$networkType(), r$upload$labels()), {
-      if (r$upload$networkType() == "bipartite") {
-        updateRadioButtons(session, "arrow_start", choices = list("row", "col") %>%
-          setNames(unlist(r$upload$labels())))
-      } else {
-        updateRadioButtons(session, "arrow_start",
-          choices = list("Rows" = "row", "Column" = "col")
         )
       }
     })
@@ -189,11 +184,11 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
-    arrow_start <- eventReactive(c(input$arrows, input$arrow_start),{
-      if(input$arrows){
+    arrow_start <- eventReactive(c(input$arrows, input$arrow_start), {
+      if (input$arrows) {
         input$arrow_start
-      }else{
-        'row'
+      } else {
+        "row"
       }
     })
 

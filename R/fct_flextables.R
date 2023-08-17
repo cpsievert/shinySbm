@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' options(digits = 5)
-#' vec <- c(0.5698,0.125,0.0556,0.0365,0.1778,0.0353)
+#' vec <- c(0.5698, 0.125, 0.0556, 0.0365, 0.1778, 0.0353)
 #' vec
 #' sum(vec)
 #'
@@ -19,7 +19,7 @@
 #'
 #' @noRd
 round_proportion <- function(x, digits = 2) {
-  if(length(x) == 1){
+  if (length(x) == 1) {
     return(1)
   }
   prop_vec <- round(x, digits)
@@ -82,41 +82,44 @@ flexBlockProp <- function(sbm, labels,
 #' @noRd
 flexConnect <- function(sbm, labels,
                         settings = list()) {
-    . <- NULL
-    ## Default settings
-    currentSettings <- list(
-      caption = "Table 2: Connectivity betweens blocks",
-      digits = 2
-    )
-    currentSettings[names(settings)] <- settings
+  . <- NULL
+  ## Default settings
+  currentSettings <- list(
+    caption = "Table 2: Connectivity betweens blocks",
+    digits = 2
+  )
+  currentSettings[names(settings)] <- settings
 
 
   ## Data
   data_connect <- as.data.frame(sbm$connectParam$mean) %>%
-    dplyr::mutate_all(~round(.x, digits = currentSettings$digits)) %>%
+    dplyr::mutate_all(~ round(.x, digits = currentSettings$digits)) %>%
     setNames(1:length(.)) %>%
     dplyr::mutate(rowlabel = labels[["row"]], rowNb = 1:nrow(.), .before = 1)
 
   ## Build flex
   ft <- flextable::flextable(data_connect) %>%
     flextable::merge_v(1)
-  if(nrow(data_connect) != 1){
-    ft <- flextable::rotate(ft,j = 1, rotation = "btlr", align = "center")
+  if (nrow(data_connect) != 1) {
+    ft <- flextable::rotate(ft, j = 1, rotation = "btlr", align = "center")
   }
 
   ## Add variance parmeter
   if (sbm$modelName == "gaussian") {
-    if(length(data_connect) == 3){
-      colwidths <-  rep(1,3)
-    }else{
+    if (length(data_connect) == 3) {
+      colwidths <- rep(1, 3)
+    } else {
       colwidths <- c(2, 1, length(data_connect) - 3)
     }
     ft <- flextable::add_footer_row(ft,
-                                    values = c("Variance",
-                                               round(sbm$connectParam$var[[1]],
-                                                     digits = currentSettings$digits),
-                                               ""),
-                                    colwidths = colwidths
+      values = c(
+        "Variance",
+        round(sbm$connectParam$var[[1]],
+          digits = currentSettings$digits
+        ),
+        ""
+      ),
+      colwidths = colwidths
     ) %>%
       flextable::bold(j = 1, part = "footer")
   }
@@ -131,8 +134,8 @@ flexConnect <- function(sbm, labels,
     ) %>%
     flextable::align(i = 1, j = NULL, align = "center", part = "header") %>%
     flextable::align(j = 1, align = "right", part = "footer") %>%
-    flextable::border(i = 1,j=1:2,border = flextable::fp_border_default(width = 0),part = 'header') %>%
-    flextable::border(i = 2,j=1:2,border.top = flextable::fp_border_default(width = 0),part = 'header') %>%
+    flextable::border(i = 1, j = 1:2, border = flextable::fp_border_default(width = 0), part = "header") %>%
+    flextable::border(i = 2, j = 1:2, border.top = flextable::fp_border_default(width = 0), part = "header") %>%
     flextable::set_caption(caption = currentSettings$caption) %>%
     flextable::autofit()
 
@@ -149,14 +152,14 @@ flexConnect <- function(sbm, labels,
 flexStoredModels <- function(sbm, labels,
                              settings = list()) {
   indexModel <- nbParams <- NULL
-    ## Default settings
-    currentSettings <- list(
-      caption = "Table 3: All explored models",
-      digits = 2,
-      selected_col = "orange",
-      best_col = "red"
-    )
-    currentSettings[names(settings)] <- settings
+  ## Default settings
+  currentSettings <- list(
+    caption = "Table 3: All explored models",
+    digits = 2,
+    selected_col = "lightblue",
+    best_col = "red"
+  )
+  currentSettings[names(settings)] <- settings
 
   ## Data
   data_strored <- as.data.frame(round(sbm$storedModels, digits = currentSettings$digits)) %>%
@@ -206,7 +209,7 @@ flexStoredModels <- function(sbm, labels,
 #' @param labels labels for nodes.
 #' If it's simple sbm it should be a single character ("default" -> c("nodes")).
 #' If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
-#' @param type the type of table you want.
+#' @param type the type of table wanted.
 #'
 #' @details Values of \code{type}
 #' \itemize{
@@ -221,7 +224,7 @@ flexStoredModels <- function(sbm, labels,
 #'
 #' \itemize{
 #'  \item{"caption": }{Caption is the flextable title (character)}
-#'  \item{"digits": }{nb of digits you want to be shown in the table}
+#'  \item{"digits": }{nb of digits wanted to be shown in the table}
 #'  \item{"selected_col": }{Color highlighting the selected model}
 #'  \item{"best_col": }{Color of text for the best model}
 #' }
@@ -234,49 +237,55 @@ flexStoredModels <- function(sbm, labels,
 #' #                                     model = 'bernoulli')
 #' my_sbm <- FungusTreeNetwork$sbmResults$fungus_tree
 #'
-#' get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
-#'  type = 'blockProp')
+#' get_flextable(my_sbm,
+#'   labels = c(row = "Fungus", col = "Trees"),
+#'   type = "blockProp"
+#' )
 #'
-#' get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
-#'  type = 'connectParam', settings = list(digits = 5))
+#' get_flextable(my_sbm,
+#'   labels = c(row = "Fungus", col = "Trees"),
+#'   type = "connectParam", settings = list(digits = 5)
+#' )
 #'
-#' get_flextable(my_sbm, labels = 'default',
-#' type = 'storedModels', settings = list(caption = "New Title"))
+#' get_flextable(my_sbm,
+#'   labels = "default",
+#'   type = "storedModels", settings = list(caption = "New Title")
+#' )
 #'
 #' @export
 #'
 get_flextable <- function(sbm,
                           labels = "default",
-                          type = c('blockProp','connectParam','storedModels'),
+                          type = c("blockProp", "connectParam", "storedModels"),
                           settings = list()) {
-
-
   ### Defaults parameters
-  if(identical(labels,"default")){
-    if(is.bipartite(sbm)){
-      currents_labels <- c(row = 'row', col = 'col')
-    }else{
-      currents_labels <- c('nodes')
+  if (identical(labels, "default")) {
+    if (is.bipartite(sbm)) {
+      currents_labels <- c(row = "row", col = "col")
+    } else {
+      currents_labels <- c("nodes")
     }
-  }else{
+  } else {
     currents_labels <- labels
   }
 
-  if(type[[1]] == 'blockProp'){
+  if (type[[1]] == "blockProp") {
     ft <- flexBlockProp(sbm,
-                  currents_labels,
-                  settings = settings)
-  }else if(type[[1]] == 'connectParam'){
+      currents_labels,
+      settings = settings
+    )
+  } else if (type[[1]] == "connectParam") {
     ft <- flexConnect(sbm,
-                currents_labels,
-                settings = settings)
-  }else if(type[[1]] == 'storedModels'){
+      currents_labels,
+      settings = settings
+    )
+  } else if (type[[1]] == "storedModels") {
     ft <- flexStoredModels(sbm,
-                     currents_labels,
-                     settings = settings)
-  }else{
+      currents_labels,
+      settings = settings
+    )
+  } else {
     stop("type should be 'blockProp','connectParam' or 'storedModels'")
   }
   return(ft)
 }
-

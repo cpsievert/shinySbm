@@ -23,12 +23,12 @@ A fct that build an adjacency matrix from a list of edges
 # For unipartite network
 data_uni <- FungusTreeNetwork$networks$tree_tree
 
-# If your network is symmetric :
+# If the network is symmetric:
 my_mat <- get_adjacency(data_uni$edges,
   type = data_uni$type,
   directed = FALSE
 )
-# If your network is directed :
+# If the network is directed:
 my_mat <- get_adjacency(data_uni$edges,
   type = data_uni$type,
   directed = TRUE
@@ -39,10 +39,9 @@ data_bi <- FungusTreeNetwork$networks$fungus_tree
 
 my_mat <- get_adjacency(data_bi$edges, type = data_bi$type)
 
-# In any case you can also use 2 columns data.frames if your network is binary.
-binary_net <- FungusTreeNetwork$fungus_tree$edges[,-3]
+# In any case with a 2 columns data.frames the network is considered binary and each line is a 1.
+binary_net <- FungusTreeNetwork$fungus_tree$edges[, -3]
 
 my_mat <- get_adjacency(binary_net, type = data_bi$type)
-
 
 }

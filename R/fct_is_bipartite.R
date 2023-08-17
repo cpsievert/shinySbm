@@ -1,6 +1,6 @@
 #' is.bipartite
 #'
-#' @description it's a function that says if your object (graph, sbm like or pre-sbm) is a bipartite one
+#' @description it's a function that says if object (graph, sbm like or pre-sbm) is a bipartite one
 #'
 #' @param object is a list or a result of {sbm} estimation that has to be checked whether or not is is bipartite
 #'
@@ -13,7 +13,7 @@
 #' my_net2 <- list(pop = 8, networktype = "unipartite")
 #' is.bipartite(my_net2)
 #'
-#' my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree,model = 'bernoulli')
+#' my_sbm <- sbm::estimateBipartiteSBM(sbm::fungusTreeNetwork$fungus_tree, model = "bernoulli")
 #' is.bipartite(my_sbm)
 #'
 #' @noRd
@@ -25,7 +25,7 @@ is.bipartite <- function(object) {
 
 #' is.bipartite.default
 #'
-#' @description it's a function that says if your object (graph, sbm like or pre-sbm) is a bipartite one
+#' @description it's a function that says if object (graph, sbm like or pre-sbm) is a bipartite one
 #'
 #' @param object is a list that has to be checked whether or not is is bipartite
 #'
@@ -44,8 +44,8 @@ is.bipartite <- function(object) {
 #' @noRd
 #'
 is.bipartite.default <- function(object) {
-  if(is.list(object)){
-    return(any(purrr::map_lgl(object,~identical(.x,"bipartite"))))
+  if (is.list(object)) {
+    return(any(purrr::map_lgl(object, ~ identical(.x, "bipartite"))))
   }
   warning("object should be of class: 'list', 'SBM'")
   return(FALSE)
@@ -54,7 +54,7 @@ is.bipartite.default <- function(object) {
 
 #' is.bipartite.SBM
 #'
-#' @description it's a function that says if your sbm is bipartite or not
+#' @description it's a function that says if object is bipartite or not
 #'
 #' @param object an sbm model from {sbm} package that has to be checked whether or not is is bipartite
 #'
@@ -70,11 +70,10 @@ is.bipartite.default <- function(object) {
 #'
 #' @noRd
 #'
-is.bipartite.SBM <- function(object){
-  if("BipartiteSBM" %in% class(object)){
+is.bipartite.SBM <- function(object) {
+  if ("BipartiteSBM" %in% class(object)) {
     return(TRUE)
-  }else{
+  } else {
     return(FALSE)
   }
 }
-

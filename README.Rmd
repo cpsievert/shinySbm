@@ -5,12 +5,16 @@ output: github_document
 
 <!-- Compiling paragraph: start -->
 ```{r, eval=FALSE, include = FALSE, echo = F}
-rmarkdown::render(input = "README.Rmd",
-                 output_format = rmarkdown::html_document(),
-                 quiet = TRUE,output_dir = "inst/app/www/")
-rmarkdown::render(input = "README.Rmd",
-                 output_format = rmarkdown::md_document(),
-                 quiet = TRUE)
+rmarkdown::render(
+  input = "README.Rmd",
+  output_format = rmarkdown::html_document(),
+  quiet = TRUE, output_dir = "inst/app/www/"
+)
+rmarkdown::render(
+  input = "README.Rmd",
+  output_format = rmarkdown::md_document(),
+  quiet = TRUE
+)
 ```
 
 
@@ -37,7 +41,7 @@ Stochastic block models (SBMs) are probabilistic models in statistical analysis 
 
 Stochastic Block Models are applied on network to simplify the information they gather, and help visualize the main behaviours/categories/relationships present in your network. It's a latent model which identify significant blocks (groups) of nodes with similar connectivity patterns. This could help you to know if your network: hides closed sub-communities, is hierarchical, or has another specific structure. 
 
-With `shinySbm` you should also be able to : 
+With `shinySbm` you should also be able to: 
 
  - Easily run a Stochastic Block Model (set your model, infer associated parameters and choose the number of blocks)
  - Get some nice outputs as matrix and network plots organised by blocks
@@ -45,7 +49,7 @@ With `shinySbm` you should also be able to :
  - Extract lists of nodes associated with their blocks
 
 
-## How to use the Application
+## How to use the application
 
 ### On Shiny Migale
 
@@ -64,26 +68,26 @@ remotes::install_gitlab("theodore.vanrenterghem/shinysbm",
 
 The shinySbm package should be installed. 
 
-#### Running The Application
+#### Running the application
 
-From a new `R` session you can then run
+From a new `R` session run
 
 ``` r
-shinySbm::run_app()
+shinySbm::shinySbmApp()
 ```
 
 ### With `docker`
 
 #### Installation
 
-If you are familiar to `docker`, you can also download the docker image by running the command :
+If you are familiar to `docker`, you can also download the docker image by running the command:
 
 ``` bash
 docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 ```
-#### Running The Application
+#### Running the application
 
-Once installed you can run the command to launch the app :
+Once installed you can run the command to launch the app:
 
 ``` bash
 docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
@@ -94,7 +98,7 @@ And then from your browser find the address `http://localhost:3838/`
 ## Contact
 
 Any questions, problems or comments regarding this application ?        
-Contact us : [shiny.sbm.dev@gmail.com](mailto:shiny.sbm.dev@gmail.com)
+Contact us: [shiny.sbm.dev@gmail.com](mailto:shiny.sbm.dev@gmail.com)
 
 ## References
 

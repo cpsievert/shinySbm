@@ -13,22 +13,23 @@
 )
 }
 \arguments{
-\item{x}{: Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
+\item{x}{Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
 
-\item{labels}{: labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
+\item{labels}{labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")).
+If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
-\item{node_names}{: if NULL do nothing specific, but list of nodes are given
-the graph get interactive and you can see by clicking on a node what are the
-individuals selected. In bipartite case a named list :
+\item{node_names}{if NULL do nothing specific, but list of nodes are given
+the graph get interactive and nodes names are showed by clicking on a block.
+In bipartite case a named list:
 \itemize{
- \item{"row": }{character : node names in rows}
- \item{"col": }{character : node names in columns}
+ \item{"row": }{character: node names in rows}
+ \item{"col": }{character: node names in columns}
  }
  In unipartite case a single character vector containing the nodes names (Default = NULL).}
 
-\item{directed}{: Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.}
+\item{directed}{Boolean indicating whether or not the network is directed by default, a asymmetrical matrix will be seen as directed.}
 
-\item{settings}{: list of settings}
+\item{settings}{list of settings}
 }
 \value{
 a visNetwork visual of the x object
@@ -41,12 +42,12 @@ List of parameters
 \itemize{
  \item{"edge_threshold": }{"default" erases as many small edges as it can without isolating any nodes (no connection).
  It can also be a numeric value between 0 and 1, relative (between min and max) filter for small edges value}
- \item{"edge_color": }{character : color of edges (default: "lightblue")}
- \item{"arrows": }{boolean : should edges be arrows}
- \item{"arrow_thickness": }{numeric : arrows size}
- \item{"arrow_start": }{character : "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
- \item{"node_color": }{named character : Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
- \item{"node_shape": }{named character : Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
- \item{"digits": }{integer : number of digits to show when numbers are shown (default: 2)}
+ \item{"edge_color": }{character: color of edges (default: "lightblue")}
+ \item{"arrows": }{boolean: should edges be arrows}
+ \item{"arrow_thickness": }{numeric: arrows size}
+ \item{"arrow_start": }{character: "row" or "col" or labels value according to row or columns. The arrow will start from selected to the the other value}
+ \item{"node_color": }{named character: Bipartite case c(row = "row_color", col = "col_color"). Unipartite case c("node_color")}
+ \item{"node_shape": }{named character: Bipartite case c(row = "row_shape", col = "col_shape"). Unipartite case c("node_shape"). Value from visNetwork shape argument of visEdges function ("triangle","dot","square",etc...)}
+ \item{"digits": }{integer: number of digits to show when numbers are shown (default: 2)}
 }
 }

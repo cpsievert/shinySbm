@@ -9,25 +9,25 @@
 #' @usage FungusTreeNetwork
 #'
 #' @format
-#' A list of the following entries :
+#' A list of the following entries:
 #'
 #' \describe{
 #'  \item{networks}{
 #'    \itemize{
-#'      \item{tree_names : (character) tree names}
-#'      \item{fungus_names : (character) fungus names}
+#'      \item{tree_names: (character) tree names}
+#'      \item{fungus_names: (character) fungus names}
 #'      \item{tree_tree}{
 #'        \enumerate{
-#'          \item{nodes : data.frame describing nodes of tree_tree network}
-#'          \item{edges : data.frame describing edges of tree_tree network}
-#'          \item{type : this network is "unipartite"}
+#'          \item{nodes: data.frame describing nodes of tree_tree network}
+#'          \item{edges: data.frame describing edges of tree_tree network}
+#'          \item{type: this network is "unipartite"}
 #'        }
 #'      }
 #'      \item{fungus_tree}{
 #'        \enumerate{
-#'          \item{nodes : data.frame describing nodes of fungus_tree network}
-#'          \item{edges : data.frame describing edges of fungus_tree network}
-#'          \item{type : this network is "bipartite"}
+#'          \item{nodes: data.frame describing nodes of fungus_tree network}
+#'          \item{edges: data.frame describing edges of fungus_tree network}
+#'          \item{type: this network is "bipartite"}
 #'        }
 #'      }
 #'    }

@@ -13,12 +13,12 @@
 #' # For unipartite network
 #' data_uni <- FungusTreeNetwork$networks$tree_tree
 #'
-#' # If your network is symmetric :
+#' # If the network is symmetric:
 #' my_mat <- get_adjacency(data_uni$edges,
 #'   type = data_uni$type,
 #'   directed = FALSE
 #' )
-#' # If your network is directed :
+#' # If the network is directed:
 #' my_mat <- get_adjacency(data_uni$edges,
 #'   type = data_uni$type,
 #'   directed = TRUE
@@ -29,15 +29,14 @@
 #'
 #' my_mat <- get_adjacency(data_bi$edges, type = data_bi$type)
 #'
-#' # In any case you can also use 2 columns data.frames if your network is binary.
-#' binary_net <- FungusTreeNetwork$fungus_tree$edges[,-3]
+#' # In any case with a 2 columns data.frames the network is considered binary and each line is a 1.
+#' binary_net <- FungusTreeNetwork$fungus_tree$edges[, -3]
 #'
 #' my_mat <- get_adjacency(binary_net, type = data_bi$type)
 #'
-#'
 #' @export
-get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE){
-  UseMethod("get_adjacency",edges)
+get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE) {
+  UseMethod("get_adjacency", edges)
 }
 
 
@@ -56,12 +55,12 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #' # For unipartite network
 #' data_uni <- FungusTreeNetwork$networks$tree_tree
 #'
-#' # If your network is symmetric :
+#' # If the network is symmetric:
 #' my_mat <- get_adjacency(data_uni$edges,
 #'   type = data_uni$type,
 #'   directed = FALSE
 #' )
-#' # If your network is directed :
+#' # If the network is directed:
 #' my_mat <- get_adjacency(data_uni$edges,
 #'   type = data_uni$type,
 #'   directed = TRUE
@@ -72,15 +71,14 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #'
 #' my_mat <- get_adjacency(data_bi$edges, type = data_bi$type)
 #'
-#' # In any case you can also use 2 columns data.frames if your network is binary.
-#' binary_net <- FungusTreeNetwork$fungus_tree$edges[,-3]
+#' # In any case with a 2 columns data.frames the network is considered binary and each line is a 1.
+#' binary_net <- FungusTreeNetwork$fungus_tree$edges[, -3]
 #'
 #' my_mat <- get_adjacency(binary_net, type = data_bi$type)
 #'
-#'
 #' @export
-get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE){
-  return(edges_to_adjacency(edges,type,directed))
+get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE) {
+  return(edges_to_adjacency(edges, type, directed))
 }
 
 
@@ -156,18 +154,18 @@ edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), direc
   colnames(mat) <- name_col
   # Changing from and to colums with positions into the matrix
   edges <- as.matrix(dplyr::mutate(edges,
-                                   from = match(from, name_row),
-                                   to = match(to, name_col)
+    from = match(from, name_row),
+    to = match(to, name_col)
   ))
   # Set values in right positions
   mat[edges[, 1:2]] <- ifelse(rep(dim(edges)[2] == 2, dim(edges)[1]),
-                                1, edges[, 3]
+    1, edges[, 3]
   )
   # Specific case of unipartite network with symmetrical connections,
   # just doing the same but reversing to and from columns
   if (type[1] == "unipartite" & !directed) {
     mat[edges[, 2:1]] <- ifelse(rep(dim(edges)[2] == 2, dim(edges)[1]),
-                                  1, edges[, 3]
+      1, edges[, 3]
     )
   }
   return(as.data.frame(mat))

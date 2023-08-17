@@ -13,15 +13,15 @@
 )
 }
 \arguments{
-\item{x}{: Sbm model of class `BipartiteSBM_fit`.}
+\item{x}{Sbm model of class `BipartiteSBM_fit`.}
 
-\item{labels}{: labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
+\item{labels}{labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
-\item{node_names}{: named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns}
+\item{node_names}{named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns}
 
-\item{attribution}{: Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
+\item{attribution}{Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
 
-\item{proportion}{: Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
+\item{proportion}{Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
 }
 \value{
 A list containing two data.frames with block attributions and/or proportions one for the row blocks and one for the column blocks
@@ -41,8 +41,9 @@ node_names_bi <- list(
 )
 
 my_blocks_bi <- get_block(my_sbm_bi,
-                         labels = c(row = 'Fungus', col = 'Tree'),
-                         node_names = node_names_bi)
+  labels = c(row = "Fungus", col = "Tree"),
+  node_names = node_names_bi
+)
 my_blocks_bi$row
 my_blocks_bi$col
 

@@ -1,25 +1,25 @@
 #' plotSbm
 #'
 #' @description A fct that plot a beautiful matrix from an sbm object or a network matrix it does
-#' have suitable parameters to get the plots you want this is the generic function,
+#' have suitable parameters to get the wanted plots. This is the generic function:
 #' it does have one method Bipartite and one for Simple Sbm. The `x` object need
 #' to be construct by one of the `estimate***SBM` function from the `sbm` package.
 #'
-#' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
-#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
-#' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
-#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
-#' @param plotOptions : a list providing options. See details below.
+#' @param x Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.
+#' @param ordered Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose Boolean. Set \code{TRUE} to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
+#' @param labels a named list (names should be: `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions a list providing options. See details below.
 #'
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
-#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
-#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"showValues": }{Boolean. Set TRUE to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE to see the predicted values. Default value is TRUE}
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
-#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
+#'  \item{"interactionName": }{Name of connection in legend default: "Connection"}
 #' }
 #'
 #'
@@ -69,11 +69,11 @@ plotSbm <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
 #'
 #' @description plotSbm method for unknown object
 #'
-#' @param x  : any object
-#' @param ordered : isn't used in default method
-#' @param transpose : isn't used in default method
-#' @param labels : isn't used in default method
-#' @param plotOptions : isn't used in default method
+#' @param x any object
+#' @param ordered isn't used in default method
+#' @param transpose isn't used in default method
+#' @param labels isn't used in default method
+#' @param plotOptions isn't used in default method
 #'
 #' @return default plot for x
 #'
@@ -87,21 +87,21 @@ plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE,
 #'
 #' @description plotSbm method for BipartiteSBM_fit object
 #'
-#' @param x  : an Sbm model of class `"BipartiteSBM_fit"`
-#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
-#' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
-#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
-#' @param plotOptions : a list providing options. See details below.
+#' @param x an Sbm model of class `"BipartiteSBM_fit"`
+#' @param ordered Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose Boolean. Set \code{TRUE} to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
+#' @param labels named list (names should be: `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions list providing options. See details below.
 #'
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
-#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
-#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"showValues": }{Boolean. Set TRUE to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE to see the predicted values. Default value is TRUE}
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
-#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
+#'  \item{"interactionName": }{Name of connection in legend default: "Connection"}
 #' }
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.
@@ -259,21 +259,21 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
 #'
 #' @description plotSbm method for SimpleSBM_fit object
 #'
-#' @param x  : an Sbm model of class `"SimpleSBM_fit"`
-#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
-#' @param transpose : isn't used in this method
-#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
-#' @param plotOptions : a list providing options. See details below.
+#' @param x Sbm model of class `"SimpleSBM_fit"`
+#' @param ordered Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose isn't used in this method
+#' @param labels named list (names should be: `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions list providing options. See details below.
 #'
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
-#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
-#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"showValues": }{Boolean. Set TRUE to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE to see the predicted values. Default value is TRUE}
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
-#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
+#'  \item{"interactionName": }{Name of connection in legend default: "Connection"}
 #' }
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.
@@ -418,21 +418,21 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE,
 #'
 #' @description plotSbm method for matrix object
 #'
-#' @param x  : a numeric matrix
-#' @param ordered : Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
-#' @param transpose : Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
-#' @param labels : a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
-#' @param plotOptions : a list providing options. See details below.
+#' @param x numeric matrix
+#' @param ordered Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})
+#' @param transpose Boolean. Set \code{TRUE} to invert columns and rows to flatten a long matrix (Default is \code{FALSE})
+#' @param labels named list (names should be: `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})
+#' @param plotOptions list providing options. See details below.
 #'
 #' @details The list of parameters \code{plotOptions} for the matrix plot is
 #' \itemize{
-#'  \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
-#'  \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+#'  \item{"showValues": }{Boolean. Set TRUE to see the real values. Default value is TRUE}
+#'  \item{"showPredictions": }{Boolean. Set TRUE to see the predicted values. Default value is TRUE}
 #'  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
 #'  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
 #'  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
 #'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
-#'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
+#'  \item{"interactionName": }{Name of connection in legend default: "Connection"}
 #' }
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.

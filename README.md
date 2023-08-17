@@ -29,7 +29,7 @@ similar connectivity patterns. This could help you to know if your
 network: hides closed sub-communities, is hierarchical, or has another
 specific structure.
 
-With `shinySbm` you should also be able to :
+With `shinySbm` you should also be able to:
 
 -   Easily run a Stochastic Block Model (set your model, infer
     associated parameters and choose the number of blocks)
@@ -38,7 +38,7 @@ With `shinySbm` you should also be able to :
 -   Get a summary of the modelling
 -   Extract lists of nodes associated with their blocks
 
-## How to use the Application
+## How to use the application
 
 ### On Shiny Migale
 
@@ -56,24 +56,24 @@ You can install the development version of shinySbm like so:
 
 The shinySbm package should be installed.
 
-#### Running The Application
+#### Running the application
 
-From a new `R` session you can then run
+From a new `R` session run
 
-    shinySbm::run_app()
+    shinySbm::shinySbmApp()
 
 ### With `docker`
 
 #### Installation
 
 If you are familiar to `docker`, you can also download the docker image
-by running the command :
+by running the command:
 
     docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 
-#### Running The Application
+#### Running the application
 
-Once installed you can run the command to launch the app :
+Once installed you can run the command to launch the app:
 
     docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
 
@@ -82,7 +82,7 @@ And then from your browser find the address `http://localhost:3838/`
 ## Contact
 
 Any questions, problems or comments regarding this application ?  
-Contact us : <shiny.sbm.dev@gmail.com>
+Contact us: <shiny.sbm.dev@gmail.com>
 
 ## References
 

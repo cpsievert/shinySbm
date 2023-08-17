@@ -25,7 +25,7 @@ mod_tab_show_ui <- function(id) {
           ),
           inline = T
         ),
-        radioButtons(ns("whichMatrix"), "Select Ploted Matrix",
+        radioButtons(ns("whichMatrix"), "Select plotted matrix",
           choices = list("Raw Matrix" = "raw")
         ),
         conditionalPanel(
@@ -35,7 +35,7 @@ mod_tab_show_ui <- function(id) {
             column(
               width = 8,
               textInput(ns("fileName"),
-                label = "File Name",
+                label = "File name",
                 value = "Shiny_Matrix_Plot"
               )
             ),
@@ -67,16 +67,16 @@ mod_tab_show_ui <- function(id) {
         conditionalPanel(
           condition = "input.whichShow == 'plot'", ns = ns,
           textInput(ns("setTitle"),
-            label = "Title :",
+            label = "Title:",
             value = NULL
           ),
-          checkboxInput(ns("showPred"), "Show Predicted Values", value = T),
+          checkboxInput(ns("showPred"), "Show predicted values", value = T),
           checkboxInput(ns("showLegend"), "Print legend", value = T),
           conditionalPanel(
             condition = "input.showLegend", ns = ns,
             textInput(ns("interactionName"),
               label = "Name of observed interraction",
-              value = "Connection"
+              value = "connection"
             )
           ),
           conditionalPanel(
@@ -97,7 +97,7 @@ mod_tab_show_ui <- function(id) {
       ),
       colourpicker::colourInput(
         ns("colorPred"),
-        label = "Select colour for Predicted values",
+        label = "Select colour for predicted values",
         value = "red"
       )
     ),
@@ -132,7 +132,7 @@ mod_tab_show_server <- function(id, r) {
     )
 
     output$matrixPrint <- DT::renderDataTable({
-      # probleme : taille et position, wrapping des titres, fixer la colonnne de rownames
+      # probleme: taille et position, wrapping des titres, fixer la colonnne de rownames
       req(input$whichShow)
       if (input$whichShow != "print") {
         return(NULL)
@@ -159,7 +159,7 @@ mod_tab_show_server <- function(id, r) {
         x <- as.matrix(r$upload$Dataset())
         labels_list <- r$upload$labels()
         my_Options <- list(
-          title =  if (input$setTitle == "") {
+          title = if (input$setTitle == "") {
             NULL
           } else {
             input$setTitle
@@ -235,13 +235,13 @@ mod_tab_show_server <- function(id, r) {
 
 
     output$downloadPlot <- downloadHandler(
-      filename = eventReactive(c(input$whichMatrix,input$fileName,input$fileExtention),{
-        if(input$whichMatrix != 'raw'){
-          add_group <- paste0('_',sum(my_sbm()$nbBlocks),'_blocks')
-        }else{
-          add_group <- ''
+      filename = eventReactive(c(input$whichMatrix, input$fileName, input$fileExtention), {
+        if (input$whichMatrix != "raw") {
+          add_group <- paste0("_", sum(my_sbm()$nbBlocks), "_blocks")
+        } else {
+          add_group <- ""
         }
-        return(paste0(input$fileName,add_group,input$fileExtention))
+        return(paste0(input$fileName, add_group, input$fileExtention))
       }),
       content = function(file) {
         width <- session$clientData$`output_tab_show_1-matrixPlot_width`
@@ -265,18 +265,34 @@ mod_tab_show_server <- function(id, r) {
 
 
     showParameters <- list(
-      title =  reactive({if (input$setTitle == "") {
-        NULL
-      } else {
-        input$setTitle
-      }}),
-      showLegend = reactive({input$showLegend}),
-      showPredictions = reactive({input$showPred}),
-      colPred = reactive({input$colorPred}),
-      colValue = reactive({input$colorValues}),
-      interactionName = reactive({input$interactionName}),
-      whichMatrix = reactive({input$whichMatrix}),
-      showTransposed = reactive({input$showTransposed})
+      title = reactive({
+        if (input$setTitle == "") {
+          NULL
+        } else {
+          input$setTitle
+        }
+      }),
+      showLegend = reactive({
+        input$showLegend
+      }),
+      showPredictions = reactive({
+        input$showPred
+      }),
+      colPred = reactive({
+        input$colorPred
+      }),
+      colValue = reactive({
+        input$colorValues
+      }),
+      interactionName = reactive({
+        input$interactionName
+      }),
+      whichMatrix = reactive({
+        input$whichMatrix
+      }),
+      showTransposed = reactive({
+        input$showTransposed
+      })
     )
 
     return(showParameters)

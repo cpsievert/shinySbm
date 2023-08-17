@@ -139,24 +139,24 @@ get_graph.matrix <- function(x,
                              ),
                              type = "unipartite", directed = F, ...) {
   . <- NULL
-    ## Tests
-    if (dim(x)[[1]] != length(node_names[["row"]]) | dim(x)[[2]] != length(node_names[["col"]])) {
-      stop("x has different dimension than node_names")
-    }
+  ## Tests
+  if (dim(x)[[1]] != length(node_names[["row"]]) | dim(x)[[2]] != length(node_names[["col"]])) {
+    stop("x has different dimension than node_names")
+  }
   if (var(dim(x)) != 0 & type == "unipartite") {
     stop("x has different number of raws and columns, it can't be unipartite")
   }
   if (var(dim(x)) == 0 & type == "bipartite") {
-    message("x has same number of raws and columns are you sure this network is bipartite ?")
+    message("x has same number of raws and columns is this network really bipartite ?")
   }
   if ((length(node_names[["row"]]) != length(node_names[["col"]]) || any(node_names[["row"]] != node_names[["col"]])) & type == "unipartite") {
-    warnings("node_names has two differents types are you sur the network is unipartite")
+    warnings("node_names has two differents types is this network really unipartite ?")
   }
   if (isSymmetric(x) & directed) {
-    warnings("x is symmetric are you sure it is directed")
+    warnings("x is symmetric. Is this network really directed ?")
   }
   if (!isSymmetric(x) & !directed) {
-    warnings("x isn't symmetric are you sure the network isn't directed")
+    warnings("x isn't symmetric. Isn't this network directed ?")
   }
 
   if (type == "unipartite") {

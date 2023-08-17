@@ -14,7 +14,7 @@ mod_tab_extraction_ui <- function(id) {
       shinydashboard::box(
         title = "Parameters", solidHeader = T,
         status = "info", collapsible = T,
-        strong("Select the informations you want:"),
+        strong("Select wanted columns:"),
         fluidRow(
           column(
             width = 6,
@@ -27,7 +27,7 @@ mod_tab_extraction_ui <- function(id) {
         ),
         hr(),
         textInput(ns("fileName"),
-          label = "File Name",
+          label = "File name",
           value = "Block_list"
         ),
         radioButtons(ns("fileType"), "Select file type:",

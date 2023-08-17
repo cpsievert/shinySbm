@@ -13,15 +13,15 @@
 )
 }
 \arguments{
-\item{x}{: any object}
+\item{x}{any object}
 
-\item{ordered}{: isn't used in default method}
+\item{ordered}{isn't used in default method}
 
-\item{transpose}{: isn't used in default method}
+\item{transpose}{isn't used in default method}
 
-\item{labels}{: isn't used in default method}
+\item{labels}{isn't used in default method}
 
-\item{plotOptions}{: isn't used in default method}
+\item{plotOptions}{isn't used in default method}
 }
 \value{
 default plot for x

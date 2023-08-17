@@ -2,15 +2,15 @@
 #'
 #' @description A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
 #'
-#' @param x  : Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit`.
-#' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
-#' @param node_names :
+#' @param x Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit`.
+#' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names:
 #' \itemize{
 #'  \item{"bipartite case": }{named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns}
-#'  \item{"unipartite case": }{character : node names}
+#'  \item{"unipartite case": }{character: node names}
 #'  }
-#' @param attribution : Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
-#' @param proportion : Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
+#' @param attribution Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
+#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
 #'
 #'
 #' @return
@@ -30,11 +30,12 @@
 #'   col = FungusTreeNetwork$networks$tree_names
 #' )
 #'
-#'my_blocks_bi <- get_block(my_sbm_bi,
-#'                          labels = c(row = 'Fungus', col = 'Tree'),
-#'                          node_names = node_names_bi)
-#'my_blocks_bi$row
-#'my_blocks_bi$col
+#' my_blocks_bi <- get_block(my_sbm_bi,
+#'   labels = c(row = "Fungus", col = "Tree"),
+#'   node_names = node_names_bi
+#' )
+#' my_blocks_bi$row
+#' my_blocks_bi$col
 #'
 #' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
 #' #                                      model = "poisson")
@@ -42,10 +43,11 @@
 #'
 #' node_names_uni <- list(FungusTreeNetwork$networks$tree_names)
 #'
-#'my_blocks_uni <- get_block(my_sbm_uni,
-#'                          labels = c('Tree'),
-#'                          node_names = node_names_uni)
-#'my_blocks_uni
+#' my_blocks_uni <- get_block(my_sbm_uni,
+#'   labels = c("Tree"),
+#'   node_names = node_names_uni
+#' )
+#' my_blocks_uni
 #' @export
 get_block <- function(x, labels = "default", node_names = NULL,
                       attribution = TRUE, proportion = FALSE) {
@@ -56,11 +58,11 @@ get_block <- function(x, labels = "default", node_names = NULL,
 #'
 #' @description A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
 #'
-#' @param x  : Sbm model of class `SimpleSBM_fit`.
-#' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
-#' @param node_names : character : node names
-#' @param attribution : Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
-#' @param proportion : Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
+#' @param x Sbm model of class `SimpleSBM_fit`.
+#' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names character: node names
+#' @param attribution Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
+#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
 #'
 #'
 #' @return A data.frame with block attributions and/or proportions
@@ -74,10 +76,11 @@ get_block <- function(x, labels = "default", node_names = NULL,
 #'
 #' node_names_uni <- list(FungusTreeNetwork$networks$tree_names)
 #'
-#'my_blocks_uni <- get_block(my_sbm_uni,
-#'                          labels = c('Tree'),
-#'                          node_names = node_names_uni)
-#'my_blocks_uni
+#' my_blocks_uni <- get_block(my_sbm_uni,
+#'   labels = c("Tree"),
+#'   node_names = node_names_uni
+#' )
+#' my_blocks_uni
 #' @export
 get_block.SimpleSBM_fit <- function(x,
                                     labels = "default",
@@ -101,9 +104,9 @@ get_block.SimpleSBM_fit <- function(x,
   if (!(attribution | proportion)) {
     attribution <- TRUE
   }
-  if(is.null(node_names)){
-    res <- data.frame(Nodes_names = paste0(currentLabels,"_",1:nrow(x$networkData)))
-  }else if (is.sbmMatrix(node_names)) {
+  if (is.null(node_names)) {
+    res <- data.frame(Nodes_names = paste0(currentLabels, "_", 1:nrow(x$networkData)))
+  } else if (is.sbmMatrix(node_names)) {
     res <- data.frame(Nodes_names = node_names$nodes_names$col)
   } else if (is.character(node_names) | is.factor(node_names)) {
     res <- data.frame(Nodes_names = as.character(node_names))
@@ -132,11 +135,11 @@ get_block.SimpleSBM_fit <- function(x,
 #'
 #' @description A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
 #'
-#' @param x  : Sbm model of class `BipartiteSBM_fit`.
-#' @param labels : labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
-#' @param node_names : named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns
-#' @param attribution : Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
-#' @param proportion : Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
+#' @param x Sbm model of class `BipartiteSBM_fit`.
+#' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
+#' @param node_names named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns
+#' @param attribution Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
+#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
 #'
 #'
 #' @return A list containing two data.frames with block attributions and/or proportions one for the row blocks and one for the column blocks
@@ -152,18 +155,18 @@ get_block.SimpleSBM_fit <- function(x,
 #'   col = FungusTreeNetwork$networks$tree_names
 #' )
 #'
-#'my_blocks_bi <- get_block(my_sbm_bi,
-#'                          labels = c(row = 'Fungus', col = 'Tree'),
-#'                          node_names = node_names_bi)
-#'my_blocks_bi$row
-#'my_blocks_bi$col
+#' my_blocks_bi <- get_block(my_sbm_bi,
+#'   labels = c(row = "Fungus", col = "Tree"),
+#'   node_names = node_names_bi
+#' )
+#' my_blocks_bi$row
+#' my_blocks_bi$col
 #'
 #' @export
 get_block.BipartiteSBM_fit <- function(x,
                                        labels = "default",
                                        node_names = NULL,
                                        attribution = TRUE, proportion = FALSE) {
-
   # Default labels
   if (identical(labels, "default")) {
     currentLabels <- c(row = "row", col = "col")
@@ -178,12 +181,12 @@ get_block.BipartiteSBM_fit <- function(x,
     attribution <- TRUE
   }
 
-  if(is.null(node_names)){
+  if (is.null(node_names)) {
     res <- list(
-      row = data.frame(Nodes_names = paste0(currentLabels,"_",1:nrow(x$networkData))),
-      col = data.frame(Nodes_names = paste0(currentLabels,"_",1:ncol(x$networkData)))
+      row = data.frame(Nodes_names = paste0(currentLabels, "_", 1:nrow(x$networkData))),
+      col = data.frame(Nodes_names = paste0(currentLabels, "_", 1:ncol(x$networkData)))
     )
-  }else if (is.sbmMatrix(node_names)) {
+  } else if (is.sbmMatrix(node_names)) {
     res <- list(
       row = data.frame(Nodes_names = node_names$nodes_names$row),
       col = data.frame(Nodes_names = node_names$nodes_names$col)

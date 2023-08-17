@@ -13,15 +13,15 @@
 )
 }
 \arguments{
-\item{x}{: Sbm model of class `SimpleSBM_fit`.}
+\item{x}{Sbm model of class `SimpleSBM_fit`.}
 
-\item{labels}{: labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
+\item{labels}{labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
-\item{node_names}{: character : node names}
+\item{node_names}{character: node names}
 
-\item{attribution}{: Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
+\item{attribution}{Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
 
-\item{proportion}{: Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
+\item{proportion}{Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
 }
 \value{
 A data.frame with block attributions and/or proportions
@@ -39,7 +39,8 @@ my_sbm_uni <- FungusTreeNetwork$sbmResults$tree_tree
 node_names_uni <- list(FungusTreeNetwork$networks$tree_names)
 
 my_blocks_uni <- get_block(my_sbm_uni,
-                         labels = c('Tree'),
-                         node_names = node_names_uni)
+  labels = c("Tree"),
+  node_names = node_names_uni
+)
 my_blocks_uni
 }

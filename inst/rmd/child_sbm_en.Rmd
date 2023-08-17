@@ -50,7 +50,7 @@ if (R$sbm$ICL != max(R$sbm$storedModels$ICL)) {
 Following application of the sbm model (`r modelName`), `r nb_models` models were estimated, each with a different number of blocks ranging from `r R$sbm$storedModels$nbBlocks[1]` `r bip_min` to `r R$sbm$storedModels$nbBlocks[nb_models]` `r bip_max` blocks.
 
 The selected model in this document has `r sum(R$sbm$nbBlocks)` blocks`r bip_cur`. The ICL of this model is `r R$sbm$ICL`. `r entrop_cur`.
-On this table the `r colorize("red line",'red')` is the best model according to the ICL criteria and the `r colorize("orange line",'orange')` is the selected one.
+On this table the `r colorize("red line",'red')` is the best model according to the ICL criteria and the `r colorize("blue line",'lightblue', highlight = T)` is the selected one.
 
 ```{r all-sbm, echo=FALSE,results='asis',warning=FALSE}
 get_flextable(R$sbm, R$upload$labels, type = "storedModels", settings = list(caption = "All Stored Models")) %>%

@@ -5,7 +5,7 @@
 #' @param list,name,n=1
 #' `list` is a character vector
 #' `name` is character
-#' `n` is argument used for recurcive action you would better not use it.
+#' `n` is argument used for recursive action (it should not be used as an external argument).
 #'
 #' @return `name` or if it's already in `list` the first of `nameX` (`name1`, `name2`, etc...) that is not already in the list
 #'
@@ -32,15 +32,15 @@ addindice <- function(list, name, n = 1) {
 #'
 #' @param obj,...,Col_names=NULL,row_names=NULL
 #' `Obj` can be data.frame or a matrix
-#' `...` are covariables, they can be named or not : they should dataframes or matrixes of the same dimension than the network one
+#' `...` are covariables, they can be named or not: they should dataframes or matrixes of the same dimension than the network one
 #' `col_names` (respectively. `row.names`) should the node names in columns (resp. rows) of the network matrix
 #'
 #'
-#' @return the return value is a list of sbmMatrix class containing all the necessary information :
-#' 1 - The matrix of adjacency (class :  matrix)
-#' 2 - The row and col names : list of two character vectors containing the nodes names
-#' 3 - The covariables : stored in a named list of matrices
-#' 4 - The type of network : 'bipartite' or 'unipartite'
+#' @return the return value is a list of sbmMatrix class containing all the necessary information:
+#' 1 - The matrix of adjacency (class:  matrix)
+#' 2 - The row and col names: list of two character vectors containing the nodes names
+#' 3 - The covariables: stored in a named list of matrices
+#' 4 - The type of network: 'bipartite' or 'unipartite'
 #' 5 - The supposed density upon the data adjacency matrix.
 #'
 #' @noRd
@@ -56,7 +56,7 @@ buildSbmMatrix <- function(obj, col_names = NULL, row_names = NULL) {
       col <- character(0)
       row <- character(0)
     } else {
-      message("Nodes names are extrated from your table")
+      message("Nodes names are extrated from the table")
       col <- colnames(obj)
       row <- row.names(obj)
     }
@@ -120,7 +120,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
   # check class
   if (!any(class(my_sbm_object) == "sbmMatrix")) {
     if (warnings) {
-      warning("my_sbm_object doesn't have the class : 'sbmMatrix'")
+      warning("my_sbm_object doesn't have the class: 'sbmMatrix'")
     }
     return(F)
   }
@@ -145,9 +145,9 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
   if (!is.numeric(my_sbm_object$matrix)) {
     warning(
       "The matrix isn't numeric\n",
-      "1 - try activate : '1st column is Rows names' and/or '1st row is Columns names' buttons\n",
+      "1 - try activate: '1st column is Rows names' and/or '1st row is Columns names' buttons\n",
       "2 - check the separator\n",
-      "3 - check in your matrix for non-numerical characters"
+      "3 - check inside the matrix for non-numerical characters"
     )
     return(F)
   }
@@ -164,7 +164,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
       dup_row <- duplicated(my_sbm_object$nodes_names$row)
       if (any(dup_row)) {
         warning(
-          "Some nodes names on rows are repeated : ",
+          "Some nodes names on rows are repeated: ",
           paste(my_sbm_object$nodes_names$row[dup_row], collapse = ", ")
         )
       }
@@ -194,7 +194,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
       dup_col <- duplicated(my_sbm_object$nodes_names$col)
       if (any(dup_col)) {
         warning(
-          "Some nodes names on columns are repeated :",
+          "Some nodes names on columns are repeated:",
           paste(my_sbm_object$nodes_names$col[dup_col], collapse = ", ")
         )
       }
@@ -213,7 +213,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
     }
   }
   if (still_sbm) {
-    message("Notes : You still can apply sbm without nodes names but this information is useful for analysis")
+    message("Notes: sbm is still running without nodes names but this information is very useful for analysis")
   }
 
 
@@ -227,7 +227,7 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
       if (warnings) {
         warning(
           "Covariables should be numeric matrix of the same dimension than the network matrix\n  ",
-          paste("Problematic covariables :",
+          paste("Problematic covariables:",
             paste(names(my_sbm_object$covar)[is_no_good_covar], collapse = ", "),
             sep = " "
           )
@@ -317,29 +317,30 @@ is.sbmMatrix <- function(my_sbm_object, warnings = FALSE) {
 #' @return fit better in the verbatim plot
 #'
 #' @noRd
-show_table <- function(data, str_len = 9,str_max = 80, show_dim = T) {
+show_table <- function(data, str_len = 9, str_max = 80, show_dim = T) {
   cols <- colnames(data)
   rows <- rownames(data)
   short_cols <- ifelse(stringr::str_length(cols) > str_len,
-                       paste0(substr(cols, 1, str_len - 3), "..."),
-                       cols
+    paste0(substr(cols, 1, str_len - 3), "..."),
+    cols
   )
   short_rows <- ifelse(stringr::str_length(rows) > str_len,
-                       paste0(substr(rows, 1, str_len - 3), "..."),
-                       rows
+    paste0(substr(rows, 1, str_len - 3), "..."),
+    rows
   )
   table <- as.matrix(data)
   colnames(table) <- short_cols
   rownames(table) <- short_rows
-  table <- table[,(max(stringr::str_length(short_rows)) +
-                     cumsum(stringr::str_length(short_cols))) <= str_max]
+  table <- table[, (max(stringr::str_length(short_rows)) +
+    cumsum(stringr::str_length(short_cols))) <= str_max]
 
 
   if (show_dim) {
-    cat("Data dimension :", dim(data)[1], "rows x", dim(data)[2], "columns\n\n")
+    cat("Data dimension:", dim(data)[1], "rows x", dim(data)[2], "columns\n\n")
   }
-  print(data.table::as.data.table(table,keep.rownames=TRUE),
-        row.names = F,topn=10)
+  print(data.table::as.data.table(table, keep.rownames = TRUE),
+    row.names = F, topn = 10
+  )
 }
 
 
@@ -363,7 +364,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
   if (!is.sbmMatrix(x)) {
     warning("x object got the sbmMatrix class but got a wrong format.")
 
-    cat("==========================\n SBM MATRIX ISN'T BUILT :  \n==========================\n\n")
+    cat("==========================\n SBM MATRIX ISN'T BUILT:  \n==========================\n\n")
     cat("Try to change the input matrix, it seems that the format is not correct")
   } else {
     network_desc1 <- paste0("Adjacency matrix of a", ifelse(x$type == "unipartite", "n ", " "), x$type, " network.")
@@ -386,7 +387,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
       network_desc4 <- paste0("\nThe network has ", dimbase[1], " row nodes & ", dimbase[2], " column nodes.\n")
     }
 
-    cat("=============================\n SBM MATRIX HAS BEEN BUILT :  \n=============================\n\n")
+    cat("=============================\n SBM MATRIX HAS BEEN BUILT:  \n=============================\n\n")
     cat(network_desc1, network_desc2, network_desc3, network_desc4)
 
     if (identical(x$nodes_names$col, character(0)) &
@@ -404,7 +405,7 @@ print.sbmMatrix <- function(x, show_matrix = T, resume_table = T, show_covar = F
     if (is.null(x$covar)) {
       cat("\nThere is no covariables.\n\n")
     } else {
-      cat("\nThere is", length(x$covar), " covariables : ")
+      cat("\nThere is", length(x$covar), " covariables: ")
       if (!show_covar) {
         cat(paste(names(x$covar), collapse = ", "), "\n")
       } else {
@@ -599,37 +600,39 @@ applySbm <- function(object,
                      model = object$law,
                      covariates = object$covar,
                      directed = !isSymmetric(object$matrix)) {
-
-  if(is.sbmMatrix(object)){
-    if(is.null(covariates)){
+  if (is.sbmMatrix(object)) {
+    if (is.null(covariates)) {
       covariates <- list()
     }
 
-    if(type == 'bipartite'){
-      if(!is.character(dimLabels) || length(dimLabels) != 2){
+    if (type == "bipartite") {
+      if (!is.character(dimLabels) || length(dimLabels) != 2) {
         warnings("dimLabels has wrong format, network is bipartite so it should be formated this way:\ndimLabels = c(row = 'row', col = 'col')")
-        dimLabels  <- c(row = "row", col = "col")
+        dimLabels <- c(row = "row", col = "col")
       }
-      my_sbm <- sbm::estimateBipartiteSBM(netMat = object$matrix,
-                                          model = model,
-                                          dimLabels = dimLabels,
-                                          covariates = covariates,
-                                          estimOptions = estimOptions)
-
-    }else{
-      if(!is.character(dimLabels) || length(dimLabels) != 2){
+      my_sbm <- sbm::estimateBipartiteSBM(
+        netMat = object$matrix,
+        model = model,
+        dimLabels = dimLabels,
+        covariates = covariates,
+        estimOptions = estimOptions
+      )
+    } else {
+      if (!is.character(dimLabels) || length(dimLabels) != 2) {
         warnings("dimLabels has wrong format, network is bipartite so it should be formated this way:\ndimLabels = c('nodes)")
-        dimLabels  <- c("nodes")
+        dimLabels <- c("nodes")
       }
-      my_sbm <- sbm::estimateSimpleSBM(netMat = object$matrix,
-                                       model = model,
-                                       directed = directed,
-                                       dimLabels = dimLabels,
-                                       covariates = covariates,
-                                       estimOptions = estimOptions)
+      my_sbm <- sbm::estimateSimpleSBM(
+        netMat = object$matrix,
+        model = model,
+        directed = directed,
+        dimLabels = dimLabels,
+        covariates = covariates,
+        estimOptions = estimOptions
+      )
     }
     return(my_sbm)
-  }else{
+  } else {
     stop("object should be of class 'sbmMatrix'")
   }
 }

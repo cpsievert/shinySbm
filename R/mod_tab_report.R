@@ -13,7 +13,7 @@ mod_tab_report_ui <- function(id) {
     shinydashboard::box(
       title = "Parameters", solidHeader = T,
       status = "info", collapsible = T,
-      radioButtons(ns("language"), "Select your language:",
+      radioButtons(ns("language"), "Select wanted language:",
         choices = list(
           "English" = "_en.Rmd",
           "Francais" = "_fr.Rmd"
@@ -22,18 +22,18 @@ mod_tab_report_ui <- function(id) {
         inline = T
       ),
       textInput(ns("fileName"),
-                label = "File Name",
-                value = "Shiny_SBM_Report"
+        label = "File name",
+        value = "Shiny_SBM_Report"
       ),
       radioButtons(ns("fileType"), "Select file type:",
-                   choices = list(
-                     "pdf" = "pdf",
-                     "html" = "html"
-                   ),
-                   selected = "html",
-                   inline = T
+        choices = list(
+          "pdf" = "pdf",
+          "html" = "html"
+        ),
+        selected = "html",
+        inline = T
       ),
-      downloadButton(ns("downReport"),label = 'Download Report')
+      downloadButton(ns("downReport"), label = "Download Report")
     ),
     mod_select_nb_groups_ui(ns("select_nb_groups_4"))
   )
@@ -57,42 +57,46 @@ mod_tab_report_server <- function(id, r) {
 
     parameters <- reactiveValues()
 
-    observeEvent(purrr::map(r$upload,~.x()),{
-      parameters$upload  <- purrr::map(r$upload,~.x())
+    observeEvent(purrr::map(r$upload, ~ .x()), {
+      parameters$upload <- purrr::map(r$upload, ~ .x())
     })
 
-    observeEvent(my_sbm(),{
+    observeEvent(my_sbm(), {
       parameters$sbm <- my_sbm()
     })
 
-    observeEvent(purrr::map(r$show,~.x()),{
-      parameters$options  <- purrr::map(r$show,~.x())
+    observeEvent(purrr::map(r$show, ~ .x()), {
+      parameters$options <- purrr::map(r$show, ~ .x())
     })
 
 
 
 
     output$downReport <- downloadHandler(
-      filename = eventReactive(c(parameters$sbm$nbBlocks,input$fileType,input$fileName),{
+      filename = eventReactive(c(parameters$sbm$nbBlocks, input$fileType, input$fileName), {
         params <- reactiveValuesToList(parameters)
-        if("sbm" %in% names(params)){
-          add_group <- paste0('_',sum(params$sbm$nbBlocks),'_blocks')
-        }else{
-          add_group <- ''
+        if ("sbm" %in% names(params)) {
+          add_group <- paste0("_", sum(params$sbm$nbBlocks), "_blocks")
+        } else {
+          add_group <- ""
         }
 
-        return(paste0(input$fileName,add_group,'.',input$fileType))
+        return(paste0(input$fileName, add_group, ".", input$fileType))
       }),
       content = function(file) {
-        file_names <- c("summary_template","child_imported","child_sbm","child_empty")
-        visual_names <- c("child_setup.Rmd","child_imported_visual.Rmd","child_sbm_visual.Rmd")
-        rmd_names <- purrr::map_chr(file_names,~paste0(.x,input$language))
-        all_files <- c(rmd_names,visual_names)
-        file_paths <- purrr::map_chr(all_files,
-                                     ~system.file("rmd",.x, package = "shinySbm"))
-        tempReports <- purrr::map_chr(all_files,
-                                      ~file.path(gsub('\\\\','/',tempdir()), .x,fsep = '/'))
-        purrr::map2(file_paths,tempReports,~file.copy(.x,.y, overwrite = TRUE))
+        file_names <- c("summary_template", "child_imported", "child_sbm", "child_empty")
+        visual_names <- c("child_setup.Rmd", "child_imported_visual.Rmd", "child_sbm_visual.Rmd")
+        rmd_names <- purrr::map_chr(file_names, ~ paste0(.x, input$language))
+        all_files <- c(rmd_names, visual_names)
+        file_paths <- purrr::map_chr(
+          all_files,
+          ~ system.file("rmd", .x, package = "shinySbm")
+        )
+        tempReports <- purrr::map_chr(
+          all_files,
+          ~ file.path(gsub("\\\\", "/", tempdir()), .x, fsep = "/")
+        )
+        purrr::map2(file_paths, tempReports, ~ file.copy(.x, .y, overwrite = TRUE))
 
         rmarkdown::render(
           input = tempReports[[1]],
@@ -103,7 +107,6 @@ mod_tab_report_server <- function(id, r) {
         )
       }
     )
-
   })
 }
 

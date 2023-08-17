@@ -13,14 +13,7 @@
 - Visualisation : Tableau
 
 ### Typos ou mise en forme/harmonisation
-- Attention parfois des majuscules pour les noms commusn, parfois que ds minuscules
-- Parfois you, parfois 
-- Espace autour des ":" pas d'espace avant, seulement après
-- Specify what ... peut-etre remplacer par Label for ...
 
-Module Data Plots: ploted -> plotted
-
-Color settings: changer les valeurs par défaut ?
 
 ### Exploration
 

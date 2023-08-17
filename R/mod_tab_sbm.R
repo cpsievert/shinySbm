@@ -63,19 +63,19 @@ mod_tab_sbm_ui <- function(id) {
         ),
         actionLink(ns("moreSettings"),
           label = HTML('<strong style = "color: black;">More settings</strong>'),
-          icon = icon("caret-square-down",style = 'color: black;')
+          icon = icon("caret-square-down", style = "color: black;")
         ),
         conditionalPanel(
           condition = "input.moreSettings % 2  == 1", ns = ns,
           numericInput(ns("exploreMin"),
-            label = "Explore at least (Blocks Number)",
+            label = "Explore at least (number of blocks)",
             value = 4,
             min = 4,
             max = 50,
             step = 1
           ),
           numericInput(ns("exploreMax"),
-            label = "Stop exploration at (Block Number)",
+            label = "Stop exploration at (number of blocks)",
             value = NA,
             min = 4,
             max = 100,
@@ -89,10 +89,10 @@ mod_tab_sbm_ui <- function(id) {
         condition = "output.sbmRan == 'YES'",
         ns = ns_tab_upload,
         shinydashboard::box(
-          title = "Download Tables", solidHeader = T,
+          title = "Download tables", solidHeader = T,
           status = "info", width = 12,
           radioButtons(ns("whichTable"),
-            "Select the Table",
+            "Select the table",
             choices = list(
               "Block proportions" = "block_proportions",
               "Connectivity Table" = "connectivity_table",
@@ -134,32 +134,34 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    observeEvent(input$moreSettings,{
+    observeEvent(input$moreSettings, {
       if (input$moreSettings %% 2 == 1) {
         updateActionLink(session, "moreSettings",
-                         label = HTML('<strong style = "color: black;">Default settings</strong>'),
-                         icon = icon("caret-square-up",style = 'color: black;'))
+          label = HTML('<strong style = "color: black;">Default settings</strong>'),
+          icon = icon("caret-square-up", style = "color: black;")
+        )
       } else {
         updateActionLink(session, "moreSettings",
-                         label = HTML('<strong style = "color: black;">More settings</strong>'),
-                         icon = icon("caret-square-down",style = 'color: black;'))
+          label = HTML('<strong style = "color: black;">More settings</strong>'),
+          icon = icon("caret-square-down", style = "color: black;")
+        )
         updateNumericInput(session, "exploreMax", value = NA)
         updateNumericInput(session, "exploreMin", value = 4)
       }
     })
 
-    observeEvent(input$exploreMin,{
-        updateNumericInput(session, "exploreMax", min = input$exploreMin+1)
+    observeEvent(input$exploreMin, {
+      updateNumericInput(session, "exploreMax", min = input$exploreMin + 1)
     })
 
-    exploreMax <- eventReactive(c(input$moreSettings,input$exploreMax),{
-      if(input$moreSettings %% 2 == 1){
-        if(is.na(input$exploreMax)){
+    exploreMax <- eventReactive(c(input$moreSettings, input$exploreMax), {
+      if (input$moreSettings %% 2 == 1) {
+        if (is.na(input$exploreMax)) {
           Inf
-        }else{
+        } else {
           input$exploreMax
         }
-      }else{
+      } else {
         Inf
       }
     })
@@ -220,7 +222,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
             netMat = as.matrix(Dataset()),
             directed = r$upload$directed(),
             model = Dataset()$law, estimOptions = list(
-              verbosity = session$userData$console_verbosity*3,
+              verbosity = session$userData$console_verbosity * 3,
               plot = F,
               exploreMin = input$exploreMin,
               exploreMax = exploreMax()
@@ -229,7 +231,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
           "bipartite" = sbm::estimateBipartiteSBM(
             netMat = as.matrix(Dataset()),
             model = Dataset()$law, estimOptions = list(
-              verbosity = session$userData$console_verbosity*3,
+              verbosity = session$userData$console_verbosity * 3,
               plot = F,
               exploreMin = input$exploreMin,
               exploreMax = exploreMax()
@@ -252,7 +254,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     observeEvent(my_sbm_main(), {
       updateRadioButtons(parent_session, "tab_show_1-whichMatrix",
-        "Select Ploted Matrix",
+        "Select plotted matrix",
         choices = list(
           "Raw Matrix" = "raw",
           "Reordered Matrix" = "ordered",
@@ -261,7 +263,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
         selected = "ordered"
       )
       updateRadioButtons(parent_session, "tab_network_1-whichNetwork",
-        "Select Ploted Network",
+        "Select plotted Network",
         choices = list(
           "Raw Network" = "raw",
           "Grouped Network" = "grouped"
@@ -308,7 +310,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       }
 
       second_par <- paste0(
-        "Table 1 gives blocks proportions, it's an indication of relative block sizes. If you take a random ",
+        "Table 1 gives blocks proportions, it's an indication of relative block sizes. Take a random ",
         example_lab, ", it has a probability of ",
         example_prop, " to belong to the first ", example_lab,
         " group."
@@ -347,9 +349,9 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
           tags$div(
             tags$br(),
             "All stored models are in Table 3, the",
-            HTML("<font color=red>red line</font>"),
+            colour_font("red text","red"),
             "is the best model based on ICL criteria. The",
-            HTML("<mark color=orange>orange line</mark>"),
+            colour_mark("blue line","lightblue"),
             "is the selected model.",
             tags$br(),
             tags$br()

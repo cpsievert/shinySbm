@@ -16,7 +16,7 @@ mod_tab_upload_ui <- function(id) {
         shinydashboard::box(
           title = "Data Selector", solidHeader = T,
           status = "info", width = 12,
-          radioButtons(ns("whichData"), "Which data do you want to use ?",
+          radioButtons(ns("whichData"), "Choose between examples and data importation:",
             choices = list(
               "My own data" = "importData",
               "SBM examples" = "sbmData"
@@ -25,50 +25,50 @@ mod_tab_upload_ui <- function(id) {
           ),
           conditionalPanel(
             condition = "input.whichData == 'importData'", ns = ns,
-            radioButtons(ns("dataType"), "Select the nature of your Data",
-                         choices = list(
-                           "Adjacency or Incidence Matrix" = "matrix",
-                           "List of node pairs" = "list"
-                         ),
-                         inline = T, selected = "matrix"
+            radioButtons(ns("dataType"), "Select the nature of imported data",
+              choices = list(
+                "Adjacency or Incidence matrix" = "matrix",
+                "Edges list" = "list"
+              ),
+              inline = T, selected = "matrix"
             )
           ),
           conditionalPanel(
             condition = "input.whichData == 'sbmData'", ns = ns,
             radioButtons(ns("dataBase"), "Which network ?",
-                         choices = list(
-                           "Bipartite : Fungus & Trees" = "fungus_tree",
-                           "Unipartite : Trees & Trees" = "tree_tree"
-                         ),
-                         selected = character(0)
+              choices = list(
+                "Bipartite: Fungus & Trees" = "fungus_tree",
+                "Unipartite: Trees & Trees" = "tree_tree"
+              ),
+              selected = character(0)
             )
           ),
           conditionalPanel(
             condition = "input.whichData == 'importData'", ns = ns,
             hr(),
             fileInput(ns("mainDataFile"),
-                      label = HTML(
-                        "Choose a file &nbsp;",
-                        as.character(
-                          actionLink(ns("showInfo"),
-                                     label = icon("circle-question")
-                          )
-                        )
-                      ),
-                      buttonLabel = "Browse...",
-                      placeholder = "No file selected",
-                      multiple = F,
-                      accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
+              label = HTML(
+                "Choose a file &nbsp;",
+                as.character(
+                  actionLink(ns("showInfo"),
+                    label = icon("circle-question")
+                  )
+                )
+              ),
+              buttonLabel = "Browse...",
+              placeholder = "No file selected",
+              multiple = F,
+              accept = c("text/plain", ".csv", ".tab", "xls", "xlsx")
             ),
             conditionalPanel(
               condition = "input.dataType == 'matrix' & input.showInfo % 2 == 1", ns = ns,
               tags$div(
-                tags$strong("About the file:"),tags$br(),
+                tags$strong("About the file:"), tags$br(),
                 " - It should be a ", tags$strong("adjacency or incidence"), " matrix", tags$br(),
-                " - ", tags$strong("Bipartite network :"), " nodes in rows and columns can be differents", tags$br(),
-                " - ", tags$strong("Unipartite network :"), " nodes in rows and columns are the same (order and names)", tags$br(),
+                " - ", tags$strong("Bipartite network:"), " nodes in rows and columns can be differents", tags$br(),
+                " - ", tags$strong("Unipartite network:"), " nodes in rows and columns are the same (order and names)", tags$br(),
                 " - The connection is the value between one node in row and one in column", tags$br(),
-                " - Values can be : 0/1, integers or decimals",
+                " - Values can be: 0/1, integers or decimals",
               )
             ),
             conditionalPanel(
@@ -81,20 +81,20 @@ mod_tab_upload_ui <- function(id) {
             ),
             hr(),
             radioButtons(ns("networkType"),
-                         "What kind of network it is ?",
-                         choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
-                         inline = T,
-                         selected = "bipartite"
+              "What kind of network it is ?",
+              choices = list("Bipartite" = "bipartite", "Unipartite" = "unipartite"),
+              inline = T,
+              selected = "bipartite"
             ),
             conditionalPanel(
               condition = "input.dataType == 'list' & input.networkType == 'unipartite'", ns = ns,
               radioButtons(ns("orientation"), "Are connections directed ?",
-                           choices = list(
-                             "Yes" = T,
-                             "No" = F
-                           ),
-                           inline = TRUE,
-                           selected = F
+                choices = list(
+                  "Yes" = T,
+                  "No" = F
+                ),
+                inline = TRUE,
+                selected = F
               )
             )
           ),
@@ -114,37 +114,37 @@ mod_tab_upload_ui <- function(id) {
               title = "Reading Parameters", solidHeader = T,
               status = "info", width = 4,
               radioButtons(ns("whichSep"), "Separator:",
-                           choices = list(
-                             "semicolon" = ";",
-                             "tabulation" = "|",
-                             "comma" = ",",
-                             "others" = "others"
-                           )
+                choices = list(
+                  "semicolon" = ";",
+                  "tabulation" = "|",
+                  "comma" = ",",
+                  "others" = "others"
+                )
               ),
               conditionalPanel(
                 condition = "input.whichSep == 'others'", ns = ns,
                 textInput(ns("whichSep_other"),
-                          label = "Write your sep character :",
-                          value = NULL
+                  label = "Write the desired separator character:",
+                  value = NULL
                 )
               ),
               radioButtons(ns("whichDec"), "Decimals:",
-                           choices = list(
-                             "point" = ".",
-                             "comma" = ",",
-                             "others" = "others"
-                           ), inline = T
+                choices = list(
+                  "point" = ".",
+                  "comma" = ",",
+                  "others" = "others"
+                ), inline = T
               ),
               conditionalPanel(
                 condition = "input.whichDec == 'others'", ns = ns,
                 textInput(ns("whichDec_other"),
-                          label = "Write your dec character :",
-                          value = NULL
+                  label = "Write the desired decimal character:",
+                  value = NULL
                 )
               ),
               strong("Header/Rownames:"),
-              checkboxInput(ns("headercol"), "1st row is Column names", value = T),
-              checkboxInput(ns("headerrow"), "1st column is Row names", value = F)
+              checkboxInput(ns("headercol"), "1st row is column names", value = T),
+              checkboxInput(ns("headerrow"), "1st column is row names", value = F)
             )
           ),
           shinydashboard::box(
@@ -153,19 +153,19 @@ mod_tab_upload_ui <- function(id) {
             conditionalPanel(
               condition = "input.networkType == 'bipartite'", ns = ns,
               textInput(ns("rowLabel"),
-                        label = "Specify what are the nodes in row",
-                        value = NULL
+                label = "Label for nodes in row",
+                value = NULL
               ),
               textInput(ns("colLabel"),
-                        label = "Specify what are for nodes in col",
-                        value = NULL
+                label = "Label for nodes in col",
+                value = NULL
               )
             ),
             conditionalPanel(
               condition = "input.networkType == 'unipartite'", ns = ns,
               textInput(ns("nodLabel"),
-                        label = "Specify what are the nodes",
-                        value = NULL
+                label = "Label for nodes",
+                value = NULL
               )
             )
           )
@@ -176,7 +176,7 @@ mod_tab_upload_ui <- function(id) {
             status = "info", width = 12,
             # strong("Help:"),
             mod_help_to_import_ui(ns("help_to_import_1")),
-            strong("Importation Code:"),
+            strong("Importation code:"),
             verbatimTextOutput(ns("uploadCode"))
           )
         )
@@ -208,16 +208,18 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     ## Settings reactive labels for plots (nature of stuff in cols and rows)
     labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
       labels_sets <- switch(input$networkType,
-                            "bipartite" = list(row = input$rowLabel, col = input$colLabel),
-                            "unipartite" = list(row = input$nodLabel, col = input$nodLabel)
+        "bipartite" = list(row = input$rowLabel, col = input$colLabel),
+        "unipartite" = list(row = input$nodLabel, col = input$nodLabel)
       )
       list(
         row = ifelse(labels_sets$row == "",
-                     ifelse(input$networkType == "bipartite","row","nodes"),
-                     labels_sets$row),
+          ifelse(input$networkType == "bipartite", "row", "nodes"),
+          labels_sets$row
+        ),
         col = ifelse(labels_sets$col == "",
-                     ifelse(input$networkType == "bipartite","col","nodes"),
-                     labels_sets$col)
+          ifelse(input$networkType == "bipartite", "col", "nodes"),
+          labels_sets$col
+        )
       )
     })
 
@@ -272,12 +274,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           need(input$dataBase, "")
         )
         data <- switch(input$dataBase,
-                       "fungus_tree" = sbm::fungusTreeNetwork$fungus_tree %>%
-                         `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
-                         `rownames<-`(sbm::fungusTreeNetwork$fungus_names),
-                       "tree_tree" = sbm::fungusTreeNetwork$tree_tree %>%
-                         `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
-                         `rownames<-`(sbm::fungusTreeNetwork$tree_names)
+          "fungus_tree" = sbm::fungusTreeNetwork$fungus_tree %>%
+            `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
+            `rownames<-`(sbm::fungusTreeNetwork$fungus_names),
+          "tree_tree" = sbm::fungusTreeNetwork$tree_tree %>%
+            `colnames<-`(sbm::fungusTreeNetwork$tree_names) %>%
+            `rownames<-`(sbm::fungusTreeNetwork$tree_names)
         ) %>% as.data.frame()
       }
       return(data)
@@ -298,8 +300,8 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           sbmMat$type <- input$networkType
         } else {
           Mat <- edges_to_adjacency(datasetSelected(),
-                                    type = input$networkType,
-                                    directed = as.logical(input$orientation)
+            type = input$networkType,
+            directed = as.logical(input$orientation)
           )
           sbmMat <- buildSbmMatrix(Mat)
           sbmMat$type <- input$networkType
@@ -328,15 +330,15 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     #  update buttons when upload a new sbmMatrix
     observeEvent(datasetUploaded(), {
       updateSelectInput(parent_session, "tab_sbm_1-whichLaw",
-                        selected = datasetUploaded()$law
+        selected = datasetUploaded()$law
       )
       updateRadioButtons(parent_session, "tab_show_1-whichMatrix",
-                         "Select Ploted Matrix",
-                         choices = list("Raw Matrix" = "raw")
+        "Select plotted matrix",
+        choices = list("Raw Matrix" = "raw")
       )
       updateRadioButtons(parent_session, "tab_network_1-whichNetwork",
-                         "Select Ploted Network",
-                         choices = list("Raw Network" = "raw")
+        "Select plotted Network",
+        choices = list("Raw Network" = "raw")
       )
       updateActionButton(parent_session, "tab_sbm_1-runSbm")
       # global variable reset the runsbm variable to 0
@@ -370,9 +372,9 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
 
     mod_help_to_import_server("help_to_import_1",
-                              rawData = datasetSelected,
-                              sbmData = datasetUploaded,
-                              input_upload = inputs
+      rawData = datasetSelected,
+      sbmData = datasetUploaded,
+      input_upload = inputs
     )
 
 
@@ -439,18 +441,18 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           headerrow <- ""
         }
         cat("myNetworkMatrix <- read.table(file = '",
-            input$mainDataFile$name,
-            "', sep = '", sep(), "', dec = '", dec(), "', header = ", input$headercol, headerrow, ")",
-            sep = ""
+          input$mainDataFile$name,
+          "', sep = '", sep(), "', dec = '", dec(), "', header = ", input$headercol, headerrow, ")",
+          sep = ""
         )
         if (input$dataType == "list") {
           cat("\nmyNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix, type = '",
-              input$networkType, "'",
-              ifelse(input$networkType == "bipartite", "",
-                     paste0(", directed = ", input$orientation)
-              ),
-              ")",
-              sep = ""
+            input$networkType, "'",
+            ifelse(input$networkType == "bipartite", "",
+              paste0(", directed = ", input$orientation)
+            ),
+            ")",
+            sep = ""
           )
         }
         cat("\nmyNetworkMatrix <- as.matrix(myNetworkMatrix)")
@@ -459,8 +461,8 @@ mod_tab_upload_server <- function(id, r, parent_session) {
           need(input$dataBase, "")
         )
         data_path <- switch(input$dataBase,
-                            "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
-                            "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
+          "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
+          "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
         )
         cat("myNetworkMatrix <- ", data_path, sep = "")
       }

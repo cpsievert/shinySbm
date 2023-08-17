@@ -18,7 +18,7 @@ get_flextable(
 If it's simple sbm it should be a single character ("default" -> c("nodes")).
 If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
-\item{type}{the type of table you want.}
+\item{type}{the type of table wanted.}
 
 \item{settings}{a list of settings}
 }
@@ -40,7 +40,7 @@ The list of parameters \code{settings} for the flextable
 
 \itemize{
  \item{"caption": }{Caption is the flextable title (character)}
- \item{"digits": }{nb of digits you want to be shown in the table}
+ \item{"digits": }{nb of digits wanted to be shown in the table}
  \item{"selected_col": }{Color highlighting the selected model}
  \item{"best_col": }{Color of text for the best model}
 }
@@ -51,13 +51,19 @@ The list of parameters \code{settings} for the flextable
 #                                     model = 'bernoulli')
 my_sbm <- FungusTreeNetwork$sbmResults$fungus_tree
 
-get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
- type = 'blockProp')
+get_flextable(my_sbm,
+  labels = c(row = "Fungus", col = "Trees"),
+  type = "blockProp"
+)
 
-get_flextable(my_sbm, labels = c(row = 'Fungus', col = 'Trees'),
- type = 'connectParam', settings = list(digits = 5))
+get_flextable(my_sbm,
+  labels = c(row = "Fungus", col = "Trees"),
+  type = "connectParam", settings = list(digits = 5)
+)
 
-get_flextable(my_sbm, labels = 'default',
-type = 'storedModels', settings = list(caption = "New Title"))
+get_flextable(my_sbm,
+  labels = "default",
+  type = "storedModels", settings = list(caption = "New Title")
+)
 
 }

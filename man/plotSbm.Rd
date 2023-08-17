@@ -13,15 +13,15 @@ plotSbm(
 )
 }
 \arguments{
-\item{x}{: Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
+\item{x}{Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit` or simple numeric `matrix`.}
 
-\item{ordered}{: Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})}
+\item{ordered}{Boolean. Set \code{TRUE} if the matrix should be reordered (Default is \code{FALSE})}
 
-\item{transpose}{: Boolean. Set \code{TRUE} if you want to invert columns and rows to flatten a long matrix (Default is \code{FALSE})}
+\item{transpose}{Boolean. Set \code{TRUE} to invert columns and rows to flatten a long matrix (Default is \code{FALSE})}
 
-\item{labels}{: a named list (names should be : `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})}
+\item{labels}{a named list (names should be: `"col"` and `"row"`) of characters describing columns and rows component (Default is \code{NULL})}
 
-\item{plotOptions}{: a list providing options. See details below.}
+\item{plotOptions}{a list providing options. See details below.}
 }
 \value{
 a ggplot object corresponding to the matrix plot inside the app.
@@ -30,20 +30,20 @@ individuals connections. The big tiles between red lines are for block connectiv
 }
 \description{
 A fct that plot a beautiful matrix from an sbm object or a network matrix it does
-have suitable parameters to get the plots you want this is the generic function,
+have suitable parameters to get the wanted plots. This is the generic function:
 it does have one method Bipartite and one for Simple Sbm. The `x` object need
 to be construct by one of the `estimate***SBM` function from the `sbm` package.
 }
 \details{
 The list of parameters \code{plotOptions} for the matrix plot is
 \itemize{
- \item{"showValues": }{Boolean. Set TRUE if you want to see the real values. Default value is TRUE}
- \item{"showPredictions": }{Boolean. Set TRUE if you want to see the predicted values. Default value is TRUE}
+ \item{"showValues": }{Boolean. Set TRUE to see the real values. Default value is TRUE}
+ \item{"showPredictions": }{Boolean. Set TRUE to see the predicted values. Default value is TRUE}
  \item{"title": }{Title in characters. Will be printed at the bottom of the matrix. Default value is NULL}
  \item{"colPred": }{Color of the predicted values, the small values will be more transparent. Default value is "red"}
  \item{"colValue": }{Color of the real values, the small values will close to white. Default value is "black"}
  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
- \item{"interactionName": }{Name of connection in legend default : "Connection"}
+ \item{"interactionName": }{Name of connection in legend default: "Connection"}
 }
 }
 \examples{
