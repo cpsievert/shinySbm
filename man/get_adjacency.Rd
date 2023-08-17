@@ -4,14 +4,14 @@
 \alias{get_adjacency}
 \title{get_adjacency}
 \usage{
-get_adjacency(edges, type = c("unipartite", "bipartite"), directed = F)
+get_adjacency(edges, type = c("unipartite", "bipartite"), directed = FALSE)
 }
 \arguments{
 \item{edges}{Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.}
 
 \item{type}{network type can be `'bipartite'` or `'unipartite'`}
 
-\item{directed}{whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)}
+\item{directed}{whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)}
 }
 \value{
 an adjacency/incidence matrix (data.frame) representing the network

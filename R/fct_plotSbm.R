@@ -23,7 +23,9 @@
 #' }
 #'
 #'
-#' @return a ggplot object corresponding to the plot
+#' @return a ggplot object corresponding to the matrix plot inside the app.
+#' Groups the network matrix is organised by blocks, the small tiles are for
+#' individuals connections. The big tiles between red lines are for block connectivity
 #'
 #' @examples
 #'
@@ -73,8 +75,7 @@ plotSbm <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
 #' @param labels : isn't used in default method
 #' @param plotOptions : isn't used in default method
 #'
-#'  @return plot of x
-#'
+#' @return default plot for x
 #'
 #' @export
 plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE,
@@ -103,7 +104,9 @@ plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE,
 #'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
 #'
-#' @return a ggplot object corresponding to the plot
+#' @return a ggplot object corresponding to the matrix plot inside the app.
+#' Groups the network matrix is organised by blocks, the small tiles are for
+#' individuals connections. The big tiles between red lines are for block connectivity
 #'
 #' @examples
 #'
@@ -273,6 +276,10 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
 #'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
 #'
+#' @return a ggplot object corresponding to the matrix plot inside the app.
+#' Groups the network matrix is organised by blocks, the small tiles are for
+#' individuals connections. The big tiles between red lines are for block connectivity
+#'
 #' @examples
 #'
 #' # my_sbm_uni <- sbm::estimateSimpleSBM(sbm::fungusTreeNetwork$tree_tree,
@@ -427,6 +434,10 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE,
 #'  \item{"showLegend": }{Should a legend be printed ? TRUE or FALSE, default:  FALSE}
 #'  \item{"interactionName": }{Name of connection in legend default : "Connection"}
 #' }
+#'
+#' @return a ggplot object corresponding to the matrix plot inside the app.
+#' Here because there no 'sbm' information and only a matrix describing a network,
+#' The matrix isn't organised and the tiles are only showing individuals connections.
 #'
 #' @examples
 #' n_col <- 100

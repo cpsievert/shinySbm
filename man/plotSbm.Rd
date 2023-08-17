@@ -24,7 +24,9 @@ plotSbm(
 \item{plotOptions}{: a list providing options. See details below.}
 }
 \value{
-a ggplot object corresponding to the plot
+a ggplot object corresponding to the matrix plot inside the app.
+Groups the network matrix is organised by blocks, the small tiles are for
+individuals connections. The big tiles between red lines are for block connectivity
 }
 \description{
 A fct that plot a beautiful matrix from an sbm object or a network matrix it does

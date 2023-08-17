@@ -4,7 +4,7 @@
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
+#' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
@@ -36,7 +36,7 @@
 #'
 #'
 #' @export
-get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = F){
+get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE){
   UseMethod("get_adjacency",edges)
 }
 
@@ -47,7 +47,7 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
+#' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
@@ -79,7 +79,7 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #'
 #'
 #' @export
-get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = F){
+get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE){
   return(edges_to_adjacency(edges,type,directed))
 }
 
@@ -91,7 +91,7 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 # #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 # #'  Or an igraph object
 # #' @param type network type can be `'bipartite'` or `'unipartite'`
-# #' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
+# #' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
 # #'
 # #'
 # #' @return an adjacency/incidence matrix (data.frame) representing the network
@@ -107,7 +107,7 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 # #' get_adjacency(karate)
 # #'
 # #' @export
-# get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), directed = F){
+# get_adjacency.igraph <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE){
 #   edges <- igraph::get.edgelist(edges)
 #   return(edges_to_adjacency(edges,type,directed))
 # }
@@ -119,13 +119,13 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`T`) or symetrical (`F`) (default is set to `TRUE`)
+#' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
 #'
 #' @noRd
-edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = F) {
+edges_to_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed = FALSE) {
   from <- to <- NULL
   edges <- as.data.frame(edges)
   ## Rename columns of the pair of node list by 'from', 'to' and 'value' (if needed)

@@ -60,7 +60,6 @@ mod_tab_network_ui <- function(id) {
         )
       ),
       downloadButton(ns("downloadVis"), label = "Download Graph"),
-      verbatimTextOutput(ns("test"))
     ),
     mod_select_nb_groups_ui(ns("select_nb_groups_3")),
     conditionalPanel(
@@ -82,8 +81,6 @@ mod_tab_network_ui <- function(id) {
 mod_tab_network_server <- function(id, r) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
-
 
     my_sbm <- mod_select_nb_groups_server(
       "select_nb_groups_3",
@@ -192,6 +189,14 @@ mod_tab_network_server <- function(id, r) {
       }
     })
 
+    arrow_start <- eventReactive(c(input$arrows, input$arrow_start),{
+      if(input$arrows){
+        input$arrow_start
+      }else{
+        'row'
+      }
+    })
+
     node_shapes <- eventReactive(c(r$upload$networkType(), input$shape_uni, input$shape_row, input$shape_col), {
       if (r$upload$networkType() == "bipartite") {
         list(row = input$shape_row, col = input$shape_col)
@@ -266,7 +271,7 @@ mod_tab_network_server <- function(id, r) {
           edge_threshold = input$edge_threshold,
           edge_color = input$edge_color,
           arrows = input$arrows,
-          arrow_start = input$arrow_start,
+          arrow_start = arrow_start(),
           node_color = node_colors(),
           node_shape = node_shapes()
         )

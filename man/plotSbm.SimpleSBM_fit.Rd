@@ -23,6 +23,11 @@
 
 \item{plotOptions}{: a list providing options. See details below.}
 }
+\value{
+a ggplot object corresponding to the matrix plot inside the app.
+Groups the network matrix is organised by blocks, the small tiles are for
+individuals connections. The big tiles between red lines are for block connectivity
+}
 \description{
 plotSbm method for SimpleSBM_fit object
 }

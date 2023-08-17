@@ -23,6 +23,11 @@
 
 \item{plotOptions}{: a list providing options. See details below.}
 }
+\value{
+a ggplot object corresponding to the matrix plot inside the app.
+Here because there no 'sbm' information and only a matrix describing a network,
+The matrix isn't organised and the tiles are only showing individuals connections.
+}
 \description{
 plotSbm method for matrix object
 }

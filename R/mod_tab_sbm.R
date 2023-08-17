@@ -220,7 +220,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
             netMat = as.matrix(Dataset()),
             directed = r$upload$directed(),
             model = Dataset()$law, estimOptions = list(
-              verbosity = 3,
+              verbosity = session$userData$console_verbosity*3,
               plot = F,
               exploreMin = input$exploreMin,
               exploreMax = exploreMax()
@@ -229,7 +229,8 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
           "bipartite" = sbm::estimateBipartiteSBM(
             netMat = as.matrix(Dataset()),
             model = Dataset()$law, estimOptions = list(
-              verbosity = 3, plot = F,
+              verbosity = session$userData$console_verbosity*3,
+              plot = F,
               exploreMin = input$exploreMin,
               exploreMax = exploreMax()
             )

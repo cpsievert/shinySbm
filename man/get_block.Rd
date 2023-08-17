@@ -8,8 +8,8 @@ get_block(
   x,
   labels = "default",
   node_names = NULL,
-  attribution = T,
-  proportion = F
+  attribution = TRUE,
+  proportion = FALSE
 )
 }
 \arguments{

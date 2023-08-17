@@ -1,6 +1,7 @@
 #' The application server-side
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
+#' @param console_verbosity boolean should the console be printing 'sbm' outputs
 #' @import shiny
 #' @importFrom stats setNames
 #' @importFrom stats var
@@ -11,8 +12,9 @@
 #' @importFrom grDevices png
 #' @importFrom grDevices svg
 #' @noRd
-app_server <- function(input, output, session) {
+app_server <- function(input, output, session, console_verbosity) {
   options(shiny.maxRequestSize = 50*1024^2) # can upload 50MB files
+  session$userData$console_verbosity <- console_verbosity
   session$userData$vars <- reactiveValues(
     tab = reactive({input$tab}),
     sbm = list(NbBlocks = 4,

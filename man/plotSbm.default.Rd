@@ -21,9 +21,10 @@
 
 \item{labels}{: isn't used in default method}
 
-\item{plotOptions}{: isn't used in default method
-
- @return plot of x}
+\item{plotOptions}{: isn't used in default method}
+}
+\value{
+default plot for x
 }
 \description{
 plotSbm method for unknown object

@@ -2,11 +2,8 @@
 
 [test CRAN](https://cran.r-project.org/web/packages/submission_checklist.html)
 
-
-
 ### Developpement essentiels
 
-1 - Résumé complet de modélisation 
 - Compléter les téléchargement
 - Permettre de récupérer le code du sbm (shinymeta::outputCodeButton associée à shinymeta::metaRender2)
 

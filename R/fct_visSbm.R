@@ -74,7 +74,7 @@ prePlotNet <- function(matrix,
     scaleFactor = currentSettings$arrow_thickness
   )
   if (currentSettings$arrows) {
-    if (is.null(currentSettings$arrow_start)) {
+    if (is.null(currentSettings$arrow_start) || length(currentSettings$arrow_start) != 1) {
       currentSettings$arrow_start <- "row"
     }
     if (!currentSettings$arrow_start %in% c("row", "col")) {

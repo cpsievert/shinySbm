@@ -48,7 +48,7 @@
 #'my_blocks_uni
 #' @export
 get_block <- function(x, labels = "default", node_names = NULL,
-                      attribution = T, proportion = F) {
+                      attribution = TRUE, proportion = FALSE) {
   UseMethod("get_block", object = x)
 }
 
@@ -82,7 +82,7 @@ get_block <- function(x, labels = "default", node_names = NULL,
 get_block.SimpleSBM_fit <- function(x,
                                     labels = "default",
                                     node_names = NULL,
-                                    attribution = T, proportion = F) {
+                                    attribution = TRUE, proportion = FALSE) {
   # Default labels
   if (identical(labels, "default")) {
     currentLabels <- "nodes"
@@ -99,7 +99,7 @@ get_block.SimpleSBM_fit <- function(x,
   }
 
   if (!(attribution | proportion)) {
-    attribution <- T
+    attribution <- TRUE
   }
   if(is.null(node_names)){
     res <- data.frame(Nodes_names = paste0(currentLabels,"_",1:nrow(x$networkData)))
@@ -162,7 +162,7 @@ get_block.SimpleSBM_fit <- function(x,
 get_block.BipartiteSBM_fit <- function(x,
                                        labels = "default",
                                        node_names = NULL,
-                                       attribution = T, proportion = F) {
+                                       attribution = TRUE, proportion = FALSE) {
 
   # Default labels
   if (identical(labels, "default")) {
@@ -175,7 +175,7 @@ get_block.BipartiteSBM_fit <- function(x,
   }
 
   if (!(attribution | proportion)) {
-    attribution <- T
+    attribution <- TRUE
   }
 
   if(is.null(node_names)){
