@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_sbm_code_ui <- function(id){
+mod_sbm_code_ui <- function(id) {
   ns <- NS(id)
   tagList(
     strong("SBM code:"),
@@ -18,9 +18,9 @@ mod_sbm_code_ui <- function(id){
 #' sbm_code Server Functions
 #'
 #' @noRd
-mod_sbm_code_server <- function(id,settings,networkType,exploreMin, exploreMax, directed,
-                                dataset, sbm_main, sbm_current){
-  moduleServer( id, function(input, output, session){
+mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
+                                dataset, sbm_main, sbm_current) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     sbm_code <- reactiveValues(
@@ -29,38 +29,49 @@ mod_sbm_code_server <- function(id,settings,networkType,exploreMin, exploreMax, 
     )
 
     sbm_text <- reactive({
-      paste(c(sbm_code$applying,
-              sbm_code$change_block),
-            collapse = '\n')
+      paste(
+        c(
+          sbm_code$applying,
+          sbm_code$change_block
+        ),
+        collapse = "\n"
+      )
     })
     session$userData$sbm_code <- sbm_text
 
-    observeEvent(settings$runSbm,{
-      case_dep <- switch (networkType(),
-                       "unipartite" = list(model = "Simple",
-                                           directed = paste0(", directed = ",
-                                                             directed())),
-                       "bipartite" = list(model = "Bipartite",
-                                          directed = "")
+    observeEvent(settings$runSbm, {
+      case_dep <- switch(upload$networkType(),
+        "unipartite" = list(
+          model = "Simple",
+          directed = paste0(
+            ", directed = ",
+            upload$directed()
+          )
+        ),
+        "bipartite" = list(
+          model = "Bipartite",
+          directed = ""
+        )
       )
-      space_line_2 <- 36 + 3 * (networkType() == 'bipartite')
-      space_line_3 <- 57 + 3 * (networkType() == 'bipartite')
+      space_line_2 <- 36 + 3 * (upload$networkType() == "bipartite")
+      space_line_3 <- 57 + 3 * (upload$networkType() == "bipartite")
       sbm_code$applying <- paste0(
-        "mySbmModel <- sbm::estimate",case_dep$model,
-        "SBM(netMat = myNetworkMatrix, model = ",dataset()$law,case_dep$directed,
-        ",\n",paste(rep(' ',space_line_2),collapse ='')," estimOptions = list(plot = T, verbosity = ",
+        "mySbmModel <- sbm::estimate", case_dep$model,
+        "SBM(netMat = myNetworkMatrix, model = ", dataset()$law, case_dep$directed,
+        ",\n", paste(rep(" ", space_line_2), collapse = ""), " estimOptions = list(plot = T, verbosity = ",
         session$userData$console_verbosity * 3,
-        ifelse(settings$moreSettings %% 2  == 0,"",
-               paste0(
-                 ",\n",paste(rep(' ',space_line_3),collapse =''),
-                 "exploreMin = ", exploreMin(),
-                 ", exploreMax = ", exploreMax()
-               )),
+        ifelse(settings$moreSettings %% 2 == 0, "",
+          paste0(
+            ",\n", paste(rep(" ", space_line_3), collapse = ""),
+            "exploreMin = ", exploreMin(),
+            ", exploreMax = ", exploreMax()
+          )
+        ),
         "))"
       )
     })
 
-    observeEvent(sbm_current(),{
+    observeEvent(sbm_current(), {
       if (sum(sbm_main()$nbBlocks) != sum(sbm_current()$nbBlocks)) {
         sbm_code$change_block <- paste0(
           "index <- which(mySbmModel$storedModels['nbBlocks'] == ",
@@ -75,7 +86,6 @@ mod_sbm_code_server <- function(id,settings,networkType,exploreMin, exploreMax, 
     output$sbmCode <- renderPrint({
       cat(sbm_text())
     })
-
   })
 }
 

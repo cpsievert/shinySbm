@@ -15,7 +15,8 @@ mod_tab_network_ui <- function(id) {
   tagList(
     shinydashboard::box(
       title = "Network Visual Settings", solidHeader = T,
-      status = "info", collapsible = T, width = 6,
+      status = "info", collapsible = T, width = 9,
+      mod_network_code_ui(ns("network_code_1")),
       fluidRow(
         column(
           6,
@@ -48,7 +49,7 @@ mod_tab_network_ui <- function(id) {
             min = 0, max = 1, value = 0.5, step = 0.005
           ),
           conditionalPanel(
-            condition = "input.helpThreshold%2 == 1", ns = ns,
+            condition = "input.helpThreshold % 2 == 1", ns = ns,
             tags$div(
               tags$strong("Threshold details:"), tags$br(),
               " - This ", tags$strong("threshold"), " controls which edges appears into the network. If an edges has a connectivity ", tags$strong("lower"), " than the threshold then it disapear.", tags$br(),
@@ -218,6 +219,9 @@ mod_tab_network_server <- function(id, r) {
     observeEvent(input$unique_id, {
       graph_has_changed(F)
     })
+
+
+    mod_network_code_server("network_code_1")
 
 
     output$node_names <- DT::renderDataTable({

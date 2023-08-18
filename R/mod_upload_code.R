@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_upload_code_ui <- function(id){
+mod_upload_code_ui <- function(id) {
   ns <- NS(id)
   tagList(
     strong("Importation code:"),
@@ -18,8 +18,8 @@ mod_upload_code_ui <- function(id){
 #' upload_code Server Functions
 #'
 #' @noRd
-mod_upload_code_server <- function(id,settings,sep,dec){
-  moduleServer( id, function(input, output, session){
+mod_upload_code_server <- function(id, settings, sep, dec) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     upload_code <- reactiveValues(
@@ -29,14 +29,18 @@ mod_upload_code_server <- function(id,settings,sep,dec){
     )
 
     upload_text <- reactive({
-      paste(c(upload_code$reading,
-              upload_code$do_matrix,
-              upload_code$as_matrix),
-            collapse = '\n')
+      paste(
+        c(
+          upload_code$reading,
+          upload_code$do_matrix,
+          upload_code$as_matrix
+        ),
+        collapse = "\n"
+      )
     })
     session$userData$upload_code <- upload_text
 
-    observeEvent(settings$matrixBuilder,{
+    observeEvent(settings$matrixBuilder, {
       if (settings$whichData == "importData") {
         validate(
           need(settings$mainDataFile$name, "")
@@ -47,7 +51,7 @@ mod_upload_code_server <- function(id,settings,sep,dec){
           headerrow <- ""
         }
         upload_code$reading <- paste0(
-          "myNetworkMatrix <- read.table(file = '",settings$mainDataFile$name,
+          "myNetworkMatrix <- read.table(file = '", settings$mainDataFile$name,
           "', sep = '", sep(), "', dec = '", dec(), "', header = ",
           settings$headercol, headerrow, ")"
         )
@@ -56,7 +60,8 @@ mod_upload_code_server <- function(id,settings,sep,dec){
             "myNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix, type = '",
             settings$networkType, "'",
             ifelse(settings$networkType == "bipartite", "",
-                   paste0(", directed = ", settings$orientation)),")"
+              paste0(", directed = ", settings$orientation)
+            ), ")"
           )
         }
         upload_code$as_matrix <- "myNetworkMatrix <- as.matrix(myNetworkMatrix)"
@@ -65,8 +70,8 @@ mod_upload_code_server <- function(id,settings,sep,dec){
           need(settings$dataBase, "")
         )
         data_path <- switch(settings$dataBase,
-                            "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
-                            "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
+          "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
+          "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
         )
         upload_code$reading <- paste0("myNetworkMatrix <- ", data_path, sep = "")
         upload_code$do_matrix <- character()

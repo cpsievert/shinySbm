@@ -206,10 +206,9 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
 
     mod_sbm_code_server("sbm_code_1",
                         settings = inputs,
-                        networkType = r$upload$networkType,
+                        upload  = r$upload,
                         exploreMin = exploreMin,
                         exploreMax = exploreMax,
-                        directed = r$upload$directed,
                         dataset = Dataset,
                         sbm_main = my_sbm_main,
                         sbm_current = my_sbm)
