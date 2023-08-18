@@ -33,8 +33,9 @@ mod_network_code_server <- function(id){
     # input$arrow_start
 
     # r$upload$labels() do something before ?
-    # r$upload$Dataset() how to do ?
     # r$upload$directed()
+
+    # r$upload$Dataset() unused outside of the app for now
 
     # visSbm(
     #   x = mySbmModel,
