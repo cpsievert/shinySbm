@@ -175,8 +175,7 @@ mod_tab_upload_ui <- function(id) {
             title = "Importation Guide", solidHeader = T,
             status = "info", width = 12,
             mod_help_to_import_ui(ns("help_to_import_1")),
-            strong("Importation code:"),
-            verbatimTextOutput(ns("uploadCode"))
+            mod_upload_code_ui(ns("upload_code_1"))
           )
         )
       )
@@ -228,7 +227,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         if (input$whichSep_other == "") {
           ";"
         } else {
-          input$whichSep_other
+          stringr::str_sub(input$whichSep_other,1,1)
         }
       } else {
         input$whichSep
@@ -241,7 +240,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         if (input$whichDec_other == "") {
           "."
         } else {
-          input$whichDec_other
+          stringr::str_sub(input$whichDec_other,1,1)
         }
       } else {
         input$whichDec
@@ -351,7 +350,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       session$userData$vars$sbm$runSbm <- 0
     })
 
-    ## For mod importation error to get parameters
+    ## For mod importation error and upload Code to get parameters
     inputs <- reactiveValues(
       matrixBuilder = NULL,
       whichData = NULL,
@@ -360,7 +359,8 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       headerrow = NULL,
       headercol = NULL,
       orientation = NULL,
-      networkType = NULL
+      networkType = NULL,
+      mainDataFile = NULL,
     )
     observe({
       inputs
@@ -428,44 +428,10 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       print(datasetUploaded())
     })
 
-    # importation code
-    output$uploadCode <- renderPrint({
-      if (input$whichData == "importData") {
-        validate(
-          need(input$mainDataFile$name, "")
-        )
-        if (input$headerrow) {
-          headerrow <- ", row.names = 1"
-        } else {
-          headerrow <- ""
-        }
-        cat("myNetworkMatrix <- read.table(file = '",
-          input$mainDataFile$name,
-          "', sep = '", sep(), "', dec = '", dec(), "', header = ", input$headercol, headerrow, ")",
-          sep = ""
-        )
-        if (input$dataType == "list") {
-          cat("\nmyNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix, type = '",
-            input$networkType, "'",
-            ifelse(input$networkType == "bipartite", "",
-              paste0(", directed = ", input$orientation)
-            ),
-            ")",
-            sep = ""
-          )
-        }
-        cat("\nmyNetworkMatrix <- as.matrix(myNetworkMatrix)")
-      } else {
-        validate(
-          need(input$dataBase, "")
-        )
-        data_path <- switch(input$dataBase,
-          "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
-          "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
-        )
-        cat("myNetworkMatrix <- ", data_path, sep = "")
-      }
-    })
+    mod_upload_code_server("upload_code_1",
+                           settings = inputs,
+                           sep = sep,
+                           dec = dec)
 
     return(list(
       dataType = reactive({

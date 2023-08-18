@@ -32,7 +32,7 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
       if (any(sapply(dta, is.character))) {
         if ((dim(dta)[2] == 2 && all(sapply(dta, is.character))) |
           (dim(dta)[2] == 3 && all(sapply(dta[, 1:2], is.character)) && is.numeric(dta[[3]]))) {
-          warning("Matrix Format: Is it really an adjacency matrix ? It seems to be a list edges")
+          warning("Matrix Format: Is it really an adjacency matrix ? It seems to be a list of edges")
         }
         # if first row and/or column are not taken as names it will change columns in character
         if (!inputs$headercol | !inputs$headerrow) {

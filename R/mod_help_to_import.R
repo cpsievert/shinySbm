@@ -32,7 +32,6 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
     )
 
     # Check if changes have been loaded
-    # unloaded_changes <- reactiveValues(v = F)
     observe({
       input_upload$matrixBuilder
       warn_list$unloaded_changes <- F
