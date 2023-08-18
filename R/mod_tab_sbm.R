@@ -112,8 +112,7 @@ mod_tab_sbm_ui <- function(id) {
       shinydashboard::box(
         title = "SBM outputs", solidHeader = T,
         status = "info", width = 12,
-        strong("SBM code:"),
-        verbatimTextOutput(ns("sbmCode")),
+        mod_sbm_code_ui(ns("sbm_code_1")),
         mod_help_to_import_ui(ns("error_2")),
         conditionalPanel(
           condition = "output.sbmRan == 'YES'",
@@ -154,14 +153,18 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       updateNumericInput(session, "exploreMax", min = input$exploreMin + 1)
     })
 
+    exploreMin <- eventReactive(c(input$moreSettings, input$exploreMin), {
+      if (input$moreSettings %% 2 == 1 && is.numeric(input$exploreMin)) {
+        input$exploreMin
+      }else{
+        4
+      }
+    })
+
     exploreMax <- eventReactive(c(input$moreSettings, input$exploreMax), {
-      if (input$moreSettings %% 2 == 1) {
-        if (is.na(input$exploreMax)) {
-          Inf
-        } else {
-          input$exploreMax
-        }
-      } else {
+      if (input$moreSettings %% 2 == 1 && !is.na(input$exploreMax)) {
+        input$exploreMax
+      }else{
         Inf
       }
     })
@@ -189,28 +192,27 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       data
     })
 
-    output$sbmCode <- renderText({
-      importSbm <- switch(r$upload$networkType(),
-        "unipartite" = paste0(
-          "mySbmModel <- sbm::estimateSimpleSBM(netMat = myNetworkMatrix, model = ",
-          Dataset()$law, ", estimOptions = list(verbosity = 1))"
-        ),
-        "bipartite" = paste0(
-          "mySbmModel <- sbm::estimateBipartiteSBM(netMat = myNetworkMatrix, model = '",
-          Dataset()$law, "', estimOptions = list(verbosity = 1))"
-        )
-      )
-      if (sum(my_sbm_main()$nbBlocks) != sum(my_sbm()$nbBlocks)) {
-        changeGroup <- paste0(
-          "\nindex <- which(mySbmModel$storedModels['nbBlocks'] == ",
-          sum(my_sbm()$nbBlocks), ")\n",
-          "mySbmModel$setModel(index)"
-        )
-      } else {
-        changeGroup <- ""
+    inputs <- reactiveValues(
+      runSbm = NULL,
+      moreSettings = NULL
+    )
+    observe({
+      inputs
+      for (nm in names(inputs)) {
+        inputs[[nm]] <- input[[nm]]
       }
-      paste0(importSbm, changeGroup)
     })
+
+
+    mod_sbm_code_server("sbm_code_1",
+                        settings = inputs,
+                        networkType = r$upload$networkType,
+                        exploreMin = exploreMin,
+                        exploreMax = exploreMax,
+                        directed = r$upload$directed,
+                        dataset = Dataset,
+                        sbm_main = my_sbm_main,
+                        sbm_current = my_sbm)
 
     mod_help_to_import_server("error_2", sbmData = Dataset)
 
@@ -224,7 +226,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
             model = Dataset()$law, estimOptions = list(
               verbosity = session$userData$console_verbosity * 3,
               plot = F,
-              exploreMin = input$exploreMin,
+              exploreMin = exploreMin(),
               exploreMax = exploreMax()
             )
           ),
@@ -233,7 +235,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
             model = Dataset()$law, estimOptions = list(
               verbosity = session$userData$console_verbosity * 3,
               plot = F,
-              exploreMin = input$exploreMin,
+              exploreMin = exploreMin(),
               exploreMax = exploreMax()
             )
           )
@@ -287,7 +289,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
       first_par <- paste0(
         "Tables 1 & 2 are the block description for the selected SBM. This model has an Entropy of ",
         round(data_sbm$entropy, 2),
-        ". The higher is the entropy, the less there is confusion inblock attribution."
+        ". The higher is the entropy, the less there is confusion in block attribution."
       )
 
       example_lab <- r$upload$labels()[["row"]]

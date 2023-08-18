@@ -74,11 +74,6 @@ mod_upload_code_server <- function(id,settings,sep,dec){
       }
     })
 
-
-
-
-
-
     output$uploadCode <- renderPrint({
       cat(upload_text())
     })

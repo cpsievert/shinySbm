@@ -166,6 +166,10 @@ golem::add_module(name = "show_group_names", with_test = TRUE)
 golem::add_module(name = "help_to_import", with_test = TRUE)
 
 golem::add_module(name = "upload_code", with_test = TRUE)
+golem::add_module(name = "sbm_code", with_test = TRUE)
+# golem::add_module(name = "show_code", with_test = TRUE)
+# golem::add_module(name = "network_code", with_test = TRUE)
+
 ## USED functions
 golem::add_fct("matrixNicePrint")
 golem::add_fct("errorHandeling")
