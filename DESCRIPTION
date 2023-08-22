@@ -9,7 +9,9 @@ Description: A 'shiny' interface for a simpler use of the 'sbm' R package.
     without any knowledge in R, get automatical reports and nice visuals, as 
     well as learning the basics functions of 'sbm'.
 License: MIT + file LICENSE
-Depends: R (>= 3.50)
+Depends: 
+  R (>= 3.50),
+  sbm
 Imports: 
     colourpicker,
     config (>= 0.3.1),
