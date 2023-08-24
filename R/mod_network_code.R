@@ -10,49 +10,85 @@
 mod_network_code_ui <- function(id){
   ns <- NS(id)
   tagList(
-    strong("visSbm Code:"),
-    verbatimTextOutput(ns('visCode')),
-    br()
+    checkboxInput(ns("visSbm_code"),label = strong("Show visSbm Code:"),value = TRUE),
+    conditionalPanel("input.visSbm_code % 2  == 1", ns = ns,
+                     verbatimTextOutput(ns('visCode')))
   )
 }
 
 #' network_code Server Functions
 #'
 #' @noRd
-mod_network_code_server <- function(id){
+mod_network_code_server <- function(id,settings,upload,node_colors,node_shapes,thresh_default){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # node_colors()
-    # node_shapes()
+    netPlot_code <- reactiveValues(
+      printNet = character()
+    )
 
-    # inputs
-    # input$edge_threshold see to put default value also
-    # input$edge_color
-    # input$arrows
-    # input$arrow_start
+    netPlot_text <- reactive({
+      paste(
+        c(
+          netPlot_code$printNet
+        ),
+        collapse = "\n"
+      )
+    })
+    session$userData$netPlot_code <- netPlot_text
 
-    # r$upload$labels() do something before ?
-    # r$upload$directed()
 
-    # r$upload$Dataset() unused outside of the app for now
+    observe({
+      if((!is.null(settings$arrows) && settings$arrows == 'FALSE') & (is.null(settings$arrow_start) || settings$arrow_start == "")){
+        arrow_start <- ''
+      }else{
+        arrow_start <- paste0("    arrow_start = '",settings$arrow_start,"',\n")
+      }
+      if(upload$networkType() == "bipartite"){
+        labels <- paste0("c(row = '",upload$labels()$row,
+                         "', col = '",upload$labels()$col,"')")
+        node_color <- paste0("c(row = '",node_colors()$row,
+                             "', col = '",node_colors()$col,"')")
+        node_shape <- paste0("c(row = '",node_shapes()$row,
+                             "', col = '",node_shapes()$col,"')")
+      }else{
+        labels <- paste0("'",upload$labels()$row,"'")
+        node_color <- paste0("'",node_colors()[[1]],"'")
+        node_shape <- paste0("'",node_shapes()[[1]],"'")
+      }
+      if(thresh_default()){
+        edge_thresh <- "    edge_threshold = 'default',\n"
+      }else{
+        edge_thresh <-paste0("    edge_threshold = ",settings$edge_threshold,",\n")
+      }
+      netPlot_code$printNet <- paste0(
+        "visSbm(","\n",
+        "  x = mySbmModel",",\n",
+        "  labels = ",labels,",\n",
+        "  directed = ",upload$directed(),",\n",
+        "  settings = list(","\n",
+        edge_thresh,
+        "    edge_color = '",settings$edge_color,"',\n",
+        "    arrows = ",settings$arrows,",\n",
+        arrow_start,
+        "    node_color = ",node_color,",\n",
+        "    node_shape = ",node_shape,"\n",
+        "  ))",
+        sep = '\n'
+      )
+    })
 
-    # visSbm(
-    #   x = mySbmModel,
-    #   labels = r$upload$labels(),
-    #   node_names = r$upload$Dataset(),
-    #   directed = r$upload$directed(),
-    #   settings = list(
-    #     edge_threshold = input$edge_threshold,
-    #     edge_color = input$edge_color,
-    #     arrows = input$arrows,
-    #     arrow_start = input$arrow_start,
-    #     node_color = node_colors(),
-    #     node_shape = node_shapes()
-    #   )
+
+
+
+
+
+
+
 
 
     output$visCode <- renderPrint({
+      cat(netPlot_text())
     })
   })
 }

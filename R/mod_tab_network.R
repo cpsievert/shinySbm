@@ -90,17 +90,36 @@ mod_tab_network_server <- function(id, r) {
     )
 
 
-    observeEvent(c(my_sbm(), input$resetThreshold), {
-      current_graph <- get_graph(my_sbm(),
-        labels = r$upload$labels(),
-        directed = r$upload$directed()
+
+
+    current_graph <- eventReactive(my_sbm(),{
+      get_graph(my_sbm(),
+                labels = r$upload$labels(),
+                directed = r$upload$directed()
       )
-      min <- floor(min(current_graph$edges$value))
-      max <- floor(max(current_graph$edges$value)) + 1
+    })
+
+    thresh_default <- reactiveVal(TRUE)
+    observe({
+      default_thresh <- default_threshold(current_graph())
+      inter <- default_thresh * 0.05
+      real_thresh <- input$edge_threshold + 0.05
+      if(real_thresh < default_thresh + inter & real_thresh > default_thresh - inter ){
+        thresh_default(TRUE)
+      }else{
+        thresh_default(FALSE)
+      }
+    })
+
+
+    observeEvent(c(input$resetThreshold,current_graph()), {
+      min <- floor(min(current_graph()$edges$value))
+      max <- floor(max(current_graph()$edges$value)) + 1
+      default_thresh <- default_threshold(current_graph())
       updateSliderInput(session, "edge_threshold",
         min = min,
         max = max,
-        value = default_threshold(current_graph) - 0.05
+        value = default_thresh - 0.05
       )
     })
 
@@ -221,7 +240,26 @@ mod_tab_network_server <- function(id, r) {
     })
 
 
-    mod_network_code_server("network_code_1")
+    inputs <- reactiveValues(
+      edge_threshold = NULL,
+      edge_color = NULL,
+      arrows = NULL,
+      arrow_start = NULL
+    )
+    observe({
+      inputs
+      for (nm in names(inputs)) {
+        inputs[[nm]] <- input[[nm]]
+      }
+    })
+
+
+    mod_network_code_server("network_code_1",
+                            settings = inputs,
+                            upload = r$upload,
+                            node_colors = node_colors,
+                            node_shapes = node_shapes,
+                            thresh_default = thresh_default)
 
 
     output$node_names <- DT::renderDataTable({

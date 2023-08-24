@@ -57,7 +57,7 @@ mod_upload_code_server <- function(id, settings, sep, dec) {
         )
         if (settings$dataType == "list") {
           upload_code$do_matrix <- paste0(
-            "myNetworkMatrix <- shinySbm::edges_to_adjacency(myNetworkMatrix, type = '",
+            "myNetworkMatrix <- shinySbm::get_adjacency(myNetworkMatrix, type = '",
             settings$networkType, "'",
             ifelse(settings$networkType == "bipartite", "",
               paste0(", directed = ", settings$orientation)
