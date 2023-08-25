@@ -234,6 +234,15 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
+
+    directed <- eventReactive(c(input$orientation,datasetUploaded()),{
+      if(input$dataType == 'list'){
+        input$orientation
+      }else{
+        !isSymmetric(as.matrix(datasetUploaded()))
+      }
+    })
+
     # reactive decimal pointer for reading
     dec <- reactive({
       if (input$whichDec == "others") {
@@ -258,14 +267,15 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         validate(
           need(input$mainDataFile$datapath, "")
         )
-        try_data <- read.table(file = input$mainDataFile$datapath, sep = sep(), dec = dec(), header = input$headercol)
+        try_data <- read.table(file = input$mainDataFile$datapath, sep = sep(), dec = dec(), header = input$headercol,check.names = FALSE)
         if (!any(duplicated(try_data[[1]])) & input$headerrow) {
           data <- read.table(
             file = input$mainDataFile$datapath, sep = sep(),
-            row.names = 1, header = input$headercol
+            row.names = 1, header = input$headercol,
+            check.names = FALSE
           )
         } else {
-          data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol)
+          data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol,check.names = FALSE)
         }
       } else {
         validate(
@@ -437,9 +447,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       dataType = reactive({
         input$dataType
       }),
-      directed = reactive({
-        as.logical(input$orientation)
-      }),
+      directed = directed,
       labels = labels,
       Dataset = datasetUploaded,
       networkType = reactive({

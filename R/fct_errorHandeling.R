@@ -42,6 +42,16 @@ check_data_inputs <- function(dta = NULL, inputs = NULL) {
           warning("Some characters in matrix: Check if the data is correctly encoded")
         }
       }
+
+      if(inputs$networkType == "unipartite" &&
+         !(all(row.names(dta) %in% names(dta)) && all(names(dta) %in% row.names(dta)))){
+        message("Node names in columns aren't exactly the same than node names in lines: Are you sure this is a unipartite network ?")
+      }else if(inputs$networkType == "bipartite" &&
+               all(row.names(dta) %in% names(dta)) && all(names(dta) %in% row.names(dta))){
+        message("Node names in columns are exactly the same than node names in lines: Are you sure this is a bipartite network ?")
+      }
+
+
     } else { ## Check in case of a list or node pairs
       if (dim(dta)[2] > 3) {
         # List can only be thick or 2 or 3 columns
