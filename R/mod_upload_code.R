@@ -57,7 +57,7 @@ mod_upload_code_server <- function(id, settings, sep, dec) {
         )
         if (settings$dataType == "list") {
           upload_code$do_matrix <- paste0(
-            "myNetworkMatrix <- shinySbm::get_adjacency(myNetworkMatrix, type = '",
+            "myNetworkMatrix <- get_adjacency(myNetworkMatrix, type = '",
             settings$networkType, "'",
             ifelse(settings$networkType == "bipartite", "",
               paste0(", directed = ", settings$orientation)
@@ -70,8 +70,8 @@ mod_upload_code_server <- function(id, settings, sep, dec) {
           need(settings$dataBase, "")
         )
         data_path <- switch(settings$dataBase,
-          "fungus_tree" = "sbm::fungusTreeNetwork$fungus_tree",
-          "tree_tree" = "sbm::fungusTreeNetwork$tree_tree"
+          "fungus_tree" = "fungusTreeNetwork$fungus_tree",
+          "tree_tree" = "fungusTreeNetwork$tree_tree"
         )
         upload_code$reading <- paste0("myNetworkMatrix <- ", data_path, sep = "")
         upload_code$do_matrix <- character()
