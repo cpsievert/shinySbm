@@ -53,10 +53,10 @@ mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
           directed = ""
         )
       )
-      space_line_2 <- 36 + 3 * (upload$networkType() == "bipartite")
-      space_line_3 <- 57 + 3 * (upload$networkType() == "bipartite")
+      space_line_2 <- 31 + 3 * (upload$networkType() == "bipartite")
+      space_line_3 <- 52 + 3 * (upload$networkType() == "bipartite")
       sbm_code$applying <- paste0(
-        "mySbmModel <- sbm::estimate", case_dep$model,
+        "mySbmModel <- estimate", case_dep$model,
         "SBM(netMat = myNetworkMatrix, model = '", dataset()$law,"'", case_dep$directed,
         ",\n", paste(rep(" ", space_line_2), collapse = ""), " estimOptions = list(plot = T, verbosity = ",
         session$userData$console_verbosity * 3,
