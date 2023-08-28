@@ -16,7 +16,6 @@ mod_tab_network_ui <- function(id) {
     shinydashboard::box(
       title = "Network Visual Settings", solidHeader = T,
       status = "info", collapsible = T, width = 9,
-      mod_network_code_ui(ns("network_code_1")),
       fluidRow(
         column(
           6,
@@ -57,7 +56,8 @@ mod_tab_network_ui <- function(id) {
               tags$br(), tags$br()
             )
           ),
-          uiOutput(ns("selectEdge"))
+          uiOutput(ns("selectEdge")),
+          mod_network_code_ui(ns("network_code_1"))
         )
       ),
       downloadButton(ns("downloadVis"), label = "Download Graph"),
