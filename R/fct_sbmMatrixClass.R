@@ -9,6 +9,8 @@
 #'
 #' @return `name` or if it's already in `list` the first of `nameX` (`name1`, `name2`, etc...) that is not already in the list
 #'
+#' @import sbm
+#'
 #' @noRd
 addindice <- function(list, name, n = 1) {
   if (name %in% list) {

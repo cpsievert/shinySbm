@@ -17,14 +17,14 @@ get_block(
 
 \item{labels}{labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).}
 
-\item{attribution}{Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
-
-\item{proportion}{Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
-
-\item{node_names:}{\itemize{
+\item{node_names}{\itemize{
 \item{"bipartite case": }{named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns}
 \item{"unipartite case": }{character: node names}
 }}
+
+\item{attribution}{Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
+
+\item{proportion}{Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
 }
 \value{
 \itemize{

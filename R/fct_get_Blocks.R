@@ -4,7 +4,7 @@
 #'
 #' @param x Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit`.
 #' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
-#' @param node_names:
+#' @param node_names
 #' \itemize{
 #'  \item{"bipartite case": }{named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns}
 #'  \item{"unipartite case": }{character: node names}
