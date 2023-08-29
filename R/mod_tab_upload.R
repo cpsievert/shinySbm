@@ -237,10 +237,11 @@ mod_tab_upload_server <- function(id, r, parent_session) {
 
     directed <- eventReactive(c(input$orientation,datasetUploaded()),{
       if(input$dataType == 'list'){
-        input$orientation
+        dir <- input$orientation
       }else{
-        !isSymmetric(as.matrix(datasetUploaded()))
+        dir <- !isSymmetric(as.matrix(datasetUploaded()))
       }
+      return(as.logical(dir))
     })
 
     # reactive decimal pointer for reading
