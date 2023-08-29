@@ -7,18 +7,20 @@
 #' @noRd
 melt_matrix <- function(data) {
   . <- NULL
-  if (is.null(rownames(data))) {
-    row_names <- 1:nrow(data)
-  } else {
-    row_names <- rownames(data)
-  }
+  # if (is.null(rownames(data))) {
+  #
+  # } else {
+  #   row_names <- rownames(data)
+  # }
+  #
+  # if (is.null(colnames(data))) {
+  #
+  # } else {
+  #   col_names <- colnames(data)
+  # }
 
-  if (is.null(colnames(data))) {
-    col_names <- 1:ncol(data)
-  } else {
-    col_names <- colnames(data)
-  }
-
+  row_names <- 1:nrow(data)
+  col_names <- 1:ncol(data)
   data.frame(
     Var1 = rep(row_names, times = length(col_names)),
     Var2 = rep(col_names, each = length(row_names)),

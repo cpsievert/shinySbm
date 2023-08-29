@@ -466,20 +466,18 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
   currentOptions[names(plotOptions)] <- plotOptions
   ################################################
 
-  nb_rows <- dim(x)[1]
-  if (nb_rows == dim(x)[2]) {
-    if (transpose) {
-      mat_exp <- x[, nb_rows:1]
-    } else {
-      mat_exp <- x[nb_rows:1, ]
-    }
+  nb_rows <- nrow(x)
+  nb_cols <- ncol(x)
+
+  if (transpose) {
+    mat_exp <- x[, nb_cols:1]
   } else {
-    mat_exp <- x
+    mat_exp <- x[nb_rows:1, ]
   }
 
   plot_net <- melt_matrix(mat_exp)
 
-  if (transpose) {
+  if (nb_rows == nb_cols & transpose) {
     names(plot_net)[c(1, 2)] <- names(plot_net)[c(2, 1)]
   }
 

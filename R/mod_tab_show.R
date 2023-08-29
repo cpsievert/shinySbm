@@ -131,6 +131,7 @@ mod_tab_show_server <- function(id, r) {
       r$upload$labels
     )
 
+
     output$matrixPrint <- DT::renderDataTable({
       # probleme: taille et position, wrapping des titres, fixer la colonnne de rownames
       req(input$whichShow)
