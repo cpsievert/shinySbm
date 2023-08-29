@@ -472,12 +472,12 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
   if (transpose) {
     mat_exp <- x[, nb_cols:1]
   } else {
-    mat_exp <- x[nb_rows:1, ]
+    mat_exp <- x[nb_rows:1,]
   }
 
   plot_net <- melt_matrix(mat_exp)
 
-  if (nb_rows == nb_cols & transpose) {
+  if (transpose) {
     names(plot_net)[c(1, 2)] <- names(plot_net)[c(2, 1)]
   }
 
