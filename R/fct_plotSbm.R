@@ -171,6 +171,11 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
     tCol <- NULL
     mat_exp <- x$connectParam$mean[clustering$row, clustering$col]
     mat_pure <- x$networkData
+    if(transpose){
+      mat_pure <- mat_pure[,ncol(x$networkData):1]
+    }else{
+      mat_pure <- mat_pure[nrow(x$networkData):1,]
+    }
   }
 
   plot_net <- dplyr::mutate(melt_matrix(mat_exp),
