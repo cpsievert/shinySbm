@@ -10,8 +10,8 @@
 mod_network_code_ui <- function(id){
   ns <- NS(id)
   tagList(
-    checkboxInput(ns("visSbm_code"),label = strong("Show visSbm Code:"),value = TRUE),
-    conditionalPanel("input.visSbm_code % 2  == 1", ns = ns,
+    checkboxInput(ns("visSbm_code"),label = strong("Show visSbm Code"),value = TRUE),
+    conditionalPanel("input.visSbm_code % 2  == 0", ns = ns,
                      verbatimTextOutput(ns('visCode')))
   )
 }

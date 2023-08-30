@@ -204,11 +204,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     outputOptions(output, "sbmRan", suspendWhenHidden = FALSE)
 
     ## Settings reactive labels for plots (nature of stuff in cols and rows)
-    labels <- eventReactive(c(input$networkType, input$rowLabel, input$colLabel, input$nodLabel), {
+    labels <- eventReactive(c(input$networkType,input$dataType, input$rowLabel, input$colLabel, input$nodLabel), {
       labels_sets <- switch(input$networkType,
         "bipartite" = list(row = input$rowLabel, col = input$colLabel),
         "unipartite" = list(row = input$nodLabel, col = input$nodLabel)
       )
+
       list(
         row = ifelse(labels_sets$row == "",
           ifelse(input$networkType == "bipartite", "row", "nodes"),
@@ -329,6 +330,50 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         updateTextInput(session, "nodLabel", value = "Trees")
       }
     })
+
+    observeEvent(input$matrixBuilder,{
+
+      if(input$dataType == "list"){
+        if("data.frame" %in% class(datasetSelected()) && ncol(datasetSelected())>1){
+          base_names <- names(datasetSelected())
+        }else{
+          base_names <- c("Col1","Col2")
+        }
+        updateTextInput(session, "rowLabel",
+                        value = base_names[[1]])
+        updateTextInput(session, "colLabel",
+                        value = base_names[[2]])
+      }else{
+        updateTextInput(session, "rowLabel",
+                        value = "")
+        updateTextInput(session, "colLabel",
+                        value = "")
+      }
+    })
+
+    observe({
+      if (input$dataType == "list") {
+        updateTextInput(session, "rowLabel",
+                        label = "Label for nodes in 1st column")
+        updateTextInput(session, "colLabel",
+                        label = "Label for nodes in 2nd column")
+      } else {
+        updateTextInput(session, "rowLabel",label = "Label for nodes in row")
+        updateTextInput(session, "colLabel",label = "Label for nodes in col")
+      }
+    })
+
+
+    # observe({
+    #   if (input$dataType == "list") {
+    #     base_names <- names(datasetSelected())
+    #     updateTextInput(session, "rowLabel",label = "Label for nodes in 1st column", value = base_names[[1]])
+    #     updateTextInput(session, "colLabel",label = "Label for nodes in 2nd column", value = base_names[[2]])
+    #   } else {
+    #     updateTextInput(session, "rowLabel",label = "Label for nodes in row", value = "")
+    #     updateTextInput(session, "colLabel",label = "Label for nodes in col", value = "")
+    #   }
+    # })
 
     observeEvent(input$whichData, {
       updateTextInput(session, "rowLabel", value = "")

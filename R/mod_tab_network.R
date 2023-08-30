@@ -150,7 +150,7 @@ mod_tab_network_server <- function(id, r) {
           ),
           fluidRow(
             column(6, checkboxInput(ns("arrows"),
-              label = "Edges as Arrows",
+              label = strong("Edges as Arrows"),
               value = r$upload$directed()
             )),
             column(6, uiOutput(ns("arrow_start_ui")))
