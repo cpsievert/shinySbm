@@ -87,18 +87,21 @@ mod_tab_show_ui <- function(id) {
       )
     ),
     mod_select_nb_groups_ui(ns("select_nb_groups_1")),
-    shinydashboard::box(
-      title = "Color settings", solidHeader = T,
-      status = "info", collapsible = T, collapsed = T, width = 3,
-      colourpicker::colourInput(
-        ns("colorValues"),
-        label = "Select colour for initial values",
-        value = "black"
-      ),
-      colourpicker::colourInput(
-        ns("colorPred"),
-        label = "Select colour for predicted values",
-        value = "red"
+    conditionalPanel(
+      condition = "input.whichShow == 'plot'", ns = ns,
+      shinydashboard::box(
+        title = "Color settings", solidHeader = T,
+        status = "info", collapsible = T, collapsed = T, width = 3,
+        colourpicker::colourInput(
+          ns("colorValues"),
+          label = "Select colour for initial values",
+          value = "black"
+        ),
+        colourpicker::colourInput(
+          ns("colorPred"),
+          label = "Select colour for predicted values",
+          value = "red"
+        )
       )
     ),
     shinydashboard::box(
@@ -138,19 +141,29 @@ mod_tab_show_server <- function(id, r) {
       if (input$whichShow != "print") {
         return(NULL)
       }
-      DT::datatable(
-        as.data.frame(r$upload$Dataset()),
-        extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
-        option = list(
-          fixedHeader = TRUE,
-          fixedColumns = list(leftColumns = 1),
-          scrollX = T,
-          scrollY = T,
-          keys = TRUE,
-          paging = F
-        )
-      ) %>%
-        DT::formatStyle(c(1:dim(r$upload$Dataset())[2]), border = "1px solid #ddd")
+      if (session$userData$vars$sbm$runSbm != 0) {
+        get_datatable(model = my_sbm(),
+                      matrix = r$upload$Dataset(),
+                      type = input$whichMatrix)
+      }else{
+        get_datatable(model = r$upload$Dataset(),
+                      type = input$whichMatrix)
+      }
+
+
+      # DT::datatable(
+      #   as.data.frame(r$upload$Dataset()),
+      #   extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
+      #   option = list(
+      #     fixedHeader = TRUE,
+      #     fixedColumns = list(leftColumns = 1),
+      #     scrollX = T,
+      #     scrollY = T,
+      #     keys = TRUE,
+      #     paging = F
+      #   )
+      # ) %>%
+      #   DT::formatStyle(c(1:dim(r$upload$Dataset())[2]), border = "1px solid #ddd")
     })
 
 
