@@ -149,21 +149,6 @@ mod_tab_show_server <- function(id, r) {
         get_datatable(model = r$upload$Dataset(),
                       type = input$whichMatrix)
       }
-
-
-      # DT::datatable(
-      #   as.data.frame(r$upload$Dataset()),
-      #   extensions = c("FixedColumns", "FixedHeader", "KeyTable"),
-      #   option = list(
-      #     fixedHeader = TRUE,
-      #     fixedColumns = list(leftColumns = 1),
-      #     scrollX = T,
-      #     scrollY = T,
-      #     keys = TRUE,
-      #     paging = F
-      #   )
-      # ) %>%
-      #   DT::formatStyle(c(1:dim(r$upload$Dataset())[2]), border = "1px solid #ddd")
     })
 
 
