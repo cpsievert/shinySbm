@@ -4,8 +4,9 @@
 
 ### Developpement essentiels
 
-- Permettre de récupérer le code du sbm (avec aussi un fichier r complet)
-- Tableau organisé comme matrice 
+- Permettre de récupérer le code du sbm (avec aussi un fichier r complet + plotsbm code)
+- corriger erreur xlim when changing tables 
+- corriger erreur builds
 
 
 ### Typos ou mise en forme/harmonisation

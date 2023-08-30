@@ -124,9 +124,11 @@ get_dataframe.SimpleSBM <- function(object,matrix = NULL, type = c('raw','ordere
 #'
 #' @param dta a numeric dataframe from wich we will build the gradient
 #'
+#' @importFrom stats quantile
 #' @return DT::styleInterval object of red gradient intervals
 #' @noRd
 DT_intervals <- function(dta){
+  . <- NULL
   brks <- quantile(dta, probs = seq(.05, .95, .05), na.rm = TRUE)
   clrs <- round(seq(255, 40, length.out = length(brks) + 1), 0) %>%
     {paste0("rgb(255,", ., ",", ., ")")}
