@@ -63,7 +63,7 @@ mod_show_code_server <- function(id,settings,upload){
       if (settings$setTitle == "") {
         title <- character()
       } else {
-        title <- patse0(
+        title <- paste0(
           "  title = '",
           settings$setTitle,
           "',\n")
