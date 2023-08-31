@@ -51,7 +51,7 @@ mod_upload_code_server <- function(id, settings, sep, dec) {
           headerrow <- ""
         }
         upload_code$reading <- paste0(
-          "myNetworkMatrix <- read.table(file = '", settings$mainDataFile$name,
+          "myNetworkMatrix <- read.table(file = 'FILE_PATH/", settings$mainDataFile$name,
           "', sep = '", sep(), "', dec = '", dec(), "', header = ",
           settings$headercol, headerrow, ")"
         )

@@ -75,7 +75,7 @@ mod_tab_report_server <- function(id, r) {
     output$downReport <- downloadHandler(
       filename = eventReactive(c(parameters$sbm$nbBlocks, input$fileType, input$fileName), {
         params <- reactiveValuesToList(parameters)
-        if ("sbm" %in% names(params)) {
+        if (session$userData$vars$sbm$runSbm != 0 && "sbm" %in% names(params)) {
           add_group <- paste0("_", sum(params$sbm$nbBlocks), "_blocks")
         } else {
           add_group <- ""

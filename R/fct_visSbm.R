@@ -330,7 +330,7 @@ visSbm.BipartiteSBM_fit <- function(x,
     )) %>%
     dplyr::ungroup()
 
-  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges, height = 800) %>%
+  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges, height = 400) %>%
     visNetwork::visEdges(
       arrows = preSettings$arrows,
       color = preSettings$edge_color,
@@ -454,7 +454,7 @@ visSbm.SimpleSBM_fit <- function(x,
   )
 
 
-  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges, height = 800) %>%
+  visual <- visNetwork::visNetwork(node_edges$nodes, node_edges$edges, height = 400) %>%
     visNetwork::visEdges(
       arrows = preSettings$arrows,
       color = preSettings$edge_color,

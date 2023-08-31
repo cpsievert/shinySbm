@@ -363,18 +363,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       }
     })
 
-
-    # observe({
-    #   if (input$dataType == "list") {
-    #     base_names <- names(datasetSelected())
-    #     updateTextInput(session, "rowLabel",label = "Label for nodes in 1st column", value = base_names[[1]])
-    #     updateTextInput(session, "colLabel",label = "Label for nodes in 2nd column", value = base_names[[2]])
-    #   } else {
-    #     updateTextInput(session, "rowLabel",label = "Label for nodes in row", value = "")
-    #     updateTextInput(session, "colLabel",label = "Label for nodes in col", value = "")
-    #   }
-    # })
-
     observeEvent(input$whichData, {
       updateTextInput(session, "rowLabel", value = "")
       updateTextInput(session, "colLabel", value = "")

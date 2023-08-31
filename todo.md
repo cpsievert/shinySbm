@@ -4,8 +4,7 @@
 
 ### Developpement essentiels
 
-- corriger erreur xlim when changing tables 
-- visSbm net should be upper
+- corriger erreur xlim when changing tables
 - corriger erreur builds
 
 

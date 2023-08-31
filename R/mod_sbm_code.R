@@ -29,13 +29,17 @@ mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
     )
 
     sbm_text <- reactive({
-      paste(
-        c(
-          sbm_code$applying,
-          sbm_code$change_block
-        ),
-        collapse = "\n"
-      )
+      if(session$userData$vars$sbm$runSbm == 0){
+        return(character())
+      }else{
+        return(paste(
+          c(
+            sbm_code$applying,
+            sbm_code$change_block
+          ),
+          collapse = "\n"
+        ))
+      }
     })
     session$userData$sbm_code <- sbm_text
 
