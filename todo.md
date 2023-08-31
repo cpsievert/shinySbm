@@ -2,10 +2,6 @@
 
 [test CRAN](https://cran.r-project.org/web/packages/submission_checklist.html)
 
-### Developpement essentiels
-
-- corriger erreur builds
-
 
 ### Typos ou mise en forme/harmonisation
 
