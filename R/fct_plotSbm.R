@@ -460,6 +460,8 @@ plotSbm.matrix <- function(x, ordered = FALSE, transpose = FALSE, labels = NULL,
   ###############################################
   if (is.null(labels)) {
     labels <- list(row = "row", col = "col")
+  } else if (length(labels) == 1) {
+    labels <- list(row = labels, col = labels)
   }
 
   currentOptions <- list(

@@ -28,7 +28,8 @@ mod_tab_report_ui <- function(id) {
       radioButtons(ns("fileType"), "Select file type:",
         choices = list(
           "pdf" = "pdf",
-          "html" = "html"
+          "html" = "html",
+          "R code" = "R"
         ),
         selected = "html",
         inline = T
@@ -71,7 +72,6 @@ mod_tab_report_server <- function(id, r) {
 
 
 
-
     output$downReport <- downloadHandler(
       filename = eventReactive(c(parameters$sbm$nbBlocks, input$fileType, input$fileName), {
         params <- reactiveValuesToList(parameters)
@@ -84,27 +84,37 @@ mod_tab_report_server <- function(id, r) {
         return(paste0(input$fileName, add_group, ".", input$fileType))
       }),
       content = function(file) {
-        file_names <- c("summary_template", "child_imported", "child_sbm", "child_empty")
-        visual_names <- c("child_setup.Rmd", "child_imported_visual.Rmd", "child_sbm_visual.Rmd")
-        rmd_names <- purrr::map_chr(file_names, ~ paste0(.x, input$language))
-        all_files <- c(rmd_names, visual_names)
-        file_paths <- purrr::map_chr(
-          all_files,
-          ~ system.file("rmd", .x, package = "shinySbm")
-        )
-        tempReports <- purrr::map_chr(
-          all_files,
-          ~ file.path(gsub("\\\\", "/", tempdir()), .x, fsep = "/")
-        )
-        purrr::map2(file_paths, tempReports, ~ file.copy(.x, .y, overwrite = TRUE))
+        if(input$fileType == "R"){
+          text <- paste0(
+            "library(shinySbm)\n\n",
+            session$userData$upload_code(),"\n\n",
+            session$userData$sbm_code(),"\n\n",
+            session$userData$matPlot_code(),"\n\n",
+            session$userData$netPlot_code())
+          write(text,file)
+        }else{
+          file_names <- c("summary_template", "child_imported", "child_sbm", "child_empty")
+          visual_names <- c("child_setup.Rmd", "child_imported_visual.Rmd", "child_sbm_visual.Rmd")
+          rmd_names <- purrr::map_chr(file_names, ~ paste0(.x, input$language))
+          all_files <- c(rmd_names, visual_names)
+          file_paths <- purrr::map_chr(
+            all_files,
+            ~ system.file("rmd", .x, package = "shinySbm")
+          )
+          tempReports <- purrr::map_chr(
+            all_files,
+            ~ file.path(gsub("\\\\", "/", tempdir()), .x, fsep = "/")
+          )
+          purrr::map2(file_paths, tempReports, ~ file.copy(.x, .y, overwrite = TRUE))
 
-        rmarkdown::render(
-          input = tempReports[[1]],
-          output_file = file,
-          output_format = paste0(input$fileType, "_document"),
-          params = reactiveValuesToList(parameters),
-          envir = new.env(parent = globalenv())
-        )
+          rmarkdown::render(
+            input = tempReports[[1]],
+            output_file = file,
+            output_format = paste0(input$fileType, "_document"),
+            params = reactiveValuesToList(parameters),
+            envir = new.env(parent = globalenv())
+          )
+        }
       }
     )
   })

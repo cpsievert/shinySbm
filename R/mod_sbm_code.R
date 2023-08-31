@@ -79,7 +79,7 @@ mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
           "mySbmModel$setModel(index)"
         )
       } else {
-        sbm_code$change_block <- ""
+        sbm_code$change_block <- character()
       }
     })
 

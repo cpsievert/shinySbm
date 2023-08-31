@@ -4,8 +4,8 @@
 
 ### Developpement essentiels
 
-- Permettre de récupérer le code du sbm (avec aussi un fichier r complet + plotsbm code)
 - corriger erreur xlim when changing tables 
+- visSbm net should be upper
 - corriger erreur builds
 
 
