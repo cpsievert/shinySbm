@@ -82,7 +82,8 @@ mod_tab_show_ui <- function(id) {
           conditionalPanel(
             condition = "input.networkType == 'bipartite'", ns = ns_tab_upload,
             checkboxInput(ns("showTransposed"), "Invert Columns and Rows", value = F)
-          )
+          ),
+          mod_show_code_ui(ns("show_code_1"))
         )
       )
     ),
@@ -150,6 +151,28 @@ mod_tab_show_server <- function(id, r) {
                       type = input$whichMatrix)
       }
     })
+
+    inputs <- reactiveValues(
+      whichShow = NULL,
+      setTitle  = NULL,
+      showLegend = NULL,
+      showPred = NULL,
+      colorPred = NULL,
+      colorValues = NULL,
+      interactionName = NULL,
+      whichMatrix = NULL,
+      showTransposed = NULL
+    )
+    observe({
+      inputs
+      for (nm in names(inputs)) {
+        inputs[[nm]] <- input[[nm]]
+      }
+    })
+
+    mod_show_code_server("show_code_1",
+                         settings = inputs,
+                         upload = r$upload)
 
 
     PlotMat <- reactive({

@@ -9,17 +9,10 @@
 #' @importFrom shiny NS tagList
 mod_show_code_ui <- function(id){
   ns <- NS(id)
-  ns_tab_show <- function(id) {
-    paste0("tab_show_1-", id)
-  }
   tagList(
-    conditionalPanel(condition = "input.whichShow == 'plot'",
-                     ns = ns_tab_show,
-                     checkboxInput(ns("plotSbm_code"),label = strong("Show plorSbm Code"),value = TRUE),
-                     conditionalPanel("input.plotSbm_code % 2  == 0", ns = ns,
-                                      verbatimTextOutput(ns('plotSbm')))
-                     )
-
+    checkboxInput(ns("plotSbm_code"),label = "Show plotSbm Code",value = FALSE),
+    conditionalPanel("input.plotSbm_code", ns = ns,
+                     verbatimTextOutput(ns('show_plotSbm')))
   )
 }
 
@@ -42,56 +35,104 @@ mod_show_code_server <- function(id,settings,upload){
       )
     })
     session$userData$matPlot_code <- matPlot_text
+
+    observe({
+
+      ## Begin Main parameters
+
+      if (session$userData$vars$sbm$runSbm == 0) {
+        dta <- "myNetworkMatrix"
+        ordered <- character()
+      }else{
+        dta <- "mySbmModel"
+        ordered <- paste0(
+          "  ordered = ",
+          settings$whichMatrix != "raw",",\n"
+        )
+      }
+
+      if(upload$networkType() == "bipartite"){
+        labels <- paste0("c(row = '",upload$labels()$row,
+                         "', col = '",upload$labels()$col,"')")
+      }else{
+        labels <- paste0("'",upload$labels()$row,"'")
+      }
+
+      ## Begin options
+
+      if (settings$setTitle == "") {
+        title <- character()
+      } else {
+        title <- patse0(
+          "  title = '",
+          settings$setTitle,
+          "',\n")
+      }
+
+      if(!settings$showLegend){
+        showLegend <- character()
+      }else{
+        showLegend <- paste0("    showLegend = TRUE,\n")
+      }
+
+
+      ## Ending options
+
+      if(settings$colorPred == '#FF0000'){
+        colPred <- character()
+      }else{
+        colPred <- paste0(",\n",
+          "    colValue = '",settings$colorPred,"'"
+        )
+      }
+
+      if(settings$colorValues == '#000000'){
+        colValue <- character()
+      }else{
+        colValue <- paste0(",\n",
+          "    colValue = '",settings$colorValues,"'"
+        )
+      }
+
+      if(settings$interactionName == "connection"){
+        interactionName <- character(0)
+      }else{
+        interactionName <- paste0(",\n",
+          "    interactionName = '",
+          settings$interactionName,"'",
+        )
+      }
+
+      if(settings$whichMatrix != "expected"){
+        showValues <- character(0)
+      }else{
+        showValues <- paste0(",\n    showValues = ", FALSE)
+      }
+
+      matPlot_code$matPlot <- paste0(
+        "plotSbm(\n",
+        "  ",dta,",\n",
+        ordered,
+        "  transpose = ",settings$showTransposed,",\n",
+        "  labels = ",labels,",\n",
+        "  plotOptions = list(\n",
+        title,
+        showLegend,
+        "    showPredictions = ",settings$showPred,
+        colPred,
+        colValue,
+        interactionName,
+        showValues,
+        "\n  ))"
+      )
+
+    })
+
+    output$show_plotSbm <- renderPrint({
+      cat(matPlot_text())
+    })
+
   })
-
-
-  # PlotMat <- reactive({
-  #   req(input$whichShow)
-  #   if (input$whichShow == "plot") {
-  #     x <- as.matrix(r$upload$Dataset())
-  #     labels_list <- r$upload$labels()
-  #     my_Options <- list(
-  #       title = if (input$setTitle == "") {
-  #         NULL
-  #       } else {
-  #         input$setTitle
-  #       },
-  #       showLegend = input$showLegend,
-  #       showPredictions = input$showPred,
-  #       colPred = input$colorPred,
-  #       colValue = input$colorValues,
-  #       interactionName = input$interactionName
-  #     )
-  #
-  #     if (session$userData$vars$sbm$runSbm != 0) {
-  #       data_sbm <- my_sbm()$clone()
-  #       switch(input$whichMatrix,
-  #              "raw" = plotSbm(data_sbm,
-  #                              ordered = FALSE, transpose = input$showTransposed,
-  #                              labels = labels_list,
-  #                              plotOptions = my_Options
-  #              ),
-  #              "ordered" = plotSbm(data_sbm,
-  #                                  ordered = TRUE, transpose = input$showTransposed,
-  #                                  labels = labels_list,
-  #                                  plotOptions = my_Options
-  #              ),
-  #              "expected" = plotSbm(data_sbm,
-  #                                   ordered = TRUE, transpose = input$showTransposed,
-  #                                   labels = labels_list,
-  #                                   plotOptions = c(my_Options, showValues = F)
-  #              )
-  #       )
-  #     } else {
-  #       plotSbm(x,
-  #               transpose = input$showTransposed,
-  #               labels = labels_list, plotOptions = my_Options
-  #       )
-  #     }
-  #   } else {
-  #     return(NULL)
-  #   }
-  # })
 }
 
 ## To be copied in the UI
