@@ -80,7 +80,8 @@ mod_tab_sbm_ui <- function(id) {
             min = 4,
             max = 100,
             step = 1
-          )
+          ),
+          uiOutput(ns('nbCoreUI'))
         ),
         uiOutput(ns("sbmButton"))
       ),
@@ -132,6 +133,34 @@ mod_tab_sbm_ui <- function(id) {
 mod_tab_sbm_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+
+
+    output$nbCoreUI <- renderUI({
+      if(session$userData$nbCore_control){
+        nb_cores <- detectCores()
+        if(is.numeric(nb_cores)){
+          max_nb_cores <- nb_cores - 2
+        }else{
+          max_nb_cores <- 2
+        }
+        numericInput(ns("nbCores"),
+                     label = "Number of Cores",
+                     value = 2,
+                     min = 2,
+                     max = max_nb_cores,
+                     step = 1
+        )
+      }
+    })
+
+    nb_cores <- reactive({
+      if(session$userData$nbCore_control && input$moreSettings %% 2  == 1 &&
+         !is.null(input$nbCores) && !is.logical(input$nbCores)){
+        nb_cores <- input$nbCores
+      }else{
+        nb_cores <- 2
+      }
+    })
 
     observeEvent(input$moreSettings, {
       if (input$moreSettings %% 2 == 1) {
@@ -209,6 +238,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
                         upload  = r$upload,
                         exploreMin = exploreMin,
                         exploreMax = exploreMax,
+                        nbCores = nb_cores,
                         dataset = Dataset,
                         sbm_main = my_sbm_main,
                         sbm_current = my_sbm)
@@ -226,7 +256,8 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
               verbosity = session$userData$console_verbosity * 3,
               plot = F,
               exploreMin = exploreMin(),
-              exploreMax = exploreMax()
+              exploreMax = exploreMax(),
+              nbCores = nb_cores()
             )
           ),
           "bipartite" = sbm::estimateBipartiteSBM(
@@ -235,7 +266,8 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
               verbosity = session$userData$console_verbosity * 3,
               plot = F,
               exploreMin = exploreMin(),
-              exploreMax = exploreMax()
+              exploreMax = exploreMax(),
+              nbCores = nb_cores()
             )
           )
         )

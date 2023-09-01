@@ -19,7 +19,7 @@ mod_sbm_code_ui <- function(id) {
 #'
 #' @noRd
 mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
-                                dataset, sbm_main, sbm_current) {
+                                nbCores, dataset, sbm_main, sbm_current) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -59,6 +59,16 @@ mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
       )
       space_line_2 <- 31 + 3 * (upload$networkType() == "bipartite")
       space_line_3 <- 52 + 3 * (upload$networkType() == "bipartite")
+
+      if(nbCores() == 2){
+        nb_cores <- ""
+      }else{
+        nb_cores <- paste0(
+          ",\n",paste(rep(" ", space_line_3), collapse = ""),"nbCores = ", nbCores()
+        )
+      }
+
+
       sbm_code$applying <- paste0(
         "mySbmModel <- estimate", case_dep$model,
         "SBM(netMat = myNetworkMatrix, model = '", dataset()$law,"'", case_dep$directed,
@@ -68,7 +78,8 @@ mod_sbm_code_server <- function(id, settings, upload, exploreMin, exploreMax,
           paste0(
             ",\n", paste(rep(" ", space_line_3), collapse = ""),
             "exploreMin = ", exploreMin(),
-            ", exploreMax = ", exploreMax()
+            ", exploreMax = ", exploreMax(),
+            nb_cores
           )
         ),
         "))"
