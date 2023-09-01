@@ -4,5 +4,6 @@
 .httr-oauth
 .DS_Store
 *.Rhistory
+inst/doc
 /doc/
 /Meta/
