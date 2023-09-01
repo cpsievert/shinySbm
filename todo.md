@@ -2,6 +2,16 @@
 
 [test CRAN](https://cran.r-project.org/web/packages/submission_checklist.html)
 
+todo users :
+- vignette
+- video
+
+todo mineure :
+- print table search on columns
+- copy paste on app
+- digits comme paramètres globaux ou parematers flotant dans (print table)
+
+
 
 ### Typos ou mise en forme/harmonisation
 

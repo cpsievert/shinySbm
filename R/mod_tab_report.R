@@ -87,6 +87,7 @@ mod_tab_report_server <- function(id, r) {
         if(input$fileType == "R"){
           text <- paste0(
             "library(shinySbm)\n\n",
+            "# Remember to change 'FILE_PATH' into the file location\n\n",
             session$userData$upload_code(),"\n\n",
             session$userData$sbm_code(),"\n\n",
             session$userData$matPlot_code(),"\n\n",
