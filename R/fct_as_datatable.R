@@ -103,14 +103,14 @@ get_dataframe.SimpleSBM <- function(object,matrix = NULL, type = c('raw','ordere
     if(type[[1]] == 'ordered'){
       # build df from the model `networkData` and organise it
       mat <- object$networkData[oRow, oRow][nb_rows:1, ] %>%
-        `colnames<-`(matrix$nodes_names$row[oRow]) %>%
-        `rownames<-`(matrix$nodes_names$col[oRow][nb_rows:1]) %>%
+        `colnames<-`(matrix$nodes_names$col[oRow]) %>%
+        `rownames<-`(matrix$nodes_names$row[oRow][nb_rows:1]) %>%
         as.data.frame()
     }else{
       # build df from the model predictions and organise it
       mat <-  object$connectParam$mean[clustering$row, clustering$col][oRow, oRow][nb_rows:1, ] %>%
-        `colnames<-`(matrix$nodes_names$row[oRow]) %>%
-        `rownames<-`(matrix$nodes_names$col[oRow][nb_rows:1]) %>%
+        `colnames<-`(matrix$nodes_names$col[oRow]) %>%
+        `rownames<-`(matrix$nodes_names$row[oRow][nb_rows:1]) %>%
         as.data.frame()
     }
     nbRows <- nrow(mat)
