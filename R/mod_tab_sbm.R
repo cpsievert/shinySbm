@@ -144,7 +144,7 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
           max_nb_cores <- 2
         }
         numericInput(ns("nbCores"),
-                     label = "Number of Cores",
+                     label = "Number of Cores (paralleling)",
                      value = 2,
                      min = 2,
                      max = max_nb_cores,
