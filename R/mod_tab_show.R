@@ -224,42 +224,38 @@ mod_tab_show_server <- function(id, r) {
     })
 
 
-    output$matrixPlot <- reactive({
-      if(is.null(PlotMat())){
-        NULL
-      }else{
-        renderImage({
+    output$matrixPlot <- renderImage({
 
-          # Read myImage's width and height. These are reactive values, so this
-          # expression will re-run whenever they change.
-          width <- session$clientData$`output_tab_show_1-matrixPlot_width`
-          height <- session$clientData$`output_tab_show_1-matrixPlot_height`
+      # Read myImage's width and height. These are reactive values, so this
+      # expression will re-run whenever they change.
+      width <- session$clientData$`output_tab_show_1-matrixPlot_width`
+      height <- session$clientData$`output_tab_show_1-matrixPlot_height`
 
-          # For high-res displays, this will be greater than 1
-          pixelratio <- session$clientData$pixelratio
+      # For high-res displays, this will be greater than 1
+      pixelratio <- session$clientData$pixelratio
 
-          # A temp file to save the output.
-          outfile <- tempfile(fileext = ".png")
+      # A temp file to save the output.
+      outfile <- tempfile(fileext = ".png")
 
-          # Generate the image file
-          png(outfile,
-              width = width * pixelratio, height = height * pixelratio,
-              res = 72 * pixelratio
-          )
-          plot(PlotMat())
-          dev.off()
-
-          # Return a list containing the filename
-          list(
-            src = outfile,
-            width = width,
-            height = height
-          )
-        },
-        deleteFile = TRUE
-        )
+      # Generate the image file
+      png(outfile,
+          width = width * pixelratio, height = height * pixelratio,
+          res = 72 * pixelratio
+      )
+      if(!is.null(PlotMat())){
+        plot(PlotMat())
       }
-    })
+      dev.off()
+
+      # Return a list containing the filename
+      list(
+        src = outfile,
+        width = width,
+        height = height
+      )
+    },
+    deleteFile = TRUE
+    )
 
 
     output$downloadPlot <- downloadHandler(
