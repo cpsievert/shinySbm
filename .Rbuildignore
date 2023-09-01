@@ -15,3 +15,5 @@ todo.md
 .gitlab-ci.yml
 docker*
 ^build_data/*
+^doc$
+^Meta$

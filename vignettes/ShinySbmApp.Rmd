@@ -1,10 +1,10 @@
 ---
-title: "ShinySbmApp"
+title: "ShinySbm package"
 author: Théodore Vanrenterghem
 date: 01/09/2023
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ShinySbmApp}
+  %\VignetteIndexEntry{ShinySbm package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
