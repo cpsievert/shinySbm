@@ -12,8 +12,9 @@
 #' @importFrom grDevices png
 #' @importFrom grDevices svg
 #' @noRd
-app_server <- function(input, output, session, console_verbosity = T) {
+app_server <- function(input, output, session, console_verbosity = TRUE, nbCore_control = TRUE) {
   options(shiny.maxRequestSize = 50*1024^2) # can upload 50MB files
+  session$userData$nbCore_control <- nbCore_control
   session$userData$console_verbosity <- console_verbosity
   session$userData$vars <- reactiveValues(
     tab = reactive({input$tab}),
