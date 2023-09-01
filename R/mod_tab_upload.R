@@ -332,7 +332,6 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     })
 
     observeEvent(input$matrixBuilder,{
-
       if(input$dataType == "list"){
         if("data.frame" %in% class(datasetSelected()) && ncol(datasetSelected())>1){
           base_names <- names(datasetSelected())
@@ -344,10 +343,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
         updateTextInput(session, "colLabel",
                         value = base_names[[2]])
       }else{
-        updateTextInput(session, "rowLabel",
+        if(input$whichData == "importData"){
+          updateTextInput(session, "rowLabel",
                         value = "")
         updateTextInput(session, "colLabel",
                         value = "")
+        }
       }
     })
 
