@@ -5,6 +5,7 @@
 \title{Run the Shiny Application}
 \usage{
 shinySbmApp(
+  nbCore_control = TRUE,
   console_verbosity = TRUE,
   onStart = NULL,
   options = list(launch.browser = TRUE),
@@ -14,6 +15,8 @@ shinySbmApp(
 )
 }
 \arguments{
+\item{nbCore_control}{Allow to control the number of Cores when running an `sbm`}
+
 \item{console_verbosity}{boolean boolean should the console be printing 'sbm' outputs}
 
 \item{onStart}{A function that will be called before the app is actually run.
