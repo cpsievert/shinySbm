@@ -12,7 +12,6 @@ todo mineure :
 - digits comme paramètres globaux ou parematers flotant dans (print table)
 
 
-
 ### Typos ou mise en forme/harmonisation
 
 
