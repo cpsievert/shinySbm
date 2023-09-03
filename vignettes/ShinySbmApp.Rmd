@@ -21,11 +21,11 @@ library(shinySbm)
 
 ## Introduction
 
-This vignette illustrates the use of the {shinySbm} package which is a shiny based graphical user interface (GUI) of the {sbm} package. These packages are made to apply **Stochastic Block Models** on network dataset. Whether it is an edges list or a matrix. We will first show how to use the shiny application. And then how to use the external functions as `plotSbm()` and `visSbm()`. 
+This vignette illustrates the use of the {shinySbm} package which is a shiny based graphical user interface (GUI) of the {sbm} package. These packages are made to apply **Stochastic Block Models** on network dataset. This dataset can be in two format: edges list and  connection matrix. First we will see how to use the shiny application in the package. And in the second part we will see how to use the external functions as `plotSbm()` and `visSbm()`. 
 
 ###  The shiny appplication: `shinySbmApp()`
 
-**shinySbm** package use {shiny} package to build an interface for the [{sbm}](https://cran.r-project.org/web/packages/sbm/index.html) package, on a html page. Users can import data from it and apply **Stochastic Block Models**. They can transform network data from **edges list** to **connection matrix**. Once the SBM ran, users can explore the different number of groups selected by {sbm}. They can get models outputs as: table of parameters, plots, interactive network visuals, automatic reports (pdf or html) (French or English), R script to repeat the analysis outside of the app and tables of block attributions. 
+**shinySbmApp()** function contain a {shiny} application which help to use and help to learn the basics of [{sbm}](https://cran.r-project.org/web/packages/sbm/index.html) package. Users can import their data inside it and apply **Stochastic Block Models**. They can transform network data from **edges list** to **connection matrix**. Once the SBM ran, users can explore the different number of groups selected by {sbm}. They can get models outputs as: table of parameters, plots, interactive network visuals, automatic reports (pdf or html) (French or English), R script to repeat the analysis outside of the app and tables of block attributions. 
 
 The following code show how to run `shinySbmApp()` from your R console.
 
@@ -34,13 +34,13 @@ library(shinySbm)
 shinySbmApp()
 ```
 
-When this is done a your browser should open and load the opening page. From this page you can load your dataset by clicking on the **Browse** button in embedded in red.
+When this is done your browser should load this page. From this page you can import your dataset by clicking on the **Browse** button in embedded in red.
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("images/shinysbmapp1.png")
 ```
 
-When you load it, the install helper (**1**) can show indication to adjust the importation. For example here, we imported this set as an **Adjacency or Incidence matrix** but as we can see in (**2**), we imported an Edges list.  So, we need to change the **nature** of imported data. 
+When you load it, the install helper (**1**) can show advice to adjust the importation. For example here, we imported this set as an **Adjacency or Incidence matrix** but as we can see in (**2**), we imported an Edges list.  So, we need to change the **nature** of imported data. 
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("images/shinysbmapp2.png")
@@ -62,7 +62,7 @@ Then it's time to explore the visuals and outputs in the other pages.
 
 ###  External functions
 
-The following codes are built by the `shinySbmApp` application, page **Report** with the **R code** option. The next chunk is made only from {sbm} package functions.
+The following codes are built by the `shinySbmApp` application, page **Report** with the **R code** option. The next chunk is only made of {sbm} package functions.
 
 ```{r}
 # Loading Dataset 
@@ -79,7 +79,7 @@ See this vignette to learn more of {sbm}
 vignette("SBM_fungus_tree_network")
 ```
 
-The function `plotSbm` is a convenient function that can take matrices or objects produced by `estimateBipartiteSBM()` and `estimateSimpleSBM()` of {sbm} as arguments. It plot them in a nice matrix of tiles, that can be ordered by blocks or not, transposed etc...
+The function `plotSbm` is a convenient function that can take  as arguments: matrices or objects produced by `estimateBipartiteSBM()` and `estimateSimpleSBM()` of {sbm}. It then plot them in a nice matrix of tiles, that can be ordered by blocks or not, transposed etc...
 
 ```{r, out.width="100%",fig.width = 12,fig.height = 5}
 plotSbm(
@@ -93,7 +93,7 @@ plotSbm(
   ))
 ```
 
-The function `visSbm` is a convenient function that can take objects produced by `estimateBipartiteSBM()` and `estimateSimpleSBM()` of {sbm} as arguments (doesn't take matrices). It make a {visNetwork} type object that represent the network condensed by blocks. 
+The function `visSbm` is a convenient function that can take as arguments objects produced by `estimateBipartiteSBM()` and `estimateSimpleSBM()` of {sbm} (it doesn't take matrices). It make a {visNetwork} type object that represent the network condensed by blocks. 
 
 ```{r, out.width="100%"}
 visSbm(
@@ -111,4 +111,10 @@ Thanks for your reading, if any question remain <u>Contact us:</u>  <a href = \"
 
 ## References
 
+###### Package SBM
 Chiquet J, Donnet S, Barbillon P (2023). _sbm: Stochastic Blockmodels_. R package version 0.4.5, <https://CRAN.R-project.org/package=sbm>.
+
+###### The demo dataset
+Vacher, Corinne, Dominique Piou, and Marie-Laure Desprez-Loustau. "Architecture of an antagonistic tree/fungus network: the asymmetric influence of past evolutionary history." PloS one 3.3 (2008): e1740.
+
+
