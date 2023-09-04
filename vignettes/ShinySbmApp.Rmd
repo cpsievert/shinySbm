@@ -1,8 +1,8 @@
 ---
-title: "ShinySbm package"
+title: "shinySBM package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ShinySbm package}
+  %\VignetteIndexEntry{shinySBM package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,7 +23,7 @@ library(shinySbm)
 
 This vignette illustrates the use of the {shinySbm} package which is a shiny based graphical user interface (GUI) of the {sbm} package. These packages are made to apply **Stochastic Block Models** on network dataset. This dataset can be in two format: edges list and  connection matrix. First we will see how to use the shiny application in the package. And in the second part we will see how to use the external functions as `plotSbm()` and `visSbm()`. 
 
-###  The shiny appplication: `shinySbmApp()`
+###  The shiny application: `shinySbmApp()`
 
 **shinySbmApp()** function contain a {shiny} application which help to use and help to learn the basics of [{sbm}](https://cran.r-project.org/web/packages/sbm/index.html) package. Users can import their data inside it and apply **Stochastic Block Models**. They can transform network data from **edges list** to **connection matrix**. Once the SBM ran, users can explore the different number of groups selected by {sbm}. They can get models outputs as: table of parameters, plots, interactive network visuals, automatic reports (pdf or html) (French or English), R script to repeat the analysis outside of the app and tables of block attributions. 
 

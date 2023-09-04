@@ -11,7 +11,7 @@ get_adjacency(edges, type = c("unipartite", "bipartite"), directed = FALSE)
 
 \item{type}{network type can be `'bipartite'` or `'unipartite'`}
 
-\item{directed}{whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)}
+\item{directed}{whether or not connections are directed (`TRUE`) or symmetrical (`FALSE`) (default is set to `TRUE`)}
 }
 \value{
 an adjacency/incidence matrix (data.frame) representing the network

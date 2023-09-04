@@ -25,7 +25,7 @@
 }
 \value{
 a ggplot object corresponding to the matrix plot inside the app.
-Groups the network matrix is organised by blocks, the small tiles are for
+Groups the network matrix is organized by blocks, the small tiles are for
 individuals connections. The big tiles between red lines are for block connectivity
 }
 \description{

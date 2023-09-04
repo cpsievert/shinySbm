@@ -35,7 +35,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 `shinySbm` is a R package containing a shiny application. This application provides a user-friendly interface for network analysis based on the `sbm` package made by Chiquet J, Donnet S and Barbillon P (2023) [CRAN](https://CRAN.R-project.org/package=sbm). The `sbm` package regroups into a unique framework tools for estimating and manipulating variants of the stochastic block model.
-`shinySbm` allows you to easily apply and explore the outputs of a Stochastic Block Model without programming. It is useful if you want to analyse your network data (adjacency matrix or list of edges) without knowing the `R` language or to learn the basics of the `sbm` package. 
+`shinySbm` allows you to easily apply and explore the outputs of a Stochastic Block Model without programming. It is useful if you want to analyze your network data (adjacency matrix or list of edges) without knowing the `R` language or to learn the basics of the `sbm` package. 
 
 Stochastic block models (SBMs) are probabilistic models in statistical analysis of graphs or networks, that can be used to discover or understand the (hidden/latent) structure of a network, as well as for clustering purposes. 
 
@@ -44,7 +44,7 @@ Stochastic Block Models are applied on network to simplify the information they 
 With `shinySbm` you should also be able to: 
 
  - Easily run a Stochastic Block Model (set your model, infer associated parameters and choose the number of blocks)
- - Get some nice outputs as matrix and network plots organised by blocks
+ - Get some nice outputs as matrix and network plots organized by blocks
  - Get a summary of the modelling
  - Extract lists of nodes associated with their blocks
 
@@ -53,7 +53,7 @@ With `shinySbm` you should also be able to:
 
 ### On Shiny Migale
 
-I you want to use ShinySBM without having to code a single line, the app is accesible on [Migale](https://shiny.migale.inrae.fr/app/ShinySBM).
+I you want to use shinySBM without having to code a single line, the app is available on [Migale](https://shiny.migale.inrae.fr/app/ShinySBM).
 
 ### With `R`
 

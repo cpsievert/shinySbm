@@ -24,7 +24,7 @@ get_block(
 
 \item{attribution}{Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.}
 
-\item{proportion}{Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.}
+\item{proportion}{Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and every blocks the probabilities that the node belong to the block.}
 }
 \value{
 \itemize{
@@ -33,7 +33,7 @@ get_block(
  }
 }
 \description{
-A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
+A fct that return blocks attribution or probabilities for each nodes in a Sbm fit from the {sbm} package.
 }
 \examples{
 

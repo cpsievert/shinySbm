@@ -1,6 +1,6 @@
 #' get_block generic
 #'
-#' @description A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
+#' @description A fct that return blocks attribution or probabilities for each nodes in a Sbm fit from the {sbm} package.
 #'
 #' @param x Sbm model of class `BipartiteSBM_fit`, `SimpleSBM_fit`.
 #' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
@@ -10,7 +10,7 @@
 #'  \item{"unipartite case": }{character: node names}
 #'  }
 #' @param attribution Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
-#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
+#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and every blocks the probabilities that the node belong to the block.
 #'
 #'
 #' @return
@@ -56,13 +56,13 @@ get_block <- function(x, labels = "default", node_names = NULL,
 
 #' get_block.SimpleSBM_fit method
 #'
-#' @description A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
+#' @description A fct that return blocks attribution or probabilities for each nodes in a Sbm fit from the {sbm} package.
 #'
 #' @param x Sbm model of class `SimpleSBM_fit`.
 #' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
 #' @param node_names character: node names
 #' @param attribution Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
-#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
+#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and every blocks the probabilities that the node belong to the block.
 #'
 #'
 #' @return A data.frame with block attributions and/or proportions
@@ -133,13 +133,13 @@ get_block.SimpleSBM_fit <- function(x,
 
 #' get_block.BipartiteSBM_fit method
 #'
-#' @description A fct that return blocks attribution or probabilities dor each nodes in a Sbm fit from the {sbm} package.
+#' @description A fct that return blocks attribution or probabilities for each nodes in a Sbm fit from the {sbm} package.
 #'
 #' @param x Sbm model of class `BipartiteSBM_fit`.
 #' @param labels labels for nodes. If it's simple sbm it should be a single character ("default" -> c("nodes")). If sbm is bipartite a named character (names are row and col) ("default" -> c(row = 'row', col = 'col')).
 #' @param node_names named list ("row","col"), row is a character vector containing names of nodes in rows, and respectively for columns
 #' @param attribution Boolean indicating whether or not the produced tables should contain a block attribution column. This column shows the block in which each nodes is the most likely to be.
-#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and evey blocks the probabilities that the node belong to the block.
+#' @param proportion Boolean indicating whether or not the produced tables should contain the probabilities to belong in each blocks. These columns shows for every nodes and every blocks the probabilities that the node belong to the block.
 #'
 #'
 #' @return A list containing two data.frames with block attributions and/or proportions one for the row blocks and one for the column blocks

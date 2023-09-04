@@ -24,7 +24,7 @@
 #'
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.
-#' Groups the network matrix is organised by blocks, the small tiles are for
+#' Groups the network matrix is organized by blocks, the small tiles are for
 #' individuals connections. The big tiles between red lines are for block connectivity
 #'
 #' @examples
@@ -105,7 +105,7 @@ plotSbm.default <- function(x, ordered = FALSE, transpose = FALSE,
 #' }
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.
-#' Groups the network matrix is organised by blocks, the small tiles are for
+#' Groups the network matrix is organized by blocks, the small tiles are for
 #' individuals connections. The big tiles between red lines are for block connectivity
 #'
 #' @examples
@@ -282,7 +282,7 @@ plotSbm.BipartiteSBM_fit <- function(x, ordered = FALSE,
 #' }
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.
-#' Groups the network matrix is organised by blocks, the small tiles are for
+#' Groups the network matrix is organized by blocks, the small tiles are for
 #' individuals connections. The big tiles between red lines are for block connectivity
 #'
 #' @examples
@@ -442,7 +442,7 @@ plotSbm.SimpleSBM_fit <- function(x, ordered = FALSE, transpose = FALSE,
 #'
 #' @return a ggplot object corresponding to the matrix plot inside the app.
 #' Here because there no 'sbm' information and only a matrix describing a network,
-#' The matrix isn't organised and the tiles are only showing individuals connections.
+#' The matrix isn't organized and the tiles are only showing individuals connections.
 #'
 #' @examples
 #' n_col <- 100

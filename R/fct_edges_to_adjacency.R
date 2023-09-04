@@ -4,7 +4,7 @@
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
+#' @param directed whether or not connections are directed (`TRUE`) or symmetrical (`FALSE`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
@@ -46,7 +46,7 @@ get_adjacency <- function(edges, type = c("unipartite", "bipartite"), directed =
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
+#' @param directed whether or not connections are directed (`TRUE`) or symmetrical (`FALSE`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
@@ -89,7 +89,7 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 # #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 # #'  Or an igraph object
 # #' @param type network type can be `'bipartite'` or `'unipartite'`
-# #' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
+# #' @param directed whether or not connections are directed (`TRUE`) or symmetrical (`FALSE`) (default is set to `TRUE`)
 # #'
 # #'
 # #' @return an adjacency/incidence matrix (data.frame) representing the network
@@ -117,7 +117,7 @@ get_adjacency.default <- function(edges, type = c("unipartite", "bipartite"), di
 #'
 #' @param edges Can be a table which is a list pair of nodes (nodes ids are one the two first columns) a numerical third column can be associated will be the connections values.
 #' @param type network type can be `'bipartite'` or `'unipartite'`
-#' @param directed whether or not connections are directed (`TRUE`) or symetrical (`FALSE`) (default is set to `TRUE`)
+#' @param directed whether or not connections are directed (`TRUE`) or symmetrical (`FALSE`) (default is set to `TRUE`)
 #'
 #'
 #' @return an adjacency/incidence matrix (data.frame) representing the network
