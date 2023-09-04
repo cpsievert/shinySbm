@@ -3,7 +3,6 @@
 [test CRAN](https://cran.r-project.org/web/packages/submission_checklist.html)
 
 todo users :
-- vignette
 - video
 
 todo mineure :
