@@ -133,16 +133,23 @@ mod_tab_sbm_ui <- function(id) {
 mod_tab_sbm_server <- function(id, r, parent_session) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    nb_cores <- parallel::detectCores() - 2
+    if(is.numeric(nb_cores)){
+      max_nb_cores <- nb_cores
+    }else{
+      max_nb_cores <- 2
+    }
 
+
+
+    observe({
+      if(is.numeric(input$nbCores) && input$nbCores > max_nb_cores){
+        updateNumericInput(session,"nbCores",value = max_nb_cores)
+      }
+    })
 
     output$nbCoreUI <- renderUI({
       if(session$userData$nbCore_control){
-        nb_cores <- detectCores()
-        if(is.numeric(nb_cores)){
-          max_nb_cores <- nb_cores - 2
-        }else{
-          max_nb_cores <- 2
-        }
         numericInput(ns("nbCores"),
                      label = "Number of Cores (paralleling)",
                      value = 2,
@@ -152,6 +159,8 @@ mod_tab_sbm_server <- function(id, r, parent_session) {
         )
       }
     })
+
+
 
     nb_cores <- reactive({
       if(session$userData$nbCore_control && input$moreSettings %% 2  == 1 &&
