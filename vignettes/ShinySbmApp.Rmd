@@ -107,7 +107,7 @@ visSbm(
   ))
 ```
 
-Thanks for your reading, if any question remain <u>Contact us:</u>  <a href = \"mailto:shiny.sbm.dev@gmail.com?subject=[ShinySBM]\" target = \"_blank\">shiny.sbm.dev@gmail.com</a>
+Thanks for your reading, if any question remain, contact us: [shiny.sbm.dev@gmail.com](mailto:shiny.sbm.dev@gmail.com)
 
 ## References
 

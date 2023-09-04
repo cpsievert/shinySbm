@@ -47,6 +47,6 @@ LazyData: true
 RoxygenNote: 7.2.3
 NeedsCompilation: no
 Packaged: 2023-06-07 15:08:48 UTC; theod
-Author: Theodore Vanrenterghem [cre, aut]
+Author: Theodore Vanrenterghem <shiny.sbm.dev@gmail.com>
 Maintainer: Theodore Vanrenterghem <shiny.sbm.dev@gmail.com>
 VignetteBuilder: knitr
