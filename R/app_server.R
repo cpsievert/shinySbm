@@ -13,6 +13,9 @@
 #' @importFrom grDevices svg
 #' @noRd
 app_server <- function(input, output, session, console_verbosity = TRUE, nbCore_control = TRUE) {
+  ## to reeset options
+  old <- options()
+  on.exit(options(old))
   options(shiny.maxRequestSize = 50*1024^2) # can upload 50MB files
   session$userData$nbCore_control <- nbCore_control
   session$userData$console_verbosity <- console_verbosity

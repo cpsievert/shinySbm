@@ -143,6 +143,8 @@ DT_intervals <- function(dta){
 #' @return DT datatable object
 #' @noRd
 as_big_table <- function(dta,invible_columns = character(0)){
+  old <- options()
+  on.exit(options(old))
   options(digits = 3)
   DT::datatable(
     as.data.frame(dta),
