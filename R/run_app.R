@@ -24,7 +24,7 @@ shinySbmApp <- function(
     app = shinyApp(
       ui = app_ui,
       server = function(input, output, session){
-        app_server(input, output, session,console_verbosity,nbCore_control)
+        app_server(input, output, session, console_verbosity, nbCore_control)
         },
       onStart = onStart,
       options = options,
