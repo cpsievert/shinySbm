@@ -458,6 +458,20 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       )
     })
 
+
+    observeEvent(datasetUploaded(),{
+      if(!is.null(datasetUploaded()) && is.sbmMatrix(datasetUploaded())){
+        shinyalert::shinyalert(
+          title = "Matrix Loaded",
+          text = "Go to Fit SBM page to run the model",
+          size = "xs",
+          closeOnClickOutside = TRUE,
+          type = "success",
+          confirmButtonText = "OK"
+        )
+      }
+    })
+
     output$summaryDataRaw <- renderPrint({
       validate(
         need(datasetSelected(), "Please Select a dataset")
