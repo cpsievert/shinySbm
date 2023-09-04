@@ -16,3 +16,5 @@ todo.md
 docker*
 ^build_data/*
 ^Meta$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
