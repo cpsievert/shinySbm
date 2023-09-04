@@ -2,9 +2,14 @@ Package: shinySbm
 Title: 'shiny' Application to Use the Stochastic Block Model
 Version: 0.1.3
 Authors@R: 
-    person("Theodore", "Vanrenterghem", , "shiny.sbm.dev@gmail.com", role = c("cre", "aut"))
+    person(given = "Theodore", family = "Vanrenterghem", 
+           email = "shiny.sbm.dev@gmail.com", role = c("cre", "aut")),
+    person(given = "Julie", family = "Aubert", role = c("ctb"),
+           email = "julie.aubert@inrae.fr",
+           comment = c(ORCID = "0000-0001-5203-5748")),
+    person("großBM team", role = c("ctb"))
 Description: A 'shiny' interface for a simpler use of the 'sbm' R package. 
-    It also contain useful functions to easily explore the 'sbm'package results. 
+    It also contain useful functions to easily explore the 'sbm' package results. 
     With this package you should be able to use the stochastic block model 
     without any knowledge in R, get automatical reports and nice visuals, as 
     well as learning the basics functions of 'sbm'.
