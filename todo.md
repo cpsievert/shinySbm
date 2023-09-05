@@ -5,7 +5,7 @@
 todo users :
 - video
 
-todo mineure :
+todo mineur :
 - print table search on columns
 - copy paste on app
 - digits comme paramètres globaux ou parematers flotant dans (print table)
