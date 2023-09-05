@@ -11,12 +11,9 @@ $run_dev.*
 ^CODE_OF_CONDUCT\.md$
 ^app\.R$
 ^rsconnect$
-todo.md
 .gitlab-ci.yml
 docker*
 ^build_data/*
 ^Meta$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
-^fct_cran_submission.R$
-^do_cran_submission.R$

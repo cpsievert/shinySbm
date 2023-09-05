@@ -7,10 +7,11 @@ source("fct_cran_submission.R")
 ## Checks before :
 check_built()
 install_built(build = FALSE, delete = TRUE)
+delete_package()
 
 
 ## Send to CRAN :
 submit_package()
-
+111
 
 

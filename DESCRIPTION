@@ -10,7 +10,9 @@ Authors@R:
     person("großBM team", role = c("cph")),
     person("ThinkR", role = "cph"))
 Author: Theodore Vanrenterghem [cre, aut],
-        Julie Aubert [aut]
+        Julie Aubert [aut],
+        großBM team [cph],
+        ThinkR [cph]
 Maintainer: Theodore Vanrenterghem <shiny.sbm.dev@gmail.com>             
 Description: A 'shiny' interface for a simpler use of the 'sbm' R package. 
     It also contains useful functions to easily explore the 'sbm' package results. 
