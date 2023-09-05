@@ -18,4 +18,5 @@ docker*
 ^Meta$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
-^do_cran_sbumition.R$
+^fct_cran_submission.R$
+^do_cran_submission.R$
