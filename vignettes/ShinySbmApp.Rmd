@@ -25,7 +25,7 @@ This vignette illustrates the use of the {shinySbm} package which is a shiny bas
 
 ###  The shiny application: `shinySbmApp()`
 
-**shinySbmApp()** function contain a {shiny} application which help to use and help to learn the basics of [{sbm}](https://cran.r-project.org/web/packages/sbm/index.html) package. Users can import their data inside it and apply **Stochastic Block Models**. They can transform network data from **edges list** to **connection matrix**. Once the SBM ran, users can explore the different number of groups selected by {sbm}. They can get models outputs as: table of parameters, plots, interactive network visuals, automatic reports (pdf or html) (French or English), R script to repeat the analysis outside of the app and tables of block attributions. 
+**shinySbmApp()** function contain a {shiny} application which help to use and help to learn the basics of [{sbm}](https://cran.r-project.org/package=sbm) package. Users can import their data inside it and apply **Stochastic Block Models**. They can transform network data from **edges list** to **connection matrix**. Once the SBM ran, users can explore the different number of groups selected by {sbm}. They can get models outputs as: table of parameters, plots, interactive network visuals, automatic reports (pdf or html) (French or English), R script to repeat the analysis outside of the app and tables of block attributions. 
 
 The following code show how to run `shinySbmApp()` from your R console.
 
