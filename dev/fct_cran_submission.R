@@ -35,13 +35,15 @@ delete_package <- function(version = 'current'){
 }
 
 check_built <- function(build = TRUE, delete = FALSE){
+  if(delete){
+    on.exit(delete_package())
+  }
   if(build){
     build_package()
-    on.exit(delete_package())
   }
   package <- get_tar_name()
   package$source
-  on.exit(unloadNamespace(package$package))
+  on.exit(unloadNamespace(package$package),add = TRUE)
 
   if(package$source %in% dir("..",recursive = T)){
     loc_source <- paste0("../",package$source)
@@ -53,13 +55,15 @@ check_built <- function(build = TRUE, delete = FALSE){
 }
 
 install_built <- function(build = TRUE, delete = FALSE){
+  if(delete){
+    on.exit(delete_package())
+  }
   if(build){
     build_package()
-    on.exit(delete_package())
   }
   package <- get_tar_name()
   package$source
-  on.exit(unloadNamespace(package$package))
+  on.exit(unloadNamespace(package$package),add = TRUE)
 
   if(package$source %in% dir("..",recursive = T)){
     loc_source <- paste0("../",package$source)

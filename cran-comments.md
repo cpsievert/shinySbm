@@ -30,7 +30,7 @@ Authors@R:
     person("großBM team", role = c("cph")),
     person("ThinkR", role = "cph"))
 Author: Theodore Vanrenterghem [cre, aut],
-        Julie Aubert [aut],
+        Julie Aubert [aut] (<https://orcid.org/0000-0001-5203-5748>),
         großBM team [cph],
         ThinkR [cph]
   
