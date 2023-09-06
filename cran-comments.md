@@ -48,7 +48,7 @@ The company name is "ThinkR" and they are using a licence named differently. I'm
            email = "saint-clair.chabert-liddell@agroparistech.fr",
            comment = c(ORCID = "0000-0001-5604-7308")), ## add another person that gave me a piece of code.
     person("großBM team", role = c("ctb")), 
-    person("Golem User", role = "cph")))
+    person("Golem User", role = c("cph")))
     
     
     
