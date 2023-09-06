@@ -7,13 +7,11 @@ Authors@R:
     person(given = "Julie", family = "Aubert", role = c("aut"),
            email = "julie.aubert@inrae.fr",
            comment = c(ORCID = "0000-0001-5203-5748")),
-    person("großBM team", role = c("cph")),
-    person("ThinkR", role = "cph"))
-Author: Theodore Vanrenterghem [cre, aut],
-        Julie Aubert [aut] (<https://orcid.org/0000-0001-5203-5748>),
-        großBM team [cph],
-        ThinkR [cph]
-Maintainer: Theodore Vanrenterghem <shiny.sbm.dev@gmail.com>             
+    person(given = "Saint-Clair", family = "Chabert-Liddell", role = c("aut"),
+           email = "saint-clair.chabert-liddell@agroparistech.fr",
+           comment = c(ORCID = "0000-0001-5604-7308")), 
+    person("großBM team", role = c("ctb")), 
+    person("Golem User", role = "cph")))
 Description: A 'shiny' interface for a simpler use of the 'sbm' R package. 
     It also contains useful functions to easily explore the 'sbm' package results. 
     With this package you should be able to use the stochastic block model 
