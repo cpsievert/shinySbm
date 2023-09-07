@@ -62,9 +62,7 @@ I you want to use shinySBM without having to code a single line, the app is avai
 You can install the development version of shinySbm like so:
 
 ``` r
-remotes::install_gitlab("theodore.vanrenterghem/shinysbm",
-                        host = "forgemia.inra.fr",
-                        build_vignettes = TRUE)
+install.packages("shinySbm")
 ```
 
 The shinySbm package should be installed. 
