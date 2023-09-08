@@ -2,7 +2,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://img.shields.io/badge/lifecycle-stable-green.svg)
 <!-- badges: end -->
 
 `shinySbm` is a R package containing a shiny application. This
