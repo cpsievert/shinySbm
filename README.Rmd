@@ -31,7 +31,7 @@ knitr::opts_chunk$set(
 
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://img.shields.io/badge/lifecycle-stable-green.svg)
 <!-- badges: end -->
 
 `shinySbm` is a R package containing a shiny application. This application provides a user-friendly interface for network analysis based on the `sbm` package made by Chiquet J, Donnet S and Barbillon P (2023) [CRAN](https://CRAN.R-project.org/package=sbm). The `sbm` package regroups into a unique framework tools for estimating and manipulating variants of the stochastic block model.
