@@ -17,6 +17,7 @@ Description: A 'shiny' interface for a simpler use of the 'sbm' R package.
     With this package you should be able to use the stochastic block model 
     without any knowledge in R, get automatic reports and nice visuals, as 
     well as learning the basic functions of 'sbm'.
+URL: https://shinysbm-theodore-vanrenterghem-b12616c23cfbfb3f0fe520178bcb95a.pages.mia.inra.fr/, https://cran.r-project.org/package=shinySbm
 BugReports: https://github.com/Jo-Theo/shinySbm/issues
 License: MIT + file LICENSE
 Depends: 
