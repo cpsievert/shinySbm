@@ -37,7 +37,7 @@ build-job:
   stage: build
   script:
     - docker pull rocker/verse:4.3.0
-    - docker run rocker/verse:4.3.0
+    - docker run -it rocker/verse:4.3.0
     - Rscript -e "install.packages('pkgdown');pkgdown::build_site()"
   artifacts:
     paths:
