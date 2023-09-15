@@ -47,6 +47,8 @@ With `shinySbm` you should also be able to:
  - Get some nice outputs as matrix and network plots organized by blocks
  - Get a summary of the modelling
  - Extract lists of nodes associated with their blocks
+ 
+To learn more about `shinySbm` you can go to the [ShinySbm Website](https://shinysbm-theodore-vanrenterghem-b12616c23cfbfb3f0fe520178bcb95a.pages.mia.inra.fr/) 
 
 
 ## How to use the application

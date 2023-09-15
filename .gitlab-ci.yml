@@ -10,6 +10,7 @@ services:
 
 stages:
   - build
+  - deploy
 
 docker-build:
   stage: build
@@ -21,7 +22,7 @@ docker-build:
   # All other branches are tagged with the escaped branch name (commit ref slug)
   script:
     - docker build -f Dockerfile --progress=plain -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG 
+    - docker push $IMAGE_TAG
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE
     - docker push $CI_REGISTRY_IMAGE
 
@@ -30,4 +31,35 @@ docker-build:
     - tags
   tags:
     - stable
+
+
+build-job:
+  stage: build
+  script:
+    - docker pull rocker/rstudio
+    - docker run rocker/rstudio
+    - Rscript -e "install.packages('pkgdown');pkgdown::build_site()"
+  artifacts:
+    paths:
+      - "docs/"
+  only:
+   - main
+   - pushes
+
+
+pages:
+  stage: deploy
+  dependencies:
+    - build-job
+  script:
+    - mv docs public
+  artifacts:
+    paths:
+     - public
+  only:
+    - main
+    - pushes
+  tags:
+    - stable
+  environment: production
 
