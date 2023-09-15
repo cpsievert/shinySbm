@@ -36,8 +36,8 @@ docker-build:
 build-job:
   stage: build
   script:
-    - docker pull rocker/rstudio
-    - docker run rocker/rstudio
+    - docker pull rocker/verse:4.3.0
+    - docker run rocker/verse:4.3.0
     - Rscript -e "install.packages('pkgdown');pkgdown::build_site()"
   artifacts:
     paths:
