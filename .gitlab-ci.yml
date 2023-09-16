@@ -35,9 +35,11 @@ docker-build:
 
 build-job:
   stage: build
-  image: rocker/verse:4.3.0
+  image: rocker/tidyverse
   script:
-    - R -e "install.packages(c('remotes','pkgdown'));remotes::install_github('Jo-Theo/shinySbm',upgrade = 'never'); pkgdown::build_site()"
+   - R -e 'devtools::install_deps(dep = T)'
+   - R -e "install.packages('pkgdown')"
+   - R -e "pkgdown::build_site()"
   artifacts:
     paths:
       - "docs/"
