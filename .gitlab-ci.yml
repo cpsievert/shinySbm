@@ -38,7 +38,7 @@ build-job:
   image: rocker/tidyverse
   script:
    - R -e 'devtools::install_deps(dep = T)'
-   - R -e "install.packages('pkgdown')"
+   - R -e "install.packages(c('shinySbm','pkgdown'))"
    - R -e "pkgdown::build_site()"
   artifacts:
     paths:
