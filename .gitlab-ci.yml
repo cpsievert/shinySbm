@@ -37,7 +37,7 @@ build-job:
   stage: build
   image: rocker/tidyverse
   script:
-   - apt install libglpk40
+   - apt-get install libglpk40
    - R -e 'devtools::install_deps(dep = T)'
    - R -e "install.packages(c('shinySbm','pkgdown'))"
    - R -e "pkgdown::build_site()"
