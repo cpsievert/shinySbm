@@ -37,7 +37,7 @@ build-job:
   stage: build
   image: rocker/verse:4.3.0
   script:
-    - R -e "install.packages('pkgdown'); pkgdown::build_site()"
+    - R -e "install.packages(c('pkgdown','shinySbm')); pkgdown::build_site()"
   artifacts:
     paths:
       - "docs/"
