@@ -38,7 +38,7 @@ build-job:
   script:
     - docker pull rocker/r-ver:4.0.4
     - docker run rocker/r-ver:4.0.4
-    - Rscript -e "install.packages('pkgdown'); pkgdown::build_site()"
+    - R -e "install.packages('pkgdown'); pkgdown::build_site()"
   artifacts:
     paths:
       - "docs/"
