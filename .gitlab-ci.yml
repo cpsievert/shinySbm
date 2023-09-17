@@ -35,9 +35,9 @@ docker-build:
 
 build-job:
   stage: build
-  image: rocker/tidyverse
+  image: registry.forgemia.inra.fr/theodore.vanrenterghem/docker-finistr:0.0.1
   script:
-   - R -e "install.packages('igraph');install.packages('shinySbm',dependencies = T);install.packages('pkgdown');pkgdown::build_site()"
+   - R -e "pkgdown::build_site()"
    # - R -e "devtools::check()"
    # - R -e "install.packages('pkgdown')"
    # - R -e "pkgdown::build_site()"
