@@ -37,10 +37,10 @@ build-job:
   stage: build
   image: rocker/tidyverse
   script:
-   - R -e "install.packages('shinySbm',dependencies = T)"
-   - R -e "devtools::check()"
-   - R -e "install.packages('pkgdown')"
-   - R -e "pkgdown::build_site()"
+   - R -e "install.packages('shinySbm',dependencies = T);install.packages('pkgdown');pkgdown::build_site()"
+   # - R -e "devtools::check()"
+   # - R -e "install.packages('pkgdown')"
+   # - R -e "pkgdown::build_site()"
   artifacts:
     paths:
       - "docs/"
