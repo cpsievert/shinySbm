@@ -58,7 +58,12 @@ mod_help_to_import_server <- function(id, rawData = NULL, sbmData = NULL, input_
       if (!is.null(rawData) & !is.null(input_upload) && input_upload$whichData == "importData") {
         warns <- list()
         mess <- list()
-        withCallingHandlers(check_data_inputs(dta = rawData(), inputs = input_upload),
+        withCallingHandlers(
+          check_data_inputs(
+            dta = rawData(),
+            inputs = input_upload,
+            show_message_repeated_rows = session$userData$vars$show_message_repeated_rows
+            ),
           warning = function(w) {
             warns <<- c(warns, list(w))
           },
