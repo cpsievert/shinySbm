@@ -20,3 +20,4 @@ docker*
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^AUTHORS$
