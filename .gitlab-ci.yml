@@ -37,15 +37,12 @@ build-job:
   stage: build
   image: registry.forgemia.inra.fr/theodore.vanrenterghem/docker-finistr:0.0.1
   script:
-   - R -e "pkgdown::build_site()"
-   # - R -e "devtools::check()"
-   # - R -e "install.packages('pkgdown')"
-   # - R -e "pkgdown::build_site()"
+   - R -e "pkgdown::build_site(new_process = FALSE, devel=FALSE,preview = FALSE)"
   artifacts:
     paths:
       - "docs/"
   only:
-   - main
+   - dev
    - pushes
 
 
@@ -59,7 +56,7 @@ pages:
     paths:
      - public
   only:
-    - main
+    - dev
     - pushes
   tags:
     - stable
