@@ -42,7 +42,7 @@ build-job:
     paths:
       - "docs/"
   only:
-   - dev
+   - main
    - pushes
 
 
@@ -56,7 +56,7 @@ pages:
     paths:
      - public
   only:
-    - dev
+    - main
     - pushes
   tags:
     - stable
