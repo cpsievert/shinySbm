@@ -43,9 +43,6 @@ build-job:
       - "docs/"
   rules:
    - if: $CI_COMMIT_BRANCH == "main"
-  only:
-   - main
-   - pushes
 
 
 pages:
@@ -59,9 +56,6 @@ pages:
      - public
   rules:
    - if: $CI_COMMIT_BRANCH == "main"
-  only:
-    - main
-    - pushes
   tags:
     - stable
   environment: production
