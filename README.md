@@ -1,3 +1,6 @@
+Shiny SBM
+================
+
 <!-- Compiling paragraph: start -->
 <!-- badges: start -->
 
@@ -5,7 +8,7 @@
 stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://img.shields.io/badge/lifecycle-stable-green.svg)
 <!-- badges: end -->
 
-`shinySbm` is a R package containing a shiny application. This
+The `shinySbm` is a R package containing a shiny application. This
 application provides a user-friendly interface for network analysis
 based on the `sbm` package made by Chiquet J, Donnet S and Barbillon P
 (2023) [CRAN](https://CRAN.R-project.org/package=sbm). The `sbm` package
@@ -31,12 +34,14 @@ specific structure.
 
 With `shinySbm` you should also be able to:
 
--   Easily run a Stochastic Block Model (set your model, infer
-    associated parameters and choose the number of blocks)
--   Get some nice outputs as matrix and network plots organized by
-    blocks
--   Get a summary of the modelling
--   Extract lists of nodes associated with their blocks
+- Easily run a Stochastic Block Model (set your model, infer associated
+  parameters and choose the number of blocks)
+- Get some nice outputs as matrix and network plots organized by blocks
+- Get a summary of the modelling
+- Extract lists of nodes associated with their blocks
+
+To learn more about `shinySbm` you can go to the [ShinySbm
+Website](https://shinysbm-theodore-vanrenterghem-b12616c23cfbfb3f0fe520178bcb95a.pages.mia.inra.fr/)
 
 ## How to use the application
 
@@ -51,7 +56,9 @@ is available on [Migale](https://shiny.migale.inrae.fr/app/ShinySBM).
 
 You can install the development version of shinySbm like so:
 
-    install.packages("shinySbm")
+``` r
+install.packages("shinySbm")
+```
 
 The shinySbm package should be installed.
 
@@ -59,7 +66,9 @@ The shinySbm package should be installed.
 
 From a new `R` session run
 
-    shinySbm::shinySbmApp()
+``` r
+shinySbm::shinySbmApp()
+```
 
 ### With `docker`
 
@@ -68,13 +77,17 @@ From a new `R` session run
 If you are familiar to `docker`, you can also download the docker image
 by running the command:
 
-    docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+``` bash
+docker pull registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+```
 
 #### Running the application
 
 Once installed you can run the command to launch the app:
 
-    docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+``` bash
+docker run -p 3838:3838 registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm:latest
+```
 
 And then from your browser find the address `http://localhost:3838/`
 
