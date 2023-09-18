@@ -2,7 +2,7 @@
 #'
 #' @description Check the raw data.frame according to inputs
 #'
-#' @param dta=NULL,inputs=NULL
+#' @param dta=NULL,inputs=NULL,show_message_repeated_rows=FALSE
 #' `dta` data.frame
 #' `inputs` list of inputs from upload table:
 #' - `input$dataType`
@@ -14,16 +14,16 @@
 #' and warnings with indication to get a better results
 #'
 #' @noRd
-check_data_inputs <- function(dta = NULL, inputs = NULL) {
+check_data_inputs <- function(dta = NULL, inputs = NULL, show_message_repeated_rows = FALSE) {
   ## Check for all cases
   # Table are too thin could be a separator problem
-  if (dim(dta)[2] <= 1) {
+  if (ncol(dta) <= 1) {
     warning("Low number of columns: Try to change separator")
   } else { # if table are thicker
     # Prevent miss-comprehension: if set rows as name and the first column has
     # repetition it would give an error and stop the app. The real correction is
     # in "mod_tab_upload.R" but here is a message that tell what's happening to the user
-    if (inputs$headerrow & any(duplicated(dta[[1]])) & is.character(dta[[1]])) {
+    if (inputs$headerrow & show_message_repeated_rows) {
       message("Repeated values in the 1st column: cannot be set as row names")
     }
     ## Check in case of a adjacency matrix

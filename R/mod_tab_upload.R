@@ -194,6 +194,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
     ns <- session$ns
     ## will be used in other modules inside conditionnal panels that should only be shown when the sbm has been run
     # reset when loading a new matrix
+    session$userData$vars$show_message_repeated_rows <- FALSE
     output$sbmRan <- renderText({
       if (session$userData$vars$sbm$runSbm != 0) {
         "YES"
@@ -265,6 +266,7 @@ mod_tab_upload_server <- function(id, r, parent_session) {
       sep(), dec(), input$headerrow,
       input$headercol
     ), {
+      session$userData$vars$show_message_repeated_rows <- FALSE
       if (input$whichData == "importData") {
         validate(
           need(input$mainDataFile$datapath, "")
@@ -276,8 +278,12 @@ mod_tab_upload_server <- function(id, r, parent_session) {
             row.names = 1, header = input$headercol,
             check.names = FALSE
           )
+
         } else {
           data <- read.table(file = input$mainDataFile$datapath, sep = sep(), header = input$headercol,check.names = FALSE)
+          if(input$headerrow){
+            session$userData$vars$show_message_repeated_rows <- TRUE
+          }
         }
       } else {
         validate(
