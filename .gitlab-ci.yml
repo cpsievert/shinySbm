@@ -41,9 +41,8 @@ build-job:
   artifacts:
     paths:
       - "docs/"
-  only:
-   - main
-   - pushes
+  rules:
+   - if: $CI_COMMIT_BRANCH == "main"
 
 
 pages:
@@ -55,9 +54,8 @@ pages:
   artifacts:
     paths:
      - public
-  only:
-    - main
-    - pushes
+  rules:
+   - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - stable
   environment: production
