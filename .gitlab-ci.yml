@@ -37,8 +37,7 @@ build-job:
   stage: build
   image: registry.forgemia.inra.fr/theodore.vanrenterghem/shinysbm-docker-base:latest
   script:
-   - R -e "install.packages(c('usethis','pkgdown'));usethis::use_pkgdown();pkgdown::build_site(new_process = FALSE, devel=FALSE,preview = FALSE)"
-   - echo -e "repo:\n  url:\n    home: https://forgemia.inra.fr/theodore.vanrenterghem/\n    source: https://forgemia.inra.fr/theodore.vanrenterghem/shinySbm/-/tree/dev/" >> _pkgdown.yml
+   - R -e "install.packages('pkgdown')pkgdown::build_site(new_process = FALSE, devel=FALSE,preview = FALSE)"
   artifacts:
     paths:
       - "docs/"
